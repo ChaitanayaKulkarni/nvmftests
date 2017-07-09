@@ -77,16 +77,16 @@ class Loopback:
             dev = self.path + "/test" + str(i)
             cmd = "dd if=/dev/zero of=" + dev + \
                 " count=" + str(count) + " bs=" + str(self.block_size)
-            print cmd
+            print(cmd)
             ret = self.exec_cmd(cmd)
             if ret != 0:
-                print "ERROR : file creation " + self.dev_list[i]
+                print("ERROR : file creation " + self.dev_list[i])
                 self.del_loopback()
                 return False
             cmd = "losetup /dev/loop" + str(i) + " " + dev
-            print cmd
+            print(cmd)
             if self.exec_cmd(cmd) != 0:
-                print "ERROR : " + cmd + " failed."
+                print("ERROR : " + cmd + " failed.")
                 return False
 
             self.dev_list.append(dev)
@@ -103,14 +103,14 @@ class Loopback:
         loop_cnt = 0
         for i in self.dev_list:
             cmd = "losetup -d /dev/loop" + str(loop_cnt)
-            print cmd
+            print(cmd)
             self.exec_cmd(cmd)
             os.remove(i)
             loop_cnt += 1
 
         time.sleep(1)
         if self.exec_cmd("modprobe -r loop") != 0:
-            print "ERROR : failed to remove loop module."
+            print("ERROR : failed to remove loop module.")
             ret = False
 
         return ret

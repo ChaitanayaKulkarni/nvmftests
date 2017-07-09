@@ -56,27 +56,27 @@ class NVMeOFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print "####Creating ns " + self.ns_path
+        print("####Creating ns " + self.ns_path)
         try:
             os.makedirs(self.ns_path)
         except Exception, err:
-            print self.err_str + str(err) + "."
+            print(self.err_str + str(err) + ".")
             return False
 
         cmd = "echo -n " + self.ns_attr['device_path'] + " > " + \
               self.ns_path + "/device_path"
         ret = self.exec_cmd(cmd)
         if ret is False:
-            print self.err_str + "failed to configure device path."
+            print(self.err_str + "failed to configure device path.")
             return False
 
         if self.ns_attr['enable'] == '1':
             ret = self.ns_enable()
             if ret is False:
-                print self.err_str + "enable ns " + self.ns_path + " failed."
+                print(self.err_str + "enable ns " + self.ns_path + " failed.")
                 return False
 
-        print "NS " + self.ns_path + " enabled."
+        print("NS " + self.ns_path + " enabled.")
         return True
 
     def exec_cmd(self, cmd):
@@ -90,7 +90,7 @@ class NVMeOFTargetNamespace(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception, err:
-            print self.err_str + str(err) + "."
+            print(self.err_str + str(err) + ".")
             return False
 
         return True if proc.wait() == 0 else False
@@ -122,11 +122,11 @@ class NVMeOFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print "Removing NS " + self.ns_path
+        print("Removing NS " + self.ns_path)
         ret = os.path.exists(self.ns_path)
         if ret is True:
             # TODO : improve cleanup funcitonality.
             shutil.rmtree(self.ns_path, ignore_errors=True)
         else:
-            print self.err_str + "path " + self.ns_path + " doesn't exists."
+            print(self.err_str + "path " + self.ns_path + " doesn't exists.")
         return ret

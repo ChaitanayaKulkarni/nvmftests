@@ -99,7 +99,7 @@ class NVMeOFHostNamespace(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             return False
 
         return True if proc.wait() == 0 else False
@@ -134,7 +134,7 @@ class NVMeOFHostNamespace(object):
                                 stdout=subprocess.PIPE)
         ret = proc.wait()
         if ret != 0:
-            print self.err_str + "nvme id-ctrl failed"
+            print(self.err_str + "nvme id-ctrl failed")
             return False
 
         i = 0
@@ -172,29 +172,29 @@ class NVMeOFHostNamespace(object):
                   - True on success, False on failure.
         """
         cmd = "mkfs.ext4 " + self.ns_dev
-        print "Running " + cmd + "."
+        print("Running " + cmd + ".")
         ret = self.exec_cmd(cmd)
         if ret is False:
-            print self.err_str + "mkfs.ext4 failed " + self.ns_dev + "."
+            print(self.err_str + "mkfs.ext4 failed " + self.ns_dev + ".")
             return False
 
         self.mount_path = "/mnt/" + self.ns_dev.split("/")[2]
         if os.path.exists(self.mount_path) is True:
-            print self.err_str + "path " + self.mount_path + " exists."
+            print(self.err_str + "path " + self.mount_path + " exists.")
             return False
 
         try:
             os.makedirs(self.mount_path)
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             return False
 
         ret = self.exec_cmd("mount " + self.ns_dev + " " + self.mount_path)
         if ret is False:
-            print self.err_str + "mount failed " + self.ns_dev + "."
+            print(self.err_str + "mount failed " + self.ns_dev + ".")
             return False
 
-        print "mount " + self.ns_dev + " " + self.mount_path + "successful."
+        print("mount " + self.ns_dev + " " + self.mount_path + "successful.")
         return True
 
     def is_mounted(self):
@@ -218,20 +218,20 @@ class NVMeOFHostNamespace(object):
                   - True on success, False on failure.
         """
         if self.is_mounted() is False:
-            print self.err_str + self.ns_dev + " is not mounted."
+            print(self.err_str + self.ns_dev + " is not mounted.")
             return False
 
         cmd = "umount " + self.mount_path
         ret = self.exec_cmd(cmd)
         if ret is False:
-            print self.err_str + "umount failed " + self.ns_dev + "."
+            print(self.err_str + "umount failed " + self.ns_dev + ".")
             return False
 
-        print "##### UNMOUNT SUCCESS " + cmd + "."
+        print("##### UNMOUNT SUCCESS " + cmd + ".")
         try:
             os.rmdir(self.mount_path)
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             ret = False
 
         return ret
@@ -248,13 +248,13 @@ class NVMeOFHostNamespace(object):
         elif iocfg['IODIR'] == "write":
             iocfg['OF'] = self.ns_dev
         else:
-            print self.err_str + "io config " + iocfg + " not supported."
+            print(self.err_str + "io config " + iocfg + " not supported.")
             return False
 
         if self.worker_thread.is_alive():
             self.workq.put(iocfg)
         else:
-            print self.err_str + "worker thread is not running."
+            print(self.err_str + "worker thread is not running.")
             return False
 
         return True
@@ -266,11 +266,11 @@ class NVMeOFHostNamespace(object):
             - Returns :
                   - None.
         """
-        print "Checking for worker thread " + self.ns_dev + "."
+        print("Checking for worker thread " + self.ns_dev + ".")
         if self.worker_thread.is_alive():
-            print "Waiting for thread completion " + self.ns_dev + "."
+            print("Waiting for thread completion " + self.ns_dev + ".")
             self.workq.join()
-        print "# WAIT COMPLETE " + self.ns_dev + "."
+        print("# WAIT COMPLETE " + self.ns_dev + ".")
 
     def del_ns(self):
         """ Namespace clanup.
@@ -279,7 +279,7 @@ class NVMeOFHostNamespace(object):
             - Returns :
                   - None.
         """
-        print "##### Deleting Namespace "
+        print("##### Deleting Namespace ")
         self.workq.put(None)
         if self.is_mounted() is True:
             self.unmount_cleanup()

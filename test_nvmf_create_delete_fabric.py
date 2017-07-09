@@ -50,7 +50,7 @@ class TestNVMFCreateDeleteFabric(NVMeOFTest):
         time.sleep(1)
 
     def setUp(self):
-        print "configuering loopback"
+        print("configuering loopback")
         self.loopdev.init_loopback()
         time.sleep(1)
         target_type = "loop"
@@ -63,7 +63,7 @@ class TestNVMFCreateDeleteFabric(NVMeOFTest):
         self.host_subsys.del_host()
         time.sleep(1)
         self.target_subsys.del_target()
-        print "deleting loopback"
+        print("deleting loopback")
         self.loopdev.del_loopback()
 
     def test_create_delete_fabric(self):

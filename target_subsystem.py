@@ -55,26 +55,26 @@ class NVMeOFTargetSubsystem(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print "Loading nvme-loop module ..."
+        print("Loading nvme-loop module ...")
         ret = self.exec_cmd("modprobe nvme-loop")
         if ret is False:
-            print self.err_str + "unable to load nvme-loop module."
+            print(self.err_str + "unable to load nvme-loop module.")
             return False
         # create subsystem dir
-        print "Creating subsys path " + self.subsys_path + "."
+        print("Creating subsys path " + self.subsys_path + ".")
         try:
             os.makedirs(self.subsys_path)
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             return False
         # allow any host
-        print "Configuring allowed hosts ..."
+        print("Configuring allowed hosts ...")
         ret = self.exec_cmd("echo " + self.attr_allow_any_host + " >" +
                             self.subsys_path + "/attr_allow_any_host")
         status = "Target Subsys " + self.subsys_path + " created successfully."
         if ret is False:
             status = self.err_str + "create " + self.subsys_path + " failed."
-        print status
+        print(status)
 
         return ret
 
@@ -89,7 +89,7 @@ class NVMeOFTargetSubsystem(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception, err:
-            print self.err_str + str(err) + "."
+            print(self.err_str + str(err) + ".")
             return False
 
         return True if proc.wait() == 0 else False
@@ -116,11 +116,11 @@ class NVMeOFTargetSubsystem(object):
             - Returns :
                 - None.
         """
-        print "Deleting namespace " + self.nqn + " : " + ns.ns_path
+        print("Deleting namespace " + self.nqn + " : " + ns.ns_path)
 
         ret = ns.del_ns()
         if ret is False:
-            print "ERROR : delete ns failed for " + ns.ns_path + "."
+            print("ERROR : delete ns failed for " + ns.ns_path + ".")
 
         return ret
 
@@ -131,7 +131,7 @@ class NVMeOFTargetSubsystem(object):
             - Returns :
                 - None.
         """
-        print "Deleting subsystem " + self.nqn
+        print("Deleting subsystem " + self.nqn)
         for ns in self.ns_list:
             self.del_ns(ns)
 

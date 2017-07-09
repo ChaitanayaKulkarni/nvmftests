@@ -62,16 +62,16 @@ class NVMeOFTargetPort(object):
                 - True on success, False on failure.
         """
         if self.port_conf['addr_trtype'] != "loop":
-            print self.err_str + "only loop transport type is supported."
+            print(self.err_str + "only loop transport type is supported.")
             return False
 
         ret = self.exec_cmd("mkdir -p " + self.port_path)
         if ret is False:
-            print self.err_str + "failed to create " + self.port_path + "."
+            print(self.err_str + "failed to create " + self.port_path + ".")
             return False
 
         # initialize transport type
-        print "Port " + self.port_path + " created successfully."
+        print("Port " + self.port_path + " created successfully.")
 
         ret = self.exec_cmd("echo -n \"" + self.port_conf['addr_trtype'] +
                             "\" > " + self.port_path + "/addr_trtype")
@@ -79,7 +79,7 @@ class NVMeOFTargetPort(object):
         if ret is False:
             status = self.err_str + "trtype " + self.port_path + " failed."
 
-        print status
+        print(status)
         return ret
 
     def exec_cmd(self, cmd):
@@ -93,7 +93,7 @@ class NVMeOFTargetPort(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception, err:
-            print self.err_str + str(err) + "."
+            print(self.err_str + str(err) + ".")
             return False
 
         return True if proc.wait() == 0 else False
@@ -107,7 +107,7 @@ class NVMeOFTargetPort(object):
         """
         src = self.cfgfs + "/nvmet/subsystems/" + subsys_name
         if not os.path.exists(src):
-            print self.err_str + "subsystem '" + src + "' not present."
+            print(self.err_str + "subsystem '" + src + "' not present.")
             return False
         dest = self.port_path + "/subsystems/"
         ret = self.exec_cmd("ln -s " + src + " " + dest)
@@ -120,20 +120,20 @@ class NVMeOFTargetPort(object):
             -Returns :
                   - True on success, False on failure.
         """
-        print "Deleeting port " + self.port_id
+        print("Deleeting port " + self.port_id)
         subsys_symlink = self.port_path + "/subsystem/"
         try:
 
             if os.path.isdir(subsys_symlink):
                 shutil.rmtree(subsys_symlink, ignore_errors=True)
-                print "Unlink subsystem fromn port successfully."
+                print("Unlink subsystem fromn port successfully.")
 
             if os.path.isdir(self.port_path):
                 shutil.rmtree(self.port_path, ignore_errors=True)
 
         except Exception, err:
-            print self.err_str + str(err) + "."
+            print(self.err_str + str(err) + ".")
             return False
 
-        print "Removed port " + self.port_path + " successfully."
+        print("Removed port " + self.port_path + " successfully.")
         return True

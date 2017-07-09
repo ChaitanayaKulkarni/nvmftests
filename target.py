@@ -60,7 +60,7 @@ class NVMeOFTarget(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception, err:
-            print self.err_str + str(err) + "."
+            print(self.err_str + str(err) + ".")
             return False
 
         return True if proc.wait() == 0 else False
@@ -76,15 +76,15 @@ class NVMeOFTarget(object):
         if ret is False:
             ret = self.exec_cmd("mount -t configfs none " + self.cfgfs)
             if ret is False:
-                print self.err_str + "failed to mount configfs."
+                print(self.err_str + "failed to mount configfs.")
                 sys.exit(ret)
             ret = self.exec_cmd("mountpoint -q " + self.cfgfs)
             if ret is True:
-                print "Configfs mounted at " + self.cfgfs + "."
+                print("Configfs mounted at " + self.cfgfs + ".")
                 ret = True
             else:
-                print self.err_str + "unable to mount configfs at " + \
-                    self.cfgfs + "."
+                print(self.err_str + "unable to mount configfs at " + \
+                    self.cfgfs + ".")
                 ret = False
         return ret
 
@@ -100,7 +100,7 @@ class NVMeOFTarget(object):
         """
         ret = self.exec_cmd("modprobe nvme-loop")
         if ret is False:
-            print self.err_str + "failed to load nvme-loop."
+            print(self.err_str + "failed to load nvme-loop.")
             return False
 
         try:
@@ -108,7 +108,7 @@ class NVMeOFTarget(object):
             config = json.loads(config_file_handle.read())
             config_file_handle.close()
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             return False
 
         # Subsystem
@@ -172,15 +172,15 @@ class NVMeOFTarget(object):
         """
         ret = self.exec_cmd("modprobe nvmet")
         if ret is False:
-            print self.err_str + "unable to load nvmet module."
+            print(self.err_str + "unable to load nvmet module.")
             return False
 
         ret = False
         if self.target_type == "loop":
-            print "Configuring loop target"
+            print("Configuring loop target")
             ret = self.config_loop_target(config_file)
         else:
-            print self.err_str + "only loop target type is supported."
+            print(self.err_str + "only loop target type is supported.")
 
         return ret
 
@@ -191,7 +191,7 @@ class NVMeOFTarget(object):
             -Returns :
                 - None
         """
-        print "Cleanup is in progress..."
+        print("Cleanup is in progress...")
 
         for port in self.port_list:
             port.del_port()
@@ -200,10 +200,10 @@ class NVMeOFTarget(object):
             subsys.del_subsys()
 
         time.sleep(1)
-        print "Removing Modules :- "
+        print("Removing Modules :- ")
         self.exec_cmd("modprobe -r nvme_loop")
         time.sleep(1)
         self.exec_cmd("modprobe -r nvmet")
         time.sleep(1)
         self.exec_cmd("modprobe -r nvme_fabrics")
-        print "DONE."
+        print("DONE.")

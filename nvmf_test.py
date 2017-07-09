@@ -35,11 +35,11 @@ def __dd_worker__(iocfg):
     """
     cmd = "dd if=" + iocfg['IF'] + " of=" + iocfg['OF'] + \
         " bs=" + iocfg['BS'] + " count=" + iocfg['COUNT']
-    print " Running IOs now CMD :------- " + cmd
+    print(" Running IOs now CMD :------- " + cmd)
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     ret = True
     if proc.wait() != iocfg['RC']:
-        print "ERROR : Failed to execute " + cmd + "."
+        print("ERROR : Failed to execute " + cmd + ".")
         ret = False
 
     return ret

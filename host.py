@@ -57,7 +57,7 @@ class NVMeOFHost(object):
         """
         ret = self.exec_cmd("modprobe nvme-fabrics")
         if ret is False:
-            print self.err_str + "unable to load nvme-fabrics."
+            print(self.err_str + "unable to load nvme-fabrics.")
             return False
         return True
 
@@ -72,7 +72,7 @@ class NVMeOFHost(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             return False
 
         return True if proc.wait() == 0 else False
@@ -89,22 +89,22 @@ class NVMeOFHost(object):
         """
         ret = self.exec_cmd("modprobe nvme-loop")
         if ret is False:
-            print self.err_str + "failed to load nvme-loop."
+            print(self.err_str + "failed to load nvme-loop.")
             return False
         try:
             config_file_handle = open(config_file, "r")
             config = json.loads(config_file_handle.read())
             config_file_handle.close()
         except Exception, err:
-            print self.err_str + str(err)
+            print(self.err_str + str(err))
             return False
 
         for sscfg in config['subsystems']:
             ctrl = NVMeOFHostController(sscfg['nqn'], "loop")
             ret = ctrl.init_ctrl()
             if ret is False:
-                print self.err_str + "failed init_ctrl() " + \
-                      str(ctrl.ctrl_dev) + "."
+                print(self.err_str + "failed init_ctrl() " + \
+                      str(ctrl.ctrl_dev) + ".")
                 return False
             self.ctrl_list.append(ctrl)
         return True
@@ -117,12 +117,12 @@ class NVMeOFHost(object):
             - Returns :
                   - None.
         """
-        print "Starting IOs parallelly on all controllers ..."
+        print("Starting IOs parallelly on all controllers ...")
         for ctrl in self.ctrl_list:
             if ctrl.run_io_all_ns(iocfg) is False:
                 return False
 
-        print "Waiting for all threads to finish the IOs..."
+        print("Waiting for all threads to finish the IOs...")
         for ctrl in self.ctrl_list:
             ctrl.wait_io_all_ns()
 
@@ -135,7 +135,7 @@ class NVMeOFHost(object):
             - Returns :
                   - None.
         """
-        print "Starting IOs seq ..."
+        print("Starting IOs seq ...")
         ret = None
         for ctrl in self.ctrl_list:
             ret = ctrl.run_io_seq(iocfg)
@@ -234,10 +234,10 @@ class NVMeOFHost(object):
         """
         ret = False
         if self.target_type == "loop":
-            print "Configuring loop host"
+            print("Configuring loop host")
             ret = self.config_loop_host(config_file)
         else:
-            print self.err_str + "only loop target type is supported."
+            print(self.err_str + "only loop target type is supported.")
         return ret
 
     def del_host(self):
