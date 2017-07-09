@@ -355,7 +355,7 @@ class NVMeOFHostController(object):
             if line.startswith('subnqn') or \
                line.startswith('NVME Identify Controller'):
                 continue
-            if line.startswith("ps ") or line.startswith("          rwt"):
+            if line.startswith('ps ') or line.strip().startswith('rwt'):
                 continue
             key, val = line.split(':')
             self.ctrl_dict[key.strip()] = val.strip()
