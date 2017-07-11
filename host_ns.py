@@ -26,6 +26,7 @@ import Queue
 import threading
 import subprocess
 
+from utils.fs import Ext4FS
 
 class NVMeOFNSThread(threading.Thread):
     """
@@ -85,7 +86,7 @@ class NVMeOFHostNamespace(object):
         self.mount_path = None
         self.worker_thread = None
         self.workq = Queue.Queue()
-
+        self.ext4fs = Ext4FS(self.ns_dev)
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def exec_cmd(self, cmd):
@@ -171,44 +172,10 @@ class NVMeOFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        cmd = "mkfs.ext4 " + self.ns_dev
-        print("Running " + cmd + ".")
-        ret = self.exec_cmd(cmd)
-        if ret is False:
-            print(self.err_str + "mkfs.ext4 failed " + self.ns_dev + ".")
-            return False
+        if self.ext4fs.mkfs() is True and self.ext4fs.mount():
+            return True
 
-        self.mount_path = "/mnt/" + self.ns_dev.split("/")[2]
-        if os.path.exists(self.mount_path) is True:
-            print(self.err_str + "path " + self.mount_path + " exists.")
-            return False
-
-        try:
-            os.makedirs(self.mount_path)
-        except Exception, err:
-            print(self.err_str + str(err))
-            return False
-
-        ret = self.exec_cmd("mount " + self.ns_dev + " " + self.mount_path)
-        if ret is False:
-            print(self.err_str + "mount failed " + self.ns_dev + ".")
-            return False
-
-        print("mount " + self.ns_dev + " " + self.mount_path + "successful.")
-        return True
-
-    def is_mounted(self):
-        """ Check if namespace is mounted.
-            - Args :
-                  - None.
-            - Returns :
-                  - True on success, False on failure.
-        """
-        ret = False
-        if self.mount_path is not None:
-            ret = self.exec_cmd("mountpoint -q " + self.mount_path)
-
-        return ret
+        return False 
 
     def unmount_cleanup(self):
         """ Unmount the namespace and cleanup the mount path.
@@ -217,24 +184,7 @@ class NVMeOFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        if self.is_mounted() is False:
-            print(self.err_str + self.ns_dev + " is not mounted.")
-            return False
-
-        cmd = "umount " + self.mount_path
-        ret = self.exec_cmd(cmd)
-        if ret is False:
-            print(self.err_str + "umount failed " + self.ns_dev + ".")
-            return False
-
-        print("##### UNMOUNT SUCCESS " + cmd + ".")
-        try:
-            os.rmdir(self.mount_path)
-        except Exception, err:
-            print(self.err_str + str(err))
-            ret = False
-
-        return ret
+        return self.ext4fs.umount()
 
     def start_io(self, iocfg):
         """ Add new work item to workqueue. Triggers wake up in worker thread.
@@ -281,5 +231,5 @@ class NVMeOFHostNamespace(object):
         """
         print("##### Deleting Namespace ")
         self.workq.put(None)
-        if self.is_mounted() is True:
-            self.unmount_cleanup()
+
+        self.unmount_cleanup()

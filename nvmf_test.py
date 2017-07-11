@@ -51,7 +51,7 @@ class NVMeOFTest(object):
         self.data_size = 128 * 1024 * 1024
         self.block_size = 4096
         self.nr_devices = 10
-        self.mount_path = "/mnt/nvme0n1/"
+        self.mount_path = "/mnt/"
         self.test_log_dir = "XXX"
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
 
