@@ -40,4 +40,5 @@ cleanall: clean
 	@rm -fr Documentation logs/*
 
 clean:
-	@rm -fr *.pyc
+	@find . -name \*pyc | xargs rm -fr
+	@find . -name __pycache__ | xargs rm -fr
