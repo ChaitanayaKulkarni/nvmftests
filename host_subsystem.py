@@ -287,7 +287,7 @@ class NVMeOFHostController(object):
 
             print("Found NS " + ns_dev)
             host_ns = NVMeOFHostNamespace(ns_dev)
-            host_ns.init_ns()
+            host_ns.init()
             self.ns_list.append(host_ns)
         time.sleep(1)
         ret = self.validate_sysfs_host_ctrl_ns(self.ctrl_dev)

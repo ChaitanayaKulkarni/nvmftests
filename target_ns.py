@@ -50,7 +50,7 @@ class NVMeOFTargetNamespace(object):
         self.ns_attr['enable'] = ns_attr['enable']
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
-    def init_ns(self):
+    def init(self):
         """ Create and initialize namespace.
             - Args :
                 - None.

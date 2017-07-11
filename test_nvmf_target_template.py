@@ -52,11 +52,11 @@ class TestNVMFTargetTemplate(NVMeOFTest):
         self.loopdev.init_loopback()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config_target()
+        self.target_subsys.config()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.target_subsys.del_target()
+        self.target_subsys.delete()
         self.loopdev.del_loopback()
 
     def test_mkfs(self):

@@ -55,14 +55,14 @@ class TestNVMFCreateDeleteFabric(NVMeOFTest):
         time.sleep(1)
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config_target()
+        self.target_subsys.config()
         self.host_subsys = NVMeOFHost(target_type)
 
     def tearDown(self):
         time.sleep(1)
-        self.host_subsys.del_host()
+        self.host_subsys.delete()
         time.sleep(1)
-        self.target_subsys.del_target()
+        self.target_subsys.delete()
         print("deleting loopback")
         self.loopdev.del_loopback()
 

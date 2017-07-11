@@ -50,10 +50,10 @@ class TestNVMFCreateTarget(NVMeOFTest):
 
     def tearDown(self):
         """ Post section of testcase """
-        self.target_subsys.del_target()
+        self.target_subsys.delete()
         self.loopdev.del_loopback()
 
     def test_create_target(self):
         """ Testcase main """
-        ret = self.target_subsys.config_target()
+        ret = self.target_subsys.config()
         assert_equal(ret, True, "ERROR : config target failed.")

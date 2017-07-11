@@ -89,7 +89,7 @@ class NVMeOFHostNamespace(object):
         self.ext4fs = Ext4FS(self.ns_dev)
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
-    def init_ns(self):
+    def init(self):
         """ Initialize nameapce, create worker thread and
             build controller attributes.
             - Args :

@@ -225,7 +225,7 @@ class NVMeOFHost(object):
             print(self.err_str + "only loop target type is supported.")
         return ret
 
-    def del_host(self):
+    def delete(self):
         """ Delete all the Host Controllers.
             - Args :
                   - None.

@@ -49,7 +49,7 @@ class NVMeOFTargetSubsystem(object):
         self.attr_allow_any_host = attr_allow_any_host
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
-    def init_subsys(self):
+    def init(self):
         """ create and initialize subsystem.
             - Args :
                 - None.
@@ -89,7 +89,7 @@ class NVMeOFTargetSubsystem(object):
         ns_id = self.generate_next_ns_id()
 
         ns = NVMeOFTargetNamespace(self.cfgfs, self.nqn, ns_id, **ns_attr)
-        if ns.init_ns() is False:
+        if ns.init() is False:
             return None
         self.ns_list.append(ns)
         return ns
@@ -109,7 +109,7 @@ class NVMeOFTargetSubsystem(object):
 
         return ret
 
-    def del_subsys(self):
+    def delete(self):
         """ Delete subsystem and associated namespace(s).
             - Args :
                 - None.

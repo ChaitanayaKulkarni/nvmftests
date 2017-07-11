@@ -104,7 +104,7 @@ class NVMeOFTarget(object):
                                            sscfg['nqn'],
                                            sscfg['allowed_hosts'][0],
                                            sscfg['attr']['allow_any_host'])
-            ret = subsys.init_subsys()
+            ret = subsys.init()
             if ret is False:
                 # call unwind code here.
                 return False
@@ -134,7 +134,7 @@ class NVMeOFTarget(object):
             port_cfg['subsystems'] = pcfg['subsystems']
 
             port = NVMeOFTargetPort(self.cfgfs, port_cfg['portid'], **port_cfg)
-            ret = port.init_port()
+            ret = port.init()
             if ret is False:
                 # call unwind code here.
                 return False
@@ -149,7 +149,7 @@ class NVMeOFTarget(object):
 
         return True
 
-    def config_target(self, config_file="loop.json"):
+    def config(self, config_file="loop.json"):
         """ Wrapper for creating target configuration.
             - Args :
                 - None
@@ -170,7 +170,7 @@ class NVMeOFTarget(object):
 
         return ret
 
-    def del_target(self):
+    def delete(self):
         """ Target Cleanup.
             - Args :
                 - None
@@ -183,7 +183,7 @@ class NVMeOFTarget(object):
             port.del_port()
 
         for subsys in self.subsys_list:
-            subsys.del_subsys()
+            subsys.delete()
 
         time.sleep(1)
         print("Removing Modules :- ")

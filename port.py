@@ -55,7 +55,7 @@ class NVMeOFTargetPort(object):
         self.port_conf['subsystems'] = port_conf['subsystems']
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
-    def init_port(self):
+    def init(self):
         """ Create and initialize port.
             - Args :
                 - None.
