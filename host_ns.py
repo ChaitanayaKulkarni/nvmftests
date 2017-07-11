@@ -206,7 +206,7 @@ class NVMeOFHostNamespace(object):
             self.workq.join()
         print("# WAIT COMPLETE " + self.ns_dev + ".")
 
-    def del_ns(self):
+    def delete(self):
         """ Namespace clanup.
             - Args :
                   - None.

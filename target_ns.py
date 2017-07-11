@@ -100,7 +100,7 @@ class NVMeOFTargetNamespace(object):
         self.ns_attr['enable'] = "1"
         return Cmd.exec_cmd("echo 1 > " + self.ns_path + "/enable")
 
-    def del_ns(self):
+    def delete(self):
         """ Delete This Namespace.
             - Args :
                 - None.

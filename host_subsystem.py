@@ -380,7 +380,7 @@ class NVMeOFHostController(object):
         """
         print("Deleting subsystem " + self.nqn)
         for host_ns in self.ns_list:
-            host_ns.del_ns()
+            host_ns.delete()
         cmd = "dirname $(grep -ls " + self.nqn + \
               " /sys/class/nvme-fabrics/ctl/*/subsysnqn)"
         try:

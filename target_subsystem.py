@@ -94,16 +94,16 @@ class NVMeOFTargetSubsystem(object):
         self.ns_list.append(ns)
         return ns
 
-    def del_ns(self, ns):
+    def delete_ns(self, ns):
         """ Delete single namespace.
             - Args :
-                - None.
+                - ns : target namespace object to be deleted.
             - Returns :
                 - None.
         """
         print("Deleting namespace " + self.nqn + " : " + ns.ns_path)
 
-        ret = ns.del_ns()
+        ret = ns.delete()
         if ret is False:
             print("ERROR : delete ns failed for " + ns.ns_path + ".")
 
@@ -118,7 +118,7 @@ class NVMeOFTargetSubsystem(object):
         """
         print("Deleting subsystem " + self.nqn)
         for ns in self.ns_list:
-            self.del_ns(ns)
+            self.delete_ns(ns)
 
         if os.path.exists(self.subsys_path):
             shutil.rmtree(self.subsys_path, ignore_errors=True)
