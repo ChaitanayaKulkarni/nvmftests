@@ -1,4 +1,3 @@
-
 # Copyright (c) 2016-2017 Western Digital Corporation or its affiliates.
 #
 # This program is free software; you can redistribute it and/or
