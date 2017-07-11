@@ -24,6 +24,7 @@ import os
 import shutil
 import subprocess
 
+from utils.shell import Cmd
 from target_ns import NVMeOFTargetNamespace
 
 
@@ -56,7 +57,7 @@ class NVMeOFTargetSubsystem(object):
                   - True on success, False on failure.
         """
         print("Loading nvme-loop module ...")
-        ret = self.exec_cmd("modprobe nvme-loop")
+        ret = Cmd.exec_cmd("modprobe nvme-loop")
         if ret is False:
             print(self.err_str + "unable to load nvme-loop module.")
             return False
@@ -69,7 +70,7 @@ class NVMeOFTargetSubsystem(object):
             return False
         # allow any host
         print("Configuring allowed hosts ...")
-        ret = self.exec_cmd("echo " + self.attr_allow_any_host + " >" +
+        ret = Cmd.exec_cmd("echo " + self.attr_allow_any_host + " >" +
                             self.subsys_path + "/attr_allow_any_host")
         status = "Target Subsys " + self.subsys_path + " created successfully."
         if ret is False:
@@ -77,22 +78,6 @@ class NVMeOFTargetSubsystem(object):
         print(status)
 
         return ret
-
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - True if cmd returns 0, False otherwise.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err) + ".")
-            return False
-
-        return True if proc.wait() == 0 else False
 
     def create_ns(self, **ns_attr):
         """ Create, initialize and store namespace in subsystem's list.

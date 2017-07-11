@@ -26,6 +26,8 @@ import time
 import subprocess
 from nose.tools import assert_equal
 from port import NVMeOFTargetPort
+
+from utils.shell import Cmd
 from target_subsystem import NVMeOFTargetSubsystem
 
 
@@ -49,22 +51,6 @@ class NVMeOFTarget(object):
 
         assert_equal(self.load_configfs(), True)
 
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - True if cmd returns 0, False otherwise.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err) + ".")
-            return False
-
-        return True if proc.wait() == 0 else False
-
     def load_configfs(self):
         """ Load configfs.
             - Args :
@@ -72,13 +58,13 @@ class NVMeOFTarget(object):
             -Returns :
                   - True on success, False on failure.
         """
-        ret = self.exec_cmd("mountpoint -q " + self.cfgfs)
+        ret = Cmd.exec_cmd("mountpoint -q " + self.cfgfs)
         if ret is False:
-            ret = self.exec_cmd("mount -t configfs none " + self.cfgfs)
+            ret = Cmd.exec_cmd("mount -t configfs none " + self.cfgfs)
             if ret is False:
                 print(self.err_str + "failed to mount configfs.")
                 sys.exit(ret)
-            ret = self.exec_cmd("mountpoint -q " + self.cfgfs)
+            ret = Cmd.exec_cmd("mountpoint -q " + self.cfgfs)
             if ret is True:
                 print("Configfs mounted at " + self.cfgfs + ".")
                 ret = True
@@ -98,7 +84,7 @@ class NVMeOFTarget(object):
             -Returns :
                   - True on success, False on failure.
         """
-        ret = self.exec_cmd("modprobe nvme-loop")
+        ret = Cmd.exec_cmd("modprobe nvme-loop")
         if ret is False:
             print(self.err_str + "failed to load nvme-loop.")
             return False
@@ -170,7 +156,7 @@ class NVMeOFTarget(object):
             -Returns :
                 - None
         """
-        ret = self.exec_cmd("modprobe nvmet")
+        ret = Cmd.exec_cmd("modprobe nvmet")
         if ret is False:
             print(self.err_str + "unable to load nvmet module.")
             return False
@@ -201,9 +187,9 @@ class NVMeOFTarget(object):
 
         time.sleep(1)
         print("Removing Modules :- ")
-        self.exec_cmd("modprobe -r nvme_loop")
+        Cmd.exec_cmd("modprobe -r nvme_loop")
         time.sleep(1)
-        self.exec_cmd("modprobe -r nvmet")
+        Cmd.exec_cmd("modprobe -r nvmet")
         time.sleep(1)
-        self.exec_cmd("modprobe -r nvme_fabrics")
+        Cmd.exec_cmd("modprobe -r nvme_fabrics")
         print("DONE.")

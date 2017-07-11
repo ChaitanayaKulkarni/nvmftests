@@ -24,6 +24,7 @@ import os
 import shutil
 import subprocess
 
+from utils.shell import Cmd
 
 class NVMeOFTargetNamespace(object):
     """
@@ -65,7 +66,7 @@ class NVMeOFTargetNamespace(object):
 
         cmd = "echo -n " + self.ns_attr['device_path'] + " > " + \
               self.ns_path + "/device_path"
-        ret = self.exec_cmd(cmd)
+        ret = Cmd.exec_cmd(cmd)
         if ret is False:
             print(self.err_str + "failed to configure device path.")
             return False
@@ -79,22 +80,6 @@ class NVMeOFTargetNamespace(object):
         print("NS " + self.ns_path + " enabled.")
         return True
 
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - True if cmd returns 0, False otherwise.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err) + ".")
-            return False
-
-        return True if proc.wait() == 0 else False
-
     def ns_disable(self):
         """ Disable Namespace.
             - Args :
@@ -103,7 +88,7 @@ class NVMeOFTargetNamespace(object):
                 - True on success, False on failure.
         """
         self.ns_attr['enable'] = "0"
-        return self.exec_cmd("echo 0 > " + self.ns_path + "/enable")
+        return Cmd.exec_cmd("echo 0 > " + self.ns_path + "/enable")
 
     def ns_enable(self):
         """ Enable Namespace.
@@ -113,7 +98,7 @@ class NVMeOFTargetNamespace(object):
                   - True on success, False on failure.
         """
         self.ns_attr['enable'] = "1"
-        return self.exec_cmd("echo 1 > " + self.ns_path + "/enable")
+        return Cmd.exec_cmd("echo 1 > " + self.ns_path + "/enable")
 
     def del_ns(self):
         """ Delete This Namespace.

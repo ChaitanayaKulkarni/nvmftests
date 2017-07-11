@@ -24,6 +24,7 @@ import json
 import random
 import subprocess
 
+from utils.shell import Cmd
 from host_subsystem import NVMeOFHostController
 
 
@@ -55,27 +56,11 @@ class NVMeOFHost(object):
             - Returns :
                   - True on success, False on failure.
         """
-        ret = self.exec_cmd("modprobe nvme-fabrics")
+        ret = Cmd.exec_cmd("modprobe nvme-fabrics")
         if ret is False:
             print(self.err_str + "unable to load nvme-fabrics.")
             return False
         return True
-
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - True if cmd returns 0, False otherwise.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err))
-            return False
-
-        return True if proc.wait() == 0 else False
 
     def config_loop_host(self, config_file):
         """ Configure host for loop target :-
@@ -87,7 +72,7 @@ class NVMeOFHost(object):
             -Returns :
                   - True on success, False on failure.
         """
-        ret = self.exec_cmd("modprobe nvme-loop")
+        ret = Cmd.exec_cmd("modprobe nvme-loop")
         if ret is False:
             print(self.err_str + "failed to load nvme-loop.")
             return False

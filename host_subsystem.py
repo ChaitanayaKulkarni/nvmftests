@@ -29,6 +29,7 @@ import string
 import subprocess
 from natsort import natsorted
 
+from utils.shell import Cmd
 from host_ns import NVMeOFHostNamespace
 
 
@@ -52,22 +53,6 @@ class NVMeOFHostController(object):
         self.ns_dev_list = []
         self.transport = transport
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
-
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - True if cmd returns 0, False otherwise.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err))
-            return False
-
-        return True if proc.wait() == 0 else False
 
     def run_io_all_ns(self, iocfg):
         """ Start IOs on all the namespaces of this controller parallelly.
@@ -320,7 +305,7 @@ class NVMeOFHostController(object):
         cmd = "echo  \"transport=" + self.transport + ",nqn=" + \
               self.nqn + "\" > /dev/nvme-fabrics"
         print("CMD :- " + cmd)
-        if self.exec_cmd(cmd) is False:
+        if Cmd.exec_cmd(cmd) is False:
             return False
         time.sleep(1)
         self.ctrl_dev, self.ns_dev_list = self.build_ctrl_ns_list()
@@ -408,7 +393,7 @@ class NVMeOFHostController(object):
                     print(self.err_str + "host ctrl dir " + self.nqn + \
                           " not present.")
                     return False
-                ret = self.exec_cmd("echo > " + line + "/delete_controller")
+                ret = Cmd.exec_cmd("echo > " + line + "/delete_controller")
                 if ret is False:
                     print(self.err_str + "failed to delete ctrl " + \
                           self.nqn + ".")

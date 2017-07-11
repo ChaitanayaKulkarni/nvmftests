@@ -24,6 +24,7 @@ import os
 import shutil
 import subprocess
 
+from utils.shell import Cmd
 
 class NVMeOFTargetPort(object):
     """
@@ -65,7 +66,7 @@ class NVMeOFTargetPort(object):
             print(self.err_str + "only loop transport type is supported.")
             return False
 
-        ret = self.exec_cmd("mkdir -p " + self.port_path)
+        ret = Cmd.exec_cmd("mkdir -p " + self.port_path)
         if ret is False:
             print(self.err_str + "failed to create " + self.port_path + ".")
             return False
@@ -73,7 +74,7 @@ class NVMeOFTargetPort(object):
         # initialize transport type
         print("Port " + self.port_path + " created successfully.")
 
-        ret = self.exec_cmd("echo -n \"" + self.port_conf['addr_trtype'] +
+        ret = Cmd.exec_cmd("echo -n \"" + self.port_conf['addr_trtype'] +
                             "\" > " + self.port_path + "/addr_trtype")
         status = "Port " + self.port_path + " initialized successfully."
         if ret is False:
@@ -81,22 +82,6 @@ class NVMeOFTargetPort(object):
 
         print(status)
         return ret
-
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - Value of the command.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err) + ".")
-            return False
-
-        return True if proc.wait() == 0 else False
 
     def add_subsys(self, subsys_name):
         """ Link Subsystem to this port.
@@ -110,7 +95,7 @@ class NVMeOFTargetPort(object):
             print(self.err_str + "subsystem '" + src + "' not present.")
             return False
         dest = self.port_path + "/subsystems/"
-        ret = self.exec_cmd("ln -s " + src + " " + dest)
+        ret = Cmd.exec_cmd("ln -s " + src + " " + dest)
         return ret
 
     def del_port(self):

@@ -24,6 +24,7 @@ import os
 import time
 import subprocess
 
+from utils.shell import Cmd
 
 class Loopback:
     """
@@ -50,19 +51,9 @@ class Loopback:
         self.max_loop = max_loop
         self.dev_list = []
 
-        self.exec_cmd("losetup -D")
-        self.exec_cmd("modprobe -r loop")
-        self.exec_cmd("modprobe loop max_loop=" + str(max_loop))
-
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - Value of the command.
-        """
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        return proc.wait()
+        Cmd.exec_cmd("losetup -D")
+        Cmd.exec_cmd("modprobe -r loop")
+        Cmd.exec_cmd("modprobe loop max_loop=" + str(max_loop))
 
     def init_loopback(self):
         """ Create and initialize Loopback.
@@ -78,14 +69,14 @@ class Loopback:
             cmd = "dd if=/dev/zero of=" + dev + \
                 " count=" + str(count) + " bs=" + str(self.block_size)
             print(cmd)
-            ret = self.exec_cmd(cmd)
-            if ret != 0:
+            ret = Cmd.exec_cmd(cmd)
+            if ret is False:
                 print("ERROR : file creation " + self.dev_list[i])
                 self.del_loopback()
                 return False
             cmd = "losetup /dev/loop" + str(i) + " " + dev
             print(cmd)
-            if self.exec_cmd(cmd) != 0:
+            if Cmd.exec_cmd(cmd) is False:
                 print("ERROR : " + cmd + " failed.")
                 return False
 
@@ -104,12 +95,12 @@ class Loopback:
         for i in self.dev_list:
             cmd = "losetup -d /dev/loop" + str(loop_cnt)
             print(cmd)
-            self.exec_cmd(cmd)
+            Cmd.exec_cmd(cmd)
             os.remove(i)
             loop_cnt += 1
 
         time.sleep(1)
-        if self.exec_cmd("modprobe -r loop") != 0:
+        if Cmd.exec_cmd("modprobe -r loop") is False:
             print("ERROR : failed to remove loop module.")
             ret = False
 

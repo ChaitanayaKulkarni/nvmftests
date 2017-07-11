@@ -89,22 +89,6 @@ class NVMeOFHostNamespace(object):
         self.ext4fs = Ext4FS(self.ns_dev)
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - True if cmd returns 0, False otherwise.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception, err:
-            print(self.err_str + str(err))
-            return False
-
-        return True if proc.wait() == 0 else False
-
     def init_ns(self):
         """ Initialize nameapce, create worker thread and
             build controller attributes.
