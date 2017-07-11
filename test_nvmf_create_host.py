@@ -49,7 +49,7 @@ class TestNVMFCreateHost(NVMeOFTest):
 
     def setUp(self):
         """ Pre section of testcase """
-        self.loopdev.init_loopback()
+        self.loopdev.init()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
         self.target_subsys.config()
@@ -59,7 +59,7 @@ class TestNVMFCreateHost(NVMeOFTest):
         """ Post section of testcase """
         self.host_subsys.delete()
         self.target_subsys.delete()
-        self.loopdev.del_loopback()
+        self.loopdev.delete()
 
     def test_create_host(self):
         """ Testcase main """

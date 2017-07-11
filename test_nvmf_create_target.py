@@ -44,14 +44,14 @@ class TestNVMFCreateTarget(NVMeOFTest):
 
     def setUp(self):
         """ Pre section of testcase """
-        self.loopdev.init_loopback()
+        self.loopdev.init()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
 
     def tearDown(self):
         """ Post section of testcase """
         self.target_subsys.delete()
-        self.loopdev.del_loopback()
+        self.loopdev.delete()
 
     def test_create_target(self):
         """ Testcase main """

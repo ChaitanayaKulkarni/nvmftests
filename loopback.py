@@ -55,7 +55,7 @@ class Loopback:
         Cmd.exec_cmd("modprobe -r loop")
         Cmd.exec_cmd("modprobe loop max_loop=" + str(max_loop))
 
-    def init_loopback(self):
+    def init(self):
         """ Create and initialize Loopback.
             - Args :
                 - None.
@@ -72,7 +72,7 @@ class Loopback:
             ret = Cmd.exec_cmd(cmd)
             if ret is False:
                 print("ERROR : file creation " + self.dev_list[i])
-                self.del_loopback()
+                self.delete()
                 return False
             cmd = "losetup /dev/loop" + str(i) + " " + dev
             print(cmd)
@@ -83,7 +83,7 @@ class Loopback:
             self.dev_list.append(dev)
         return True
 
-    def del_loopback(self):
+    def delete(self):
         """ Delete this Loopback.
             - Args :
                 - None.
