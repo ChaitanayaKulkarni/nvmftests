@@ -63,5 +63,5 @@ class TestNVMFCreateHost(NVMeOFTest):
 
     def test_create_host(self):
         """ Testcase main """
-        ret = self.host_subsys.config_host()
+        ret = self.host_subsys.config()
         assert_equal(ret, True, "ERROR : config host failed")

@@ -68,5 +68,5 @@ class TestNVMFCreateDeleteFabric(NVMeOFTest):
 
     def test_create_delete_fabric(self):
         """ Testcase main """
-        ret = self.host_subsys.config_host()
+        ret = self.host_subsys.config()
         assert_equal(ret, True, "ERROR : config host failed")

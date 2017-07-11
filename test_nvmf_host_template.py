@@ -56,7 +56,7 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.target_subsys = NVMeOFTarget(target_type)
         self.target_subsys.config()
         self.host_subsys = NVMeOFHost(target_type)
-        self.host_subsys.config_host()
+        self.host_subsys.config()
 
     def tearDown(self):
         """ Post section of testcase """

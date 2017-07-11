@@ -180,7 +180,7 @@ class NVMeOFTarget(object):
         print("Cleanup is in progress...")
 
         for port in self.port_list:
-            port.del_port()
+            port.delete()
 
         for subsys in self.subsys_list:
             subsys.delete()

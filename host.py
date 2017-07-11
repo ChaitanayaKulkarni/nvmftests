@@ -62,7 +62,7 @@ class NVMeOFHost(object):
             return False
         return True
 
-    def config_loop_host(self, config_file):
+    def config_loop(self, config_file):
         """ Configure host for loop target :-
             1. Load Loop module(s).
             2. Load config from json file.
@@ -210,7 +210,7 @@ class NVMeOFHost(object):
 
         return ret
 
-    def config_host(self, config_file="loop.json"):
+    def config(self, config_file="loop.json"):
         """ Configure Host based on the target transport.
             - Args :
                   - None.
@@ -220,7 +220,7 @@ class NVMeOFHost(object):
         ret = False
         if self.target_type == "loop":
             print("Configuring loop host")
-            ret = self.config_loop_host(config_file)
+            ret = self.config_loop(config_file)
         else:
             print(self.err_str + "only loop target type is supported.")
         return ret
@@ -234,6 +234,6 @@ class NVMeOFHost(object):
         """
         ret = True
         for subsys in self.ctrl_list:
-            if subsys.del_ctrl() is False:
+            if subsys.delete() is False:
                 ret = False
         return ret

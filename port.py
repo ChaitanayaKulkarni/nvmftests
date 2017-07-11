@@ -98,7 +98,7 @@ class NVMeOFTargetPort(object):
         ret = Cmd.exec_cmd("ln -s " + src + " " + dest)
         return ret
 
-    def del_port(self):
+    def delete(self):
         """ Delete this port.
             - Args :
                 - None

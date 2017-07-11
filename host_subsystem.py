@@ -185,7 +185,7 @@ class NVMeOFHostController(object):
             i += 1
         return True
 
-    def validate_sysfs_host_ctrl_ns(self, ctrl):
+    def validate_sysfs_ns(self, ctrl):
         """ Validate sysfs entries for the host controller and namespace(s)
             - Args :
                   - ctrl : controller id.
@@ -217,7 +217,7 @@ class NVMeOFHostController(object):
         print("sysfs entries for ctrl and ns created successfully.")
         return True
 
-    def build_ctrl_ns_list(self):
+    def build_ns_listt(self):
         """ Generate next available controller and namespace id on the fly.
             Build the ns list for this controller.
             - Args :
@@ -290,7 +290,7 @@ class NVMeOFHostController(object):
             host_ns.init()
             self.ns_list.append(host_ns)
         time.sleep(1)
-        ret = self.validate_sysfs_host_ctrl_ns(self.ctrl_dev)
+        ret = self.validate_sysfs_ns(self.ctrl_dev)
         print("Host sysfs entries are validated " + str(ret))
         return ret
 
@@ -308,7 +308,7 @@ class NVMeOFHostController(object):
         if Cmd.exec_cmd(cmd) is False:
             return False
         time.sleep(1)
-        self.ctrl_dev, self.ns_dev_list = self.build_ctrl_ns_list()
+        self.ctrl_dev, self.ns_dev_list = self.build_ns_listt()
 
         if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
             print(self.err_str + "failed to find char device for host ctrl.")
@@ -371,7 +371,7 @@ class NVMeOFHostController(object):
         """
         return len(self.ns_list) + 1
 
-    def del_ctrl(self):
+    def delete(self):
         """ Delete subsystem and associated namespace(s).
             - Args :
                   - None.
