@@ -291,6 +291,9 @@ class NVMeOFHostController(object):
             self.ns_list.append(host_ns)
         time.sleep(1)
         ret = self.validate_sysfs_ns(self.ctrl_dev)
+		if ret is False:
+			print(self.err_str + "unable to verify sysfs entries")
+			return False
         print("Host sysfs entries are validated " + str(ret))
         return ret
 
