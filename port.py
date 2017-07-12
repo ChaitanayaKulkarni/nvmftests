@@ -105,7 +105,7 @@ class NVMeOFTargetPort(object):
             -Returns :
                   - True on success, False on failure.
         """
-        print("Deleeting port " + self.port_id)
+        print("Deleting port " + self.port_id)
         subsys_symlink = self.port_path + "/subsystem/"
         try:
 
