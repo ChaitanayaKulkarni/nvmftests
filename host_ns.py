@@ -138,15 +138,6 @@ class NVMeOFHostNamespace(object):
             self.ns_dict[key.strip()] = value.strip()
         return True
 
-    def get_value(self, k):
-        """ Access nvme namespace attribute's value based on the key.
-            - Args :
-                  - k : represents namespace's attribute.
-            - Returns :
-                  - None.
-        """
-        return self.ns_dict[k]
-
     def mkfs_seq(self):
         """ Format namespace with file system and mount on the unique
             namespace directory.

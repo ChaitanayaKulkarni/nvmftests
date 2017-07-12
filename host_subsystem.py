@@ -264,15 +264,6 @@ class NVMeOFHostController(object):
         ctrl = "/dev/" + ctrl
         return ctrl, ns_list
 
-    def get_value(self, k):
-        """ Access nvme controller attribute's value based on the kay.
-            - Args :
-                  - k : represents controller's attribute.
-            - Returns :
-                  - value of controller's attribute.
-        """
-        return self.ctrl_dict[k]
-
     def init_ctrl_ns(self):
         """ Initialize and build namespace list and validate sysfs entries.
             - Args :
@@ -291,9 +282,9 @@ class NVMeOFHostController(object):
             self.ns_list.append(host_ns)
         time.sleep(1)
         ret = self.validate_sysfs_ns(self.ctrl_dev)
-		if ret is False:
-			print(self.err_str + "unable to verify sysfs entries")
-			return False
+        if ret is False:
+            print(self.err_str + "unable to verify sysfs entries")
+            return False
         print("Host sysfs entries are validated " + str(ret))
         return ret
 
