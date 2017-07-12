@@ -185,10 +185,10 @@ class NVMeOFHostController(object):
             i += 1
         return True
 
-    def validate_sysfs_ns(self, ctrl):
+    def validate_sysfs_ns(self):
         """ Validate sysfs entries for the host controller and namespace(s)
             - Args :
-                  - ctrl : controller id.
+                  - None.
             - Returns :
                   - True on success, False on failure.
         """
@@ -200,13 +200,13 @@ class NVMeOFHostController(object):
                                 stdout=subprocess.PIPE)
         for line in proc.stdout:
             line = line.strip('\n')
-            if line != ctrl.split("/")[2]:
+            if line != self.ctrl_dev.split("/")[2]:
                 print(self.err_str + "host ctrl " + ctrl + " not present.")
                 return False
         dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" +
-                              ctrl.split("/")[2] + "/")
+                              self.ctrl_dev.split("/")[2] + "/")
 
-        pat = re.compile("^" + ctrl.split("/")[2] + "+n[0-9]+$")
+        pat = re.compile("^" + self.ctrl_dev.split("/")[2] + "+n[0-9]+$")
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
@@ -281,7 +281,7 @@ class NVMeOFHostController(object):
             host_ns.init()
             self.ns_list.append(host_ns)
         time.sleep(1)
-        ret = self.validate_sysfs_ns(self.ctrl_dev)
+        ret = self.validate_sysfs_ns()
         if ret is False:
             print(self.err_str + "unable to verify sysfs entries")
             return False
