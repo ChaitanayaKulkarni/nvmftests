@@ -23,6 +23,8 @@
 import os
 import sys
 import subprocess
+
+from utils.diskio import DD
 from nvmf_test_logger import NVMeOFLogger
 
 
@@ -33,16 +35,7 @@ def __dd_worker__(iocfg):
         - Returns :
                 - None.
     """
-    cmd = "dd if=" + iocfg['IF'] + " of=" + iocfg['OF'] + \
-        " bs=" + iocfg['BS'] + " count=" + iocfg['COUNT']
-    print(" Running IOs now CMD :------- " + cmd)
-    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    ret = True
-    if proc.wait() != iocfg['RC']:
-        print("ERROR : Failed to execute " + cmd + ".")
-        ret = False
-
-    return ret
+    return DD.run_io(iocfg)
 
 
 class NVMeOFTest(object):
