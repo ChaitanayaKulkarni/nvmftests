@@ -387,7 +387,10 @@ class NVMeOFHostController(object):
                     print(self.err_str + "host ctrl dir " + self.nqn + \
                           " not present.")
                     return False
-                ret = Cmd.exec_cmd("echo > " + line + "/delete_controller")
+                cmd= "nvme disconnect -n " + self.nqn
+                print("disconnecting : " + cmd )
+                ret = Cmd.exec_cmd(cmd)
+                #ret = Cmd.exec_cmd("echo > " + line + "/delete_controller")
                 if ret is False:
                     print(self.err_str + "failed to delete ctrl " + \
                           self.nqn + ".")
