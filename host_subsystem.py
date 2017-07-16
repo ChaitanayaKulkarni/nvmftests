@@ -23,7 +23,6 @@
 import re
 import os
 import stat
-import time
 import random
 import string
 import subprocess
@@ -280,7 +279,6 @@ class NVMeOFHostController(object):
             host_ns = NVMeOFHostNamespace(ns_dev)
             host_ns.init()
             self.ns_list.append(host_ns)
-        time.sleep(1)
         ret = self.validate_sysfs_ns()
         if ret is False:
             print(self.err_str + "unable to verify sysfs entries")
@@ -301,7 +299,6 @@ class NVMeOFHostController(object):
         print("CMD :- " + cmd)
         if Cmd.exec_cmd(cmd) is False:
             return False
-        time.sleep(1)
         self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
 
         if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
