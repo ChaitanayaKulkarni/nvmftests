@@ -195,16 +195,16 @@ class NVMeOFHost(object):
 
         return ret
 
-    def mkfs_seq(self):
+    def mkfs_seq(self, fs_type):
         """ Run mkfs, mount fs, run IOs.
             - Args :
-                  - None.
+                  - fs_type : file system type.
             - Returns :
-                  - None.
+                  - True on success, False on failure..
         """
         ret = True
         for ctrl in self.ctrl_list:
-            if ctrl.run_mkfs_seq() is False:
+            if ctrl.run_mkfs_seq(fs_type) is False:
                 ret = False
                 break
 

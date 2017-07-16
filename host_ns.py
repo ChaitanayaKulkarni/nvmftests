@@ -83,7 +83,7 @@ class NVMeOFHostNamespace(object):
         self.mount_path = None
         self.worker_thread = None
         self.workq = Queue.Queue()
-        self.ext4fs = Ext4FS(self.ns_dev)
+        self.fs = None
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def init(self):
@@ -121,16 +121,20 @@ class NVMeOFHostNamespace(object):
 
         return True
 
-    def mkfs_seq(self):
+    def mkfs(self, fs_type):
         """ Format namespace with file system and mount on the unique
             namespace directory.
             - Args :
-                  - None.
+                  - fs_type : file system type.
             - Returns :
                   - True on success, False on failure.
         """
-        if self.ext4fs.mkfs() is True and self.ext4fs.mount():
-            return True
+        if fs_type == "ext4":
+            self.fs = Ext4FS(self.ns_dev)
+            if self.fs.mkfs() is True and self.fs.mount():
+                return True
+        else:
+             print(self.err_str + "file system is not supported")
 
         return False 
 
@@ -141,7 +145,9 @@ class NVMeOFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        return self.ext4fs.umount()
+        if self.fs is None:
+            print(self.err_str + "uninitialized file system object.")
+        return self.fs.umount()
 
     def start_io(self, iocfg):
         """ Add new work item to workqueue. Triggers wake up in worker thread.

@@ -65,5 +65,5 @@ class TestNVMFMKFS(NVMeOFTest):
 
     def test_mkfs(self):
         """ Testcase main """
-        ret = self.host_subsys.mkfs_seq()
+        ret = self.host_subsys.mkfs_seq("ext4")
         assert_equal(ret, True, "ERROR : mkfs failed.")

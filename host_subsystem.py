@@ -97,16 +97,16 @@ class NVMeOFHostController(object):
             host_ns.wait_io()
         return ret
 
-    def run_mkfs_seq(self):
+    def run_mkfs_seq(self, fs_type):
         """ Run mkfs, mount fs.
             - Args :
-                  - None.
+                  - fs_type : file system type.
             - Returns :
                   - True on success, False on failure.
         """
         ret = True
         for host_ns in self.ns_list:
-            if host_ns.mkfs_seq() is False:
+            if host_ns.mkfs(fs_type) is False:
                 ret = False
                 break
 
