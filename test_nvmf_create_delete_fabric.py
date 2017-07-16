@@ -26,7 +26,6 @@ NVMeOF Create/Delete Host, Target :-
     4. Delete Target.
 """
 
-import time
 from loopback import Loopback
 from nvmf_test import NVMeOFTest
 from target import NVMeOFTarget
@@ -47,21 +46,17 @@ class TestNVMFCreateDeleteFabric(NVMeOFTest):
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_devices)
-        time.sleep(1)
 
     def setUp(self):
         print("configuering loopback")
         self.loopdev.init()
-        time.sleep(1)
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
         self.target_subsys.config()
         self.host_subsys = NVMeOFHost(target_type)
 
     def tearDown(self):
-        time.sleep(1)
         self.host_subsys.delete()
-        time.sleep(1)
         self.target_subsys.delete()
         print("deleting loopback")
         self.loopdev.delete()

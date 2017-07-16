@@ -21,7 +21,6 @@
 """
 
 import os
-import time
 import subprocess
 
 from utils.shell import Cmd
@@ -99,7 +98,6 @@ class Loopback:
             os.remove(i)
             loop_cnt += 1
 
-        time.sleep(1)
         if Cmd.exec_cmd("modprobe -r loop") is False:
             print("ERROR : failed to remove loop module.")
             ret = False

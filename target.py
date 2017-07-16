@@ -22,7 +22,6 @@
 
 import sys
 import json
-import time
 import subprocess
 from nose.tools import assert_equal
 from port import NVMeOFTargetPort
@@ -185,11 +184,8 @@ class NVMeOFTarget(object):
         for subsys in self.subsys_list:
             subsys.delete()
 
-        time.sleep(1)
         print("Removing Modules :- ")
         Cmd.exec_cmd("modprobe -r nvme_loop")
-        time.sleep(1)
         Cmd.exec_cmd("modprobe -r nvmet")
-        time.sleep(1)
         Cmd.exec_cmd("modprobe -r nvme_fabrics")
         print("DONE.")
