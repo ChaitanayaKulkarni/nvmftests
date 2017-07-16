@@ -65,7 +65,6 @@ class NVMeOFHostNamespace(object):
         - Attributes :
             - ns_dev : block device associated with this namespace.
             - lbaf_cnt : logical block format count.
-            - ns_dict : namespace attributes.
             - lbaf : dictionary for logical block format.
             - ms : dictionary to store medata size information.
             - lbads : dictionary to store LBA Data Size.
@@ -77,7 +76,6 @@ class NVMeOFHostNamespace(object):
     def __init__(self, ns_dev):
         self.ns_dev = ns_dev
         self.lbaf_cnt = 0
-        self.ns_dict = {}
         self.lbaf = {}
         self.ms = {}
         self.lbads = {}
@@ -89,7 +87,7 @@ class NVMeOFHostNamespace(object):
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def init(self):
-        """ Initialize nameapce, create worker thread and
+        """ Initialize namespace, create worker thread and
             build controller attributes.
             - Args :
                   - None.
@@ -121,21 +119,6 @@ class NVMeOFHostNamespace(object):
             print(self.err_str + "nvme id-ctrl failed")
             return False
 
-        i = 0
-        for line in proc.stdout:
-            if line.startswith('subnqn') or \
-               line.startswith('NVME Identify Nameapce'):
-                continue
-            if line.startswith('lbaf'):
-                self.lbaf[i] = line.split(':')[0].split('  ')[1]
-                self.ms[i] = line.split(':')[2].split('  ')[0]
-                self.lbads[i] = line.split(':')[3].split(' ')[0]
-                self.rp[i] = line.split(':')[4].split(' ')[0]
-                i += 1
-                continue
-
-            key, value = line.split(':')
-            self.ns_dict[key.strip()] = value.strip()
         return True
 
     def mkfs_seq(self):
