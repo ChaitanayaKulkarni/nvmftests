@@ -264,7 +264,7 @@ class NVMeOFHostController(object):
         ctrl = "/dev/" + ctrl
         return ctrl, ns_list
 
-    def init_ctrl_ns(self):
+    def init_ns(self):
         """ Initialize and build namespace list and validate sysfs entries.
             - Args :
                   - None.
@@ -312,7 +312,7 @@ class NVMeOFHostController(object):
         if ret is False:
             return False
 
-        return self.init_ctrl_ns()
+        return self.init_ns()
 
     def id_ctrl(self):
         """ Wrapper for executing id-ctrl command.
