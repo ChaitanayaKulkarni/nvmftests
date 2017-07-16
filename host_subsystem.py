@@ -133,7 +133,7 @@ class NVMeOFHostController(object):
 
         return True
 
-    def exec_smart_log(self, nsid="0xFFFFFFFF"):
+    def run_smart_log(self, nsid="0xFFFFFFFF"):
         """ Wrapper for nvme smart-log command.
             - Args :
                   - None.
@@ -177,10 +177,10 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        self.exec_smart_log()
+        self.run_smart_log()
         i = 1
         for namespace in self.ns_list:
-            if self.exec_smart_log(i) is False:
+            if self.run_smart_log(i) is False:
                 return False
             i += 1
         return True
@@ -217,7 +217,7 @@ class NVMeOFHostController(object):
         print("sysfs entries for ctrl and ns created successfully.")
         return True
 
-    def build_ns_listt(self):
+    def build_ns_list(self):
         """ Generate next available controller and namespace id on the fly.
             Build the ns list for this controller.
             - Args :
@@ -302,7 +302,7 @@ class NVMeOFHostController(object):
         if Cmd.exec_cmd(cmd) is False:
             return False
         time.sleep(1)
-        self.ctrl_dev, self.ns_dev_list = self.build_ns_listt()
+        self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
 
         if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
             print(self.err_str + "failed to find char device for host ctrl.")
