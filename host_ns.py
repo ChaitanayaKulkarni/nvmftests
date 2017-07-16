@@ -145,9 +145,10 @@ class NVMeOFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        if self.fs is None:
-            print(self.err_str + "uninitialized file system object.")
-        return self.fs.umount()
+        if self.fs is not None:
+            return self.fs.umount()
+
+        return True
 
     def start_io(self, iocfg):
         """ Add new work item to workqueue. Triggers wake up in worker thread.
