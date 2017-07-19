@@ -22,6 +22,7 @@
 
 import os
 import Queue
+import time
 import threading
 import subprocess
 
@@ -42,9 +43,29 @@ class NVMeOFNSThread(threading.Thread):
         self.target = target
         self.name = name
         self.workq = args[0]
+        self.q_cond_var = args[1]
 
     def run(self):
         """ Default Thread Function """
+        while True:
+            with self.q_cond_var:
+                # if queue is empty wait
+                if self.workq.empty():
+                    self.q_cond_var.wait()
+
+                # get the itsm from the queue if None exit
+                item = self.workq.get()
+                if item is None:
+                    break
+
+                ret = item['THREAD'](item)
+                # On Error just shutdown the worker thread
+                # complete all the remaining operations and quit
+                if ret is False:
+                    self.workq.put(None)
+        print("Exiting workther thread " + self.name)
+
+        """
         while True:
             if not self.workq.empty():
                 item = self.workq.get()
@@ -56,6 +77,9 @@ class NVMeOFNSThread(threading.Thread):
                 # Need to implement qid based work queue implementation.
                 if ret is False:
                     self.workq.put(None)
+            else:
+                time.sleep()
+        """
 
 
 class NVMeOFHostNamespace(object):
@@ -72,6 +96,7 @@ class NVMeOFHostNamespace(object):
             - mount_path : mounted directory.
             - worker_thread : handle for io worker thread.
             - workq : workqueue shared between producer and worker thread.
+            - q_cond_var : Condition variable for queue operations.
     """
     def __init__(self, ns_dev):
         self.ns_dev = ns_dev
@@ -83,6 +108,7 @@ class NVMeOFHostNamespace(object):
         self.mount_path = None
         self.worker_thread = None
         self.workq = Queue.Queue()
+        self.q_cond_var = threading.Condition()
         self.fs = None
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
@@ -97,8 +123,8 @@ class NVMeOFHostNamespace(object):
         if self.id_ns() is False:
             return False
 
-        # Create IO worker thread for this ns
-        self.worker_thread = NVMeOFNSThread(args=[self.workq])
+        # Create worker thread for this ns
+        self.worker_thread = NVMeOFNSThread(args=[self.workq, self.q_cond_var])
         self.worker_thread.setDaemon(True)
         self.worker_thread.start()
         return True
@@ -166,7 +192,9 @@ class NVMeOFHostNamespace(object):
             return False
 
         if self.worker_thread.is_alive():
-            self.workq.put(iocfg)
+            with self.q_cond_var:
+                self.workq.put(iocfg)
+                self.q_cond_var.notifyAll()
         else:
             print(self.err_str + "worker thread is not running.")
             return False
@@ -183,7 +211,9 @@ class NVMeOFHostNamespace(object):
         print("Checking for worker thread " + self.ns_dev + ".")
         if self.worker_thread.is_alive():
             print("Waiting for thread completion " + self.ns_dev + ".")
-            self.workq.join()
+            while not self.workq.empty():
+                time.sleep(1)
+        # print error message when worker thread is not alive.
         print("# WAIT COMPLETE " + self.ns_dev + ".")
 
     def delete(self):
@@ -194,6 +224,15 @@ class NVMeOFHostNamespace(object):
                   - None.
         """
         print("##### Deleting Namespace ")
-        self.workq.put(None)
+        if self.worker_thread.is_alive():
+            with self.q_cond_var:
+                self.workq.put(None)
+                self.q_cond_var.notifyAll()
+
+            while not self.workq.empty():
+                time.sleep(1)
+
+            if self.worker_thread.is_alive():
+                print(self.err_str + "Worker thread is still alive ...!!!")
 
         self.unmount_cleanup()
