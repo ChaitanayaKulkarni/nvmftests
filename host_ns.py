@@ -65,23 +65,6 @@ class NVMeOFNSThread(threading.Thread):
                     self.workq.put(None)
         print("Exiting workther thread " + self.name)
 
-        """
-        while True:
-            if not self.workq.empty():
-                item = self.workq.get()
-                if item is None:
-                    break
-                ret = item['THREAD'](item)
-                self.workq.task_done()
-                # On Error just shutdown the worker thread.
-                # Need to implement qid based work queue implementation.
-                if ret is False:
-                    self.workq.put(None)
-            else:
-                time.sleep()
-        """
-
-
 class NVMeOFHostNamespace(object):
     """
     Represents a host namespace.
