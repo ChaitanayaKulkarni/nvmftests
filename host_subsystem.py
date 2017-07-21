@@ -75,12 +75,15 @@ class NVMeOFHostController(object):
                   - True on success, False on failure.
         """
         ret = True
-        for host_ns in self.ns_list:
-            if host_ns.start_io(iocfg) is False:
-                print("start IO " + host_ns.ns_dev + " failed.")
-                ret = False
+        for ns in iter(self):
+            try:
+                if ns.start_io(iocfg) is False:
+                    print("start IO " + ns.ns_dev + " failed.")
+                    ret = False
+                    break
+                print("start IO " + ns.ns_dev + " SUCCESS.")
+            except StopIteration:
                 break
-            print("start IO " + host_ns.ns_dev + " SUCCESS.")
 
         return ret
 
@@ -91,8 +94,11 @@ class NVMeOFHostController(object):
             - Returns :
                   - None.
         """
-        for host_ns in self.ns_list:
-            host_ns.wait_io()
+        for ns in iter(self):
+            try:
+                ns.wait_io()
+            except StopIteration:
+                break
 
     def run_io_seq(self, iocfg):
         """ Issue IOs to each namespace and wait, repeat for all the
@@ -197,10 +203,13 @@ class NVMeOFHostController(object):
         """
         self.run_smart_log()
         i = 1
-        for namespace in self.ns_list:
-            if self.run_smart_log(i) is False:
-                return False
-            i += 1
+        for namespace in iter(self):
+            try:
+                if self.run_smart_log(i) is False:
+                    return False
+                i += 1
+            except StopIteration:
+                break
         return True
 
     def validate_sysfs_ns(self):
