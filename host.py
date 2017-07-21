@@ -132,15 +132,17 @@ class NVMeOFHost(object):
             - Args :
                   - None.
             - Returns :
-                  - None.
+                  - True on success, False on failure.
         """
         print("Starting IOs seq ...")
-        ret = None
-        for ctrl in self.ctrl_list:
-            ret = ctrl.run_io_seq(iocfg)
-            if ret is False:
+        ret = True
+        for ctrl in iter(self):
+            try:
+                if ctrl.run_io_seq(iocfg) is False:
+                    ret = False
+                    break
+            except StopIteration:
                 break
-
         return ret
 
     def run_ios_random(self, iocfg):

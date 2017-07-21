@@ -103,11 +103,14 @@ class NVMeOFHostController(object):
                   - True on success, False on failure.
         """
         ret = True
-        for host_ns in self.ns_list:
-            if host_ns.start_io(iocfg) is False:
-                print("start IO " + host_ns.ns_dev + " failed.")
-                ret = False
-            host_ns.wait_io()
+        for ns in iter(self):
+            try:
+                if ns.start_io(iocfg) is False:
+                    print("start IO " + ns.ns_dev + " failed.")
+                    ret = False
+                ns.wait_io()
+            except StopIteration:
+                break
         return ret
 
     def run_mkfs_seq(self, fs_type):
