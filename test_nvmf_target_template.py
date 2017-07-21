@@ -58,6 +58,6 @@ class TestNVMFTargetTemplate(NVMeOFTest):
         self.target_subsys.delete()
         self.loopdev.delete()
 
-    def test_mkfs(self):
+    def test_target(self):
         """ Testcase main """
         assert_equal(0, 0, "")
