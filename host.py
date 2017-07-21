@@ -49,6 +49,20 @@ class NVMeOFHost(object):
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
         self.load_modules()
 
+    def __iter__(self):
+        self.ctrl_list_index = 0
+        return self
+
+    def __next__(self):
+        index = self.ctrl_list_index
+        self.ctrl_list_index += 1
+        if (len(self.ctrl_list) > index):
+            return self.ctrl_list[index]
+        return None
+
+    def next(self):
+        return self.__next__()
+
     def load_modules(self):
         """ Wrapper for Loading NVMeOF Host modules.
             - Args :
