@@ -58,7 +58,7 @@ class NVMeOFHost(object):
         self.ctrl_list_index += 1
         if (len(self.ctrl_list) > index):
             return self.ctrl_list[index]
-        return None
+        raise StopIteration
 
     def next(self):
         return self.__next__()

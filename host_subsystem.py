@@ -62,7 +62,7 @@ class NVMeOFHostController(object):
         self.ns_list_index += 1
         if (len(self.ns_list) > index):
             return self.ns_list[index]
-        return None
+        raise StopIteration
 
     def next(self):
         return self.__next__()

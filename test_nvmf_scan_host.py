@@ -66,11 +66,14 @@ class TestNVMFHostTemplate(NVMeOFTest):
     def test_host(self):
         """ Testcase main """
         for host_subsys in iter(self.host_subsys):
-            if host_subsys == None:
-                break
-            print("Host Controller " + host_subsys.ctrl_dev)
-            for host_ns in iter(host_subsys):
-                if host_ns == None:
-                    break
-                print(" Host NS " + host_ns.ns_dev)
+            try:
+                print("Host Controller " + host_subsys.ctrl_dev)
+                for host_ns in iter(host_subsys):
+                    try:
+                        print(" Host NS " + host_ns.ns_dev)
+                    except StopIteration:
+                        break;
+            except StopIteration:
+                break;
+
         assert_equal(0, 0, "")
