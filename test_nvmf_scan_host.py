@@ -68,5 +68,9 @@ class TestNVMFHostTemplate(NVMeOFTest):
         for host_subsys in iter(self.host_subsys):
             if host_subsys == None:
                 break
-            print("----> found class " + host_subsys.err_str.split(":")[-2])
+            print("Host Controller " + host_subsys.ctrl_dev)
+            for host_ns in iter(host_subsys):
+                if host_ns == None:
+                    break
+                print(" Host NS " + host_ns.ns_dev)
         assert_equal(0, 0, "")

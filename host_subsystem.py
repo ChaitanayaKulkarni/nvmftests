@@ -53,6 +53,20 @@ class NVMeOFHostController(object):
         self.transport = transport
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
+    def __iter__(self):
+        self.ns_list_index = 0
+        return self
+
+    def __next__(self):
+        index = self.ns_list_index
+        self.ns_list_index += 1
+        if (len(self.ns_list) > index):
+            return self.ns_list[index]
+        return None
+
+    def next(self):
+        return self.__next__()
+
     def run_io_all_ns(self, iocfg):
         """ Start IOs on all the namespaces of this controller parallelly.
             - Args :
