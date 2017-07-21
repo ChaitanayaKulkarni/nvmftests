@@ -217,11 +217,13 @@ class NVMeOFHost(object):
                   - True on success, False on failure..
         """
         ret = True
-        for ctrl in self.ctrl_list:
-            if ctrl.run_mkfs_seq(fs_type) is False:
-                ret = False
+        for ctrl in iter(self):
+            try:
+                if ctrl.run_mkfs_seq(fs_type) is False:
+                    ret = False
+                    break
+            except StopIteration:
                 break
-
         return ret
 
     def config(self, config_file="loop.json"):

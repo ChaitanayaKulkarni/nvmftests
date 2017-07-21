@@ -118,11 +118,13 @@ class NVMeOFHostController(object):
                   - True on success, False on failure.
         """
         ret = True
-        for host_ns in self.ns_list:
-            if host_ns.mkfs(fs_type) is False:
-                ret = False
+        for ns in iter(self):
+            try:
+                if ns.mkfs(fs_type) is False:
+                    ret = False
+                    break
+            except StopIteration:
                 break
-
         return ret
 
     def run_io_random(self, iocfg):
