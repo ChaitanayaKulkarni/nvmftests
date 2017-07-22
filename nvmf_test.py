@@ -24,6 +24,7 @@ import os
 import sys
 import subprocess
 
+from utils.const import Const
 from utils.diskio import DD
 from nvmf_test_logger import NVMeOFLogger
 
@@ -41,11 +42,11 @@ def __dd_worker__(iocfg):
 class NVMeOFTest(object):
 
     def __init__(self):
-        self.data_size = 128 * 1024 * 1024
-        self.block_size = 4096
-        self.nr_devices = 10
+        self.data_size = 128 * Const.KB
+        self.block_size = 4 * Const.KB
+        self.nr_devices = Const.TEN
         self.mount_path = "/mnt/"
-        self.test_log_dir = "XXX"
+        self.test_log_dir = Const.XXX
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
 
         self.dd_read = {"IODIR": "read",
