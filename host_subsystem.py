@@ -28,6 +28,7 @@ import string
 import subprocess
 from natsort import natsorted
 
+from utils.const import Const
 from utils.shell import Cmd
 from host_ns import NVMeOFHostNamespace
 
@@ -54,12 +55,12 @@ class NVMeOFHostController(object):
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def __iter__(self):
-        self.ns_list_index = 0
+        self.ns_list_index = Const.ZERO
         return self
 
     def __next__(self):
         index = self.ns_list_index
-        self.ns_list_index += 1
+        self.ns_list_index += Const.ONE
         if (len(self.ns_list) > index):
             return self.ns_list[index]
         raise StopIteration
@@ -144,9 +145,9 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        num_list = range(0, len(self.ns_list))
+        num_list = range(Const.ZERO, len(self.ns_list))
 
-        for i in range(0, len(self.ns_list)):
+        for i in range(Const.ZERO, len(self.ns_list)):
             random.shuffle(num_list)
             ns_id = num_list.pop()
 
@@ -170,23 +171,27 @@ class NVMeOFHostController(object):
                                 shell=True,
                                 stdout=subprocess.PIPE)
         err = proc.wait()
-        if err != 0:
+        if err != Const.ZERO:
             print(self.err_str + "nvme smart log failed")
             return False
 
         for line in proc.stdout:
             if "data_units_read" in line:
                 data_units_read = \
-                    string.replace(line.split(":")[1].strip(), ",", "")
+                    string.replace(line.split(":")\
+                    [Const.SMART_LOG_VALUE].strip(), ",", "")
             if "data_units_written" in line:
                 data_units_written = \
-                    string.replace(line.split(":")[1].strip(), ",", "")
+                    string.replace(line.split(":")\
+                    [Const.SMART_LOG_VALUE].strip(), ",", "")
             if "host_read_commands" in line:
                 host_read_commands = \
-                    string.replace(line.split(":")[1].strip(), ",", "")
+                    string.replace(line.split(":")\
+                    [Const.SMART_LOG_VALUE].strip(), ",", "")
             if "host_write_commands" in line:
                 host_write_commands = \
-                    string.replace(line.split(":")[1].strip(), ",", "")
+                    string.replace(line.split(":")\
+                    [Const.SMART_LOG_VALUE].strip(), ",", "")
 
         print("data_units_read " + data_units_read)
         print("data_units_written " + data_units_written)
@@ -202,12 +207,12 @@ class NVMeOFHostController(object):
                   - True on success, False on failure.
         """
         self.run_smart_log()
-        i = 1
+        i = Const.ONE
         for namespace in iter(self):
             try:
                 if self.run_smart_log(i) is False:
                     return False
-                i += 1
+                i += Const.ONE
             except StopIteration:
                 break
         return True
@@ -219,6 +224,7 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
+        ctrl_bdev = self.ctrl_dev.split("/")[Const.CTRL_BLK_FILE_NAME]
         # Validate ctrl in the sysfs
         cmd = "basename $(dirname $(grep -ls " + self.nqn + \
               " /sys/class/nvme-fabrics/ctl/*/subsysnqn))"
@@ -227,13 +233,13 @@ class NVMeOFHostController(object):
                                 stdout=subprocess.PIPE)
         for line in proc.stdout:
             line = line.strip('\n')
-            if line != self.ctrl_dev.split("/")[2]:
+            # compare nvmeN in /dev/nvmeN in sysfs
+            if line != ctrl_bdev:
                 print(self.err_str + "host ctrl " + ctrl + " not present.")
                 return False
-        dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" +
-                              self.ctrl_dev.split("/")[2] + "/")
+        dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" + ctrl_bdev + "/")
 
-        pat = re.compile("^" + self.ctrl_dev.split("/")[2] + "+n[0-9]+$")
+        pat = re.compile("^" + ctrl_bdev + "+n[0-9]+$")
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
@@ -268,7 +274,7 @@ class NVMeOFHostController(object):
             if pat.match(line):
                 ctrl = line
 
-        if ctrl == "XXX":
+        if ctrl == Const.XXX:
             print(self.err_str + "controller '/dev/nvme*' not found.")
             return None, None
 

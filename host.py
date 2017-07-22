@@ -25,6 +25,7 @@ import random
 import subprocess
 
 from utils.shell import Cmd
+from utils.const import Const
 from host_subsystem import NVMeOFHostController
 
 
@@ -50,7 +51,7 @@ class NVMeOFHost(object):
         self.load_modules()
 
     def __iter__(self):
-        self.ctrl_list_index = 0
+        self.ctrl_list_index = Const.ZERO
         return self
 
     def __next__(self):

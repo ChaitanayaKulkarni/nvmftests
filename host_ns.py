@@ -26,6 +26,7 @@ import time
 import threading
 import subprocess
 
+from utils.const import Const
 from utils.fs import Ext4FS
 
 class NVMeOFNSThread(threading.Thread):
@@ -83,7 +84,7 @@ class NVMeOFHostNamespace(object):
     """
     def __init__(self, ns_dev):
         self.ns_dev = ns_dev
-        self.lbaf_cnt = 0
+        self.lbaf_cnt = Const.ZERO
         self.lbaf = {}
         self.ms = {}
         self.lbads = {}
@@ -124,7 +125,7 @@ class NVMeOFHostNamespace(object):
                                 shell=True,
                                 stdout=subprocess.PIPE)
         ret = proc.wait()
-        if ret != 0:
+        if ret != Const.ZERO:
             print(self.err_str + "nvme id-ctrl failed")
             return False
 
@@ -195,7 +196,7 @@ class NVMeOFHostNamespace(object):
         if self.worker_thread.is_alive():
             print("Waiting for thread completion " + self.ns_dev + ".")
             while not self.workq.empty():
-                time.sleep(1)
+                time.sleep(Const.ONE)
         # print error message when worker thread is not alive.
         print("# WAIT COMPLETE " + self.ns_dev + ".")
 
@@ -213,7 +214,7 @@ class NVMeOFHostNamespace(object):
                 self.q_cond_var.notifyAll()
 
             while not self.workq.empty():
-                time.sleep(1)
+                time.sleep(Const.ONE)
 
             if self.worker_thread.is_alive():
                 print(self.err_str + "Worker thread is still alive ...!!!")
