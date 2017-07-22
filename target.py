@@ -27,6 +27,7 @@ from nose.tools import assert_equal
 from port import NVMeOFTargetPort
 
 from utils.shell import Cmd
+from utils.const import Const
 from target_subsystem import NVMeOFTargetSubsystem
 
 
@@ -101,7 +102,8 @@ class NVMeOFTarget(object):
             # Create Subsystem
             subsys = NVMeOFTargetSubsystem(self.cfgfs,
                                            sscfg['nqn'],
-                                           sscfg['allowed_hosts'][0],
+                                           sscfg['allowed_hosts']\
+                                           [Const.ALLOW_HOST_VALUE],
                                            sscfg['attr']['allow_any_host'])
             ret = subsys.init()
             if ret is False:

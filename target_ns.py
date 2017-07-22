@@ -87,7 +87,7 @@ class NVMeOFTargetNamespace(object):
             - Returns :
                 - True on success, False on failure.
         """
-        self.ns_attr['enable'] = "0"
+        self.ns_attr['enable'] = '0'
         return Cmd.exec_cmd("echo 0 > " + self.ns_path + "/enable")
 
     def ns_enable(self):
@@ -97,7 +97,7 @@ class NVMeOFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        self.ns_attr['enable'] = "1"
+        self.ns_attr['enable'] = '1'
         return Cmd.exec_cmd("echo 1 > " + self.ns_path + "/enable")
 
     def delete(self):

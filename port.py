@@ -25,6 +25,7 @@ import shutil
 import subprocess
 
 from utils.shell import Cmd
+from utils.const import Const
 
 class NVMeOFTargetPort(object):
     """
@@ -51,7 +52,7 @@ class NVMeOFTargetPort(object):
         self.port_conf['addr_trtype'] = port_conf['addr_trtype']
         self.port_conf['addr_adrfam'] = port_conf['addr_adrfam']
         self.port_conf['addr_trsvcid'] = port_conf['addr_trsvcid']
-        self.port_conf['referrals'] = "XXX"
+        self.port_conf['referrals'] = Const.XXX
         self.port_conf['subsystems'] = port_conf['subsystems']
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 

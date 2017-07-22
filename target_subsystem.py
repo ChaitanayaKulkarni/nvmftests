@@ -25,6 +25,7 @@ import shutil
 import subprocess
 
 from utils.shell import Cmd
+from utils.const import Const
 from target_ns import NVMeOFTargetNamespace
 
 
@@ -130,4 +131,4 @@ class NVMeOFTargetSubsystem(object):
             - Returns :
                 - next namespace id.
         """
-        return len(self.ns_list) + 1
+        return len(self.ns_list) + Const.ONE
