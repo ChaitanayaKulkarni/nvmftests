@@ -95,6 +95,8 @@ class NVMeOFTargetPort(object):
             print(self.err_str + "subsystem '" + src + "' not present.")
             return False
         dest = self.port_path + "/subsystems/"
+        cmd = "ln -s " + src + " " + dest
+        print(cmd)
         ret = Cmd.exec_cmd("ln -s " + src + " " + dest)
         return ret
 

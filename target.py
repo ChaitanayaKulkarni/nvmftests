@@ -144,6 +144,8 @@ class NVMeOFTarget(object):
                 ret = port.add_subsys(subsys)
                 if ret is False:
                     # call unwind code here.
+                    print(self.err_str + "failed to add subsystem " + \
+                          subsys + " to port " + port.port_id)
                     return False
 
         return True
