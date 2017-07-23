@@ -29,22 +29,22 @@ class Const:
             All constants for testcases
     """
 
-    """ Numerical constants """
-
+    XXX = "XXX"
     ZERO = 0
     ONE = 1
     TWO = 2
     FOUR = 4
     TEN = 10
-    HALF_KB = 512
-    KB = 1024
-    MB = KB * KB
-    GB = MB * KB
+    ONE_KB = 1024
+    ONE_MB = ONE_KB * ONE_KB
+    ONE_GB = ONE_MB * ONE_KB
 
-    """ File System constants """
+    KB = "KB"
+    MB = "MB"
+    GB = "GB"
+
     EXT4 = "ext4"
 
     CTRL_BLK_FILE_NAME = TWO
     SMART_LOG_VALUE = ONE
-    XXX = "XXX"
     ALLOW_HOST_VALUE = ZERO
