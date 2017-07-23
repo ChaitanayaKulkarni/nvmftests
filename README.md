@@ -113,7 +113,17 @@ nvmftests
                 .
                 .
 
-7. Dependencies
+7. Test configuration
+---------------------
+
+	Right now we use two json config file loop.json and nvmftests.json.
+	loop.json is used to describe the target subsystem(s) hierarchies.
+	nvmftests.json used to specify the testcase execution related options.
+	For loop mode we create and build loopback device prior to each testcase.
+	The number of distinct loopback devices used in loop.json should match
+	the "nr_devices" parameter in nvmftests.json.
+
+8. Dependencies
 ----------------
 
     6.1. Python(>= 2.7.5 or >= 3.3)
@@ -130,7 +140,7 @@ nvmftests
 
     $ pip install nose nose2 natsort pep8 flake8 pylint epydoc
 
-8. Future Work
+9. Future Work
 --------------
 
     7.1. Add support for thread safe logging.
