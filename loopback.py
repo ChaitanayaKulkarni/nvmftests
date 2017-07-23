@@ -21,7 +21,6 @@
 """
 
 import os
-import subprocess
 
 from utils.shell import Cmd
 
