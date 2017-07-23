@@ -1,3 +1,6 @@
 {
-	"mount_path" : "/mnt"
+	"mount_path" : "/mnt",
+	"data_size"  : "128MB",
+	"block_size" : "4KB",
+	"nr_devices" : "4"
 }
