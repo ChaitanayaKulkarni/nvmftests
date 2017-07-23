@@ -23,6 +23,7 @@
 import os
 
 from utils.shell import Cmd
+from utils.const import Const
 
 class Loopback:
     """
@@ -48,6 +49,7 @@ class Loopback:
         self.block_size = block_size
         self.max_loop = max_loop
         self.dev_list = []
+        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
         Cmd.exec_cmd("losetup -D")
         Cmd.exec_cmd("modprobe -r loop")
@@ -62,20 +64,20 @@ class Loopback:
         """
         count = self.dev_size / self.block_size
 
-        for i in range(0, self.max_loop):
+        for i in range(Const.ZERO, self.max_loop):
             dev = self.path + "/test" + str(i)
             cmd = "dd if=/dev/zero of=" + dev + \
                 " count=" + str(count) + " bs=" + str(self.block_size)
             print(cmd)
             ret = Cmd.exec_cmd(cmd)
             if ret is False:
-                print("ERROR : file creation " + self.dev_list[i])
+                print(self.err_str + " file creation " + self.dev_list[i])
                 self.delete()
                 return False
             cmd = "losetup /dev/loop" + str(i) + " " + dev
             print(cmd)
             if Cmd.exec_cmd(cmd) is False:
-                print("ERROR : " + cmd + " failed.")
+                print(self.err_str + cmd + " failed.")
                 return False
 
             self.dev_list.append(dev)
@@ -89,16 +91,16 @@ class Loopback:
                 - True on success, False on failure.
         """
         ret = True
-        loop_cnt = 0
+        loop_cnt = Const.ZERO
         for i in self.dev_list:
             cmd = "losetup -d /dev/loop" + str(loop_cnt)
             print(cmd)
             Cmd.exec_cmd(cmd)
             os.remove(i)
-            loop_cnt += 1
+            loop_cnt += Const.ONE
 
         if Cmd.exec_cmd("modprobe -r loop") is False:
-            print("ERROR : failed to remove loop module.")
+            print(self.err_str + "failed to remove loop module.")
             ret = False
 
         return ret
