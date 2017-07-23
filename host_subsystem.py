@@ -239,7 +239,7 @@ class NVMeOFHostController(object):
             line = line.strip('\n')
             # compare nvmeN in /dev/nvmeN in sysfs
             if line != ctrl_bdev:
-                print(self.err_str + "host ctrl " + ctrl + " not present.")
+                print(self.err_str + "host ctrl " + self.ctrl_dev + " not present.")
                 return False
         dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" + ctrl_bdev + "/")
 
