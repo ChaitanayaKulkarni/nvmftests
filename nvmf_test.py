@@ -22,7 +22,7 @@
 
 import os
 import sys
-import subprocess
+import json
 
 from utils.const import Const
 from utils.diskio import DD
@@ -42,10 +42,11 @@ def __dd_worker__(iocfg):
 class NVMeOFTest(object):
 
     def __init__(self):
+        self.config_file = 'nvmftests.json'
         self.data_size = 128 * Const.KB
         self.block_size = 4 * Const.KB
         self.nr_devices = Const.TEN
-        self.mount_path = "/mnt/"
+        self.mount_path = Const.XXX
         self.test_log_dir = Const.XXX
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
 
@@ -64,6 +65,18 @@ class NVMeOFTest(object):
                          "BS": "4K",
                          "COUNT": str(self.data_size / self.block_size),
                          "RC": 0}
+        self.load_config()
+
+    def load_config(self):
+        """ Load Basic test configuration.
+            - Args:
+                - None
+            - Returns:
+                - None
+        """
+        with open(self.config_file) as nvmftest_config:
+            config = json.load(nvmftest_config)
+            self.mount_path = config['mount_path']
 
     def setup_log_dir(self, test_name):
         """ Set up the log directory for a testcase
