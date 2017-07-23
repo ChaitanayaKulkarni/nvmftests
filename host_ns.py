@@ -190,15 +190,19 @@ class NVMeOFHostNamespace(object):
             - Args :
                   - None.
             - Returns :
-                  - None.
+                  - True if worker thread is alive and queue is empty,
+                    False otherwise.
         """
         print("Checking for worker thread " + self.ns_dev + ".")
         if self.worker_thread.is_alive():
             print("Waiting for thread completion " + self.ns_dev + ".")
             while not self.workq.empty():
                 time.sleep(Const.ONE)
-        # print error message when worker thread is not alive.
+        else:
+            print(self.str_err + "worker thread is not alive")
+            return False
         print("# WAIT COMPLETE " + self.ns_dev + ".")
+        return True
 
     def delete(self):
         """ Namespace clanup.

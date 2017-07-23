@@ -93,13 +93,16 @@ class NVMeOFHostController(object):
             - Args :
                   - None.
             - Returns :
-                  - None.
+                  - True if namespace wait IO is successful, False otherwise.
         """
         for ns in iter(self):
             try:
-                ns.wait_io()
+                ret = ns.wait_io()
+                if ret == False:
+                    return False
             except StopIteration:
                 break
+        return True
 
     def run_io_seq(self, iocfg):
         """ Issue IOs to each namespace and wait, repeat for all the
@@ -115,7 +118,8 @@ class NVMeOFHostController(object):
                 if ns.start_io(iocfg) is False:
                     print("start IO " + ns.ns_dev + " failed.")
                     ret = False
-                ns.wait_io()
+                    break
+                ret = ns.wait_io()
             except StopIteration:
                 break
         return ret
