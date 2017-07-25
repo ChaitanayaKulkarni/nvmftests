@@ -2,7 +2,7 @@
     "ports": [
         {
             "addr": {
-                "addrfam": "", 
+                "adrfam": "", 
                 "traddr": "", 
                 "treq": "not specified", 
                 "trsvcid": "", 
@@ -13,17 +13,19 @@
                 null
             ], 
             "subsystems": [
-                "testnqn2"
+                "testnqn1", 
+                "testnqn2", 
+                "testnqn3"
             ]
         }
     ], 
     "subsystems": [
         {
-            "allowd_hosts": [
+            "allowed_hosts": [
                 "hostnqn"
             ], 
             "attr": {
-                "allow_any_host": "XXX"
+                "allow_any_host": "1"
             }, 
             "namespaces": [
                 {
@@ -41,16 +43,32 @@
                     }, 
                     "enable": 0, 
                     "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop2"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop3"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 4
                 }
             ], 
             "nqn": "testnqn1"
         }, 
         {
-            "allowd_hosts": [
+            "allowed_hosts": [
                 "hostnqn"
             ], 
             "attr": {
-                "allow_any_host": "XXX"
+                "allow_any_host": "1"
             }, 
             "namespaces": [
                 {
@@ -68,9 +86,68 @@
                     }, 
                     "enable": 0, 
                     "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop2"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop3"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 4
                 }
             ], 
             "nqn": "testnqn2"
+        }, 
+        {
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
+            "namespaces": [
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop0"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 1
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop1"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop2"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop3"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 4
+                }
+            ], 
+            "nqn": "testnqn3"
         }
     ]
 }

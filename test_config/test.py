@@ -2,11 +2,10 @@ import json
 
 def pp_json(json_thing, sort=True, indents=4):
     if type(json_thing) is str:
-        print(json.dumps(json.loads(json_thing),
-              sort_keys=sort, indent=indents))
+        return json.dumps(json.loads(json_thing),
+                          sort_keys=sort, indent=indents)
     else:
-        print(json.dumps(json_thing, sort_keys=sort, indent=indents))
-    return None
+        return json.dumps(json_thing, sort_keys=sort, indent=indents)
 
 
 class port:
@@ -19,7 +18,7 @@ class port:
         self.subsystems = []
 
     def build_addr(self):
-        self.addr['addrfam'] = ""
+        self.addr['adrfam'] = ""
         self.addr['traddr'] = ""
         self.addr['treq'] = "not specified"
         self.addr['trsvcid'] = ""
@@ -54,7 +53,7 @@ class subsystem:
         self.namespace = {}
         self.device = {}
         self.allowd_hosts.append('hostnqn')
-        self.attr['allow_any_host'] = 'XXX'
+        self.attr['allow_any_host'] = '1'
         self.device['nguid'] = 'XXX'
         self.device['path'] = 'XXX'
         self.namespace['enable'] = 0
@@ -69,11 +68,11 @@ class subsystem:
         self.ns_list.append(n)
 
     def build_ns(self):
-        for i in range(0, nr_ns):
+        for i in range(0, self.nr_ns):
             ns_cfg = {}
             ns_cfg['device'] = {}
             ns_cfg['device']['nguid'] = '123456'
-            ns_cfg['device']['path'] = '/dev/loop' + str(i % nr_devices)
+            ns_cfg['device']['path'] = '/dev/loop' + str(i % self.nr_devices)
             ns_cfg['enable'] = 0
             ns_cfg['nsid'] = i + 1
             self.add_ns(ns_cfg)
@@ -81,7 +80,7 @@ class subsystem:
     def build_subsys(self):
         self.build_ns()
         ss_entry = {}
-        ss_entry['allowd_hosts'] = self.allowd_hosts
+        ss_entry['allowed_hosts'] = self.allowd_hosts
         ss_entry['attr'] = self.attr
         ss_entry['namespaces'] = self.ns_list
         ss_entry['nqn'] = self.nqn
@@ -89,25 +88,35 @@ class subsystem:
         ss.append(ss_entry)
         return ss_entry
 
-ss_list = []
-port_list = []
-nr_ns = 2
-nr_devices = 2
-nqn = "testnqn1"
-subsys = subsystem(nr_ns, nr_devices, nqn)
-ss_list.append(subsys.build_subsys())
+class target_config:
+    def __init__(self, config_file_path, nr_subsys, nr_ns, nr_dev):
+        self.ss_list = []
+        self.port_list = []
+        self.config_file_path = config_file_path
+        self.nr_subsys = nr_subsys
+        self.nr_ns = nr_ns
+        self.nr_devices = nr_dev
 
+    def build_target_subsys(self):
 
-nqn = "testnqn2"
-subsys = subsystem(nr_ns, nr_devices, nqn)
-ss_list.append(subsys.build_subsys())
+        nqn_list = []
+        ss_list = []
+        port_list = []
+        for i in range(0, self.nr_subsys):
+            nqn = "testnqn" + str(i + 1)
+            subsys = subsystem(self.nr_ns, self.nr_devices, nqn)
+            ss_list.append(subsys.build_subsys())
+            nqn_list.append(nqn)
 
-p = port(1)
-port_list.append(p.build_port([nqn]))
+        p = port(1)
+        port_list.append(p.build_port(nqn_list))
 
+        l = {}
+        l['ports'] = port_list
+        l['subsystems'] = ss_list
+        data = pp_json(l)
+        with open(self.config_file_path, "w+") as config_file:
+            config_file.write(data)
 
-l = {}
-l['ports'] = port_list
-l['subsystems'] = ss_list
-
-pp_json(l)
+t = target_config("test.json", 3, 4, 4)
+t.build_target_subsys()
