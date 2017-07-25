@@ -35,11 +35,7 @@ class port:
         self.build_subsystems(nqn_list)
         self.port_dict['portid'] = self.port_id
         self.port_dict['referrals'] = self.referrals
-        t = {}
-        l = []
-        l.append(self.port_dict)
-        t['ports'] = l
-        return l
+        return self.port_dict
 
 class subsystem:
     def __init__(self, nr_ns, nr_devices, nqn):
@@ -91,18 +87,24 @@ class subsystem:
         ss_entry['nqn'] = self.nqn
         ss = []
         ss.append(ss_entry)
-        t = {}
-        t['subsystems'] = ss
-        return ss
+        return ss_entry
 
+ss_list = []
+port_list = []
 nr_ns = 2
 nr_devices = 2
 nqn = "testnqn1"
 subsys = subsystem(nr_ns, nr_devices, nqn)
-ss_list = subsys.build_subsys()
+ss_list.append(subsys.build_subsys())
+
+
+nqn = "testnqn2"
+subsys = subsystem(nr_ns, nr_devices, nqn)
+ss_list.append(subsys.build_subsys())
 
 p = port(1)
-port_list = p.build_port([nqn])
+port_list.append(p.build_port([nqn]))
+
 
 l = {}
 l['ports'] = port_list
