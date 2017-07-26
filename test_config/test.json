@@ -22,8 +22,12 @@
     ], 
     "subsystems": [
         {
-            "allowed_hosts": [], 
-            "attr": {}, 
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
             "namespaces": [
                 {
                     "device": {
@@ -61,8 +65,12 @@
             "nqn": "testnqn1"
         }, 
         {
-            "allowed_hosts": [], 
-            "attr": {}, 
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
             "namespaces": [
                 {
                     "device": {
@@ -100,8 +108,12 @@
             "nqn": "testnqn2"
         }, 
         {
-            "allowed_hosts": [], 
-            "attr": {}, 
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
             "namespaces": [
                 {
                     "device": {
@@ -139,8 +151,12 @@
             "nqn": "testnqn3"
         }, 
         {
-            "allowed_hosts": [], 
-            "attr": {}, 
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
             "namespaces": [
                 {
                     "device": {
