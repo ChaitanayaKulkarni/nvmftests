@@ -197,7 +197,10 @@ class NVMeOFHostNamespace(object):
         if self.worker_thread.is_alive():
             print("Waiting for thread completion " + self.ns_dev + ".")
             while not self.workq.empty():
-                time.sleep(Const.ONE)
+                if self.worker_thread.is_alive():
+                    time.sleep(Const.ONE)
+                else:
+                    break
         else:
             print(self.str_err + "worker thread is not alive")
             return False
@@ -218,7 +221,10 @@ class NVMeOFHostNamespace(object):
                 self.q_cond_var.notifyAll()
 
             while not self.workq.empty():
-                time.sleep(Const.ONE)
+                if self.worker_thread.is_alive():
+                    time.sleep(Const.ONE)
+                else:
+                    break
 
             if self.worker_thread.is_alive():
                 print(self.err_str + "Worker thread is still alive ...!!!")
