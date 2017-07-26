@@ -40,7 +40,7 @@ class TestNVMFCreateTarget(NVMeOFTest):
         self.loopdev = None
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_devices)
+                                self.block_size, self.nr_loop_dev)
 
     def setUp(self):
         """ Pre section of testcase """
@@ -55,6 +55,6 @@ class TestNVMFCreateTarget(NVMeOFTest):
 
     def test_create_target(self):
         """ Testcase main """
-        ret = self.target_subsys.config()
+        ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : config target failed.")
         raw_input("Press enter to coninue ...")

@@ -44,14 +44,14 @@ class TestNVMFTargetTemplate(NVMeOFTest):
 
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_devices)
+                                self.block_size, self.nr_loop_dev)
 
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config()
+        self.target_subsys.config(self.target_config_file)
 
     def tearDown(self):
         """ Post section of testcase """
