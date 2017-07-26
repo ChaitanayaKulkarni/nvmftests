@@ -15,18 +15,15 @@
             "subsystems": [
                 "testnqn1", 
                 "testnqn2", 
-                "testnqn3"
+                "testnqn3", 
+                "testnqn4"
             ]
         }
     ], 
     "subsystems": [
         {
-            "allowed_hosts": [
-                "hostnqn"
-            ], 
-            "attr": {
-                "allow_any_host": "1"
-            }, 
+            "allowed_hosts": [], 
+            "attr": {}, 
             "namespaces": [
                 {
                     "device": {
@@ -64,12 +61,8 @@
             "nqn": "testnqn1"
         }, 
         {
-            "allowed_hosts": [
-                "hostnqn"
-            ], 
-            "attr": {
-                "allow_any_host": "1"
-            }, 
+            "allowed_hosts": [], 
+            "attr": {}, 
             "namespaces": [
                 {
                     "device": {
@@ -107,12 +100,8 @@
             "nqn": "testnqn2"
         }, 
         {
-            "allowed_hosts": [
-                "hostnqn"
-            ], 
-            "attr": {
-                "allow_any_host": "1"
-            }, 
+            "allowed_hosts": [], 
+            "attr": {}, 
             "namespaces": [
                 {
                     "device": {
@@ -148,6 +137,45 @@
                 }
             ], 
             "nqn": "testnqn3"
+        }, 
+        {
+            "allowed_hosts": [], 
+            "attr": {}, 
+            "namespaces": [
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop0"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 1
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop1"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop2"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/loop3"
+                    }, 
+                    "enable": 0, 
+                    "nsid": 4
+                }
+            ], 
+            "nqn": "testnqn4"
         }
     ]
 }
