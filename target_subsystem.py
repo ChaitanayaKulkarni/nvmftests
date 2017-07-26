@@ -50,6 +50,20 @@ class NVMeOFTargetSubsystem(object):
         self.attr_allow_any_host = attr_allow_any_host
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
+    def __iter__(self):
+        self.ns_list_index = Const.ZERO
+        return self
+
+    def __next__(self):
+        index = self.ns_list_index
+        self.ns_list_index += Const.ONE
+        if (len(self.ns_list) > index):
+            return self.ns_list[index]
+        raise StopIteration
+
+    def next(self):
+        return self.__next__()
+
     def init(self):
         """ create and initialize subsystem.
             - Args :
