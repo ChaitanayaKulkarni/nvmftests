@@ -26,6 +26,7 @@ import json
 
 from utils.const import Const
 from utils.diskio import DD
+from target_config_generator import target_config
 from nvmf_test_logger import NVMeOFLogger
 
 
@@ -45,9 +46,14 @@ class NVMeOFTest(object):
         self.config_file = 'nvmftests.json'
         self.data_size = Const.ZERO
         self.block_size = Const.ZERO
-        self.nr_devices = Const.ZERO
+        self.nr_loop_dev = Const.ZERO
         self.mount_path = Const.XXX
         self.test_log_dir = Const.XXX
+        self.nr_loop_dev = Const.ZERO
+        self.nr_target_subsys = Const.ZERO
+        self.nr_ns_per_subsys = Const.ZERO
+        self.target_config_file = Const.XXX
+
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
 
         self.load_config()
@@ -68,6 +74,26 @@ class NVMeOFTest(object):
                          "COUNT": str(self.data_size / self.block_size),
                          "RC": 0}
 
+    def build_target_config(self, nvmf_test_config):
+        """ Generates target config file in JSON format from test config file.
+            - Args:
+                - nvmf_test_config : path to test config file
+            - Returns:
+                - None
+        """
+        with open(nvmf_test_config) as cfg_file:
+            cfg = json.load(cfg_file)
+            self.nr_loop_dev = int(cfg['nr_loop_dev'])
+            self.nr_target_subsys = int(cfg['nr_target_subsys'])
+            self.nr_ns_per_subsys = int(cfg['nr_ns_per_subsys'])
+            self.target_config_file = cfg['target_config_file']
+
+            t = target_config(self.target_config_file,
+                            self.nr_target_subsys,
+                            self.nr_ns_per_subsys,
+                            self.nr_loop_dev)
+            t.build_target_subsys()
+
     def load_config(self):
         """ Load Basic test configuration.
             - Args:
@@ -80,9 +106,11 @@ class NVMeOFTest(object):
             self.mount_path = config['mount_path']
             self.data_size = self.human_to_bytes(config['data_size'])
             self.block_size = self.human_to_bytes(config['block_size'])
-            self.nr_devices = int(config['nr_devices'])
+            self.nr_loop_dev = int(config['nr_loop_dev'])
 
-            print("dev_size %d block_size %d nr_devices %d", (self.data_size, self.block_size, self.nr_devices))
+            print("dev_size %d block_size %d nr_loop_dev %d",
+                  (self.data_size, self.block_size, self.nr_loop_dev))
+            self.build_target_config(self.config_file)
 
     def human_to_bytes(self, num_str):
         """ Converts num_str from human redable format to decimal
