@@ -9,7 +9,6 @@ def pp_json(json_thing, sort=True, indents=4):
         return json.dumps(json_thing, sort_keys=sort, indent=indents)
 
 class port:
-
     def __init__(self, port_id):
         self.port_id = port_id
         self.port = []
@@ -54,15 +53,9 @@ class subsystem:
         self.attr = {}
         self.namespace = {}
         self.device = {}
-        """
+        # config device
         self.allowd_hosts.append('hostnqn')
         self.attr['allow_any_host'] = '1'
-        self.device['nguid'] = 'XXX'
-        self.device['path'] = 'XXX'
-        self.namespace['enable'] = 0
-        self.namespace['nsid'] = 0
-        """
-        # config device
         self.device['nguid'] = ns_cfg['device']['nguid']
         self.device['path'] =  ns_cfg['device']['path']
         self.namespace['device'] = self.device
@@ -70,6 +63,8 @@ class subsystem:
         self.namespace['nsid'] = ns_cfg['nsid']
         n = self.namespace
         self.ns_list.append(n)
+        # reinitialize the lists and dictionaries
+
 
     def build_ns(self):
         for i in range(0, self.nr_ns):
@@ -135,7 +130,7 @@ def build_target_config(nvmf_test_config):
         t = target_config("test.json",
                           nr_target_subsys,
                           nr_ns_per_subsys,
-						  nr_loop_dev)
+                          nr_loop_dev)
         t.build_target_subsys()
 
 build_target_config("../nvmftests.json")
