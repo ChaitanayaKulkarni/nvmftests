@@ -51,6 +51,20 @@ class NVMeOFTarget(object):
 
         assert_equal(self.load_configfs(), True)
 
+    def __iter__(self):
+        self.subsys_list_index = Const.ZERO
+        return self
+
+    def __next__(self):
+        index = self.subsys_list_index
+        self.subsys_list_index += 1
+        if (len(self.subsys_list) > index):
+            return self.subsys_list[index]
+        raise StopIteration
+
+    def next(self):
+        return self.__next__()
+
     def load_configfs(self):
         """ Load configfs.
             - Args :
