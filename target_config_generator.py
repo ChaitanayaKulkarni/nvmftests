@@ -71,7 +71,7 @@ class subsystem:
             ns_cfg['device'] = {}
             ns_cfg['device']['nguid'] = '123456'
             ns_cfg['device']['path'] = '/dev/loop' + str(i % self.nr_loop_dev)
-            ns_cfg['enable'] = 0
+            ns_cfg['enable'] = 1
             ns_cfg['nsid'] = i + 1
             self.add_ns(ns_cfg)
 
