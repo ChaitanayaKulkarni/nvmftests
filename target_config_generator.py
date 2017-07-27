@@ -1,12 +1,25 @@
+# Copyright (c) 2016-2017 Western Digital Corporation or its affiliates.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA  02110-1301, USA.
+#
+#   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
+#
+""" Represents NVMe Over Fabric Target config file generator.
+"""
 import json
-
-def pp_json(json_thing, sort=True, indents=4):
-
-    if type(json_thing) is str:
-        return json.dumps(json.loads(json_thing),
-        sort_keys=sort, indent=indents)
-    else:
-        return json.dumps(json_thing, sort_keys=sort, indent=indents)
 
 class port:
     def __init__(self, port_id):
@@ -97,6 +110,14 @@ class target_config:
         self.nr_ns = nr_ns
         self.nr_loop_dev = nr_loop_dev
 
+    def pp_json(self, json_thing, sort=True, indents=4):
+
+        if type(json_thing) is str:
+            return json.dumps(json.loads(json_thing),
+            sort_keys=sort, indent=indents)
+        else:
+            return json.dumps(json_thing, sort_keys=sort, indent=indents)
+
     def build_target_subsys(self):
 
         nqn_list = []
@@ -114,6 +135,6 @@ class target_config:
         l = {}
         l['ports'] = port_list
         l['subsystems'] = ss_list
-        data = pp_json(l)
+        data = self.pp_json(l)
         with open(self.config_file_path, "w+") as config_file:
             config_file.write(data)
