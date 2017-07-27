@@ -50,18 +50,25 @@ class TestNVMFCreateDeleteFabric(NVMeOFTest):
     def setUp(self):
         print("configuering loopback")
         self.loopdev.init()
-        target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config(self.target_config_file)
-        self.host_subsys = NVMeOFHost(target_type)
 
     def tearDown(self):
-        self.host_subsys.delete()
-        self.target_subsys.delete()
         print("deleting loopback")
         self.loopdev.delete()
 
     def test_create_delete_fabric(self):
         """ Testcase main """
+        target_type = "loop"
+
+        self.target_subsys = NVMeOFTarget(target_type)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : config target failed")
+
+        self.host_subsys = NVMeOFHost(target_type)
         ret = self.host_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : config host failed")
+
+        ret = self.host_subsys.delete()
+        assert_equal(ret, True, "ERROR : delete host subsystems failed")
+
+        ret = self.target_subsys.delete()
+        assert_equal(ret, True, "ERROR : delete target subsystems failed")
