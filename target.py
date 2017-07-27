@@ -192,18 +192,22 @@ class NVMeOFTarget(object):
             - Args :
                 - None
             -Returns :
-                - None
+                - True on success, False on failure
         """
         print("Cleanup is in progress...")
-
+        ret = True
         for port in self.port_list:
-            port.delete()
+            if port.delete() is False:
+                ret = False
 
         for subsys in self.subsys_list:
-            subsys.delete()
+            if subsys.delete() is False:
+                ret = False
 
         print("Removing Modules :- ")
         Cmd.exec_cmd("modprobe -r nvme_loop")
         Cmd.exec_cmd("modprobe -r nvmet")
         Cmd.exec_cmd("modprobe -r nvme_fabrics")
         print("DONE.")
+
+        return ret

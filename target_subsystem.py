@@ -114,7 +114,7 @@ class NVMeOFTargetSubsystem(object):
             - Args :
                 - ns : target namespace object to be deleted.
             - Returns :
-                - None.
+                - True on success, False on failure.
         """
         print("Deleting namespace " + self.nqn + " : " + ns.ns_path)
 
@@ -129,14 +129,19 @@ class NVMeOFTargetSubsystem(object):
             - Args :
                 - None.
             - Returns :
-                - None.
+                - True on success, False on failure.
         """
         print("Deleting subsystem " + self.nqn)
+        ret = True
         for ns in self.ns_list:
-            self.delete_ns(ns)
+            if self.delete_ns(ns) is False:
+                print("#####$$$$$$$$$$$$$$ delete_ns returned False")
+                ret = False
 
         if os.path.exists(self.subsys_path):
             shutil.rmtree(self.subsys_path, ignore_errors=True)
+
+        return ret
 
     def generate_next_ns_id(self):
         """ Return next namespace id.
