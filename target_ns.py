@@ -72,7 +72,7 @@ class NVMeOFTargetNamespace(object):
             return False
 
         if self.ns_attr['enable'] == '1':
-            ret = self.ns_enable()
+            ret = self.enable()
             if ret is False:
                 print(self.err_str + "enable ns " + self.ns_path + " failed.")
                 return False
@@ -80,7 +80,7 @@ class NVMeOFTargetNamespace(object):
         print("NS " + self.ns_path + " enabled.")
         return True
 
-    def ns_disable(self):
+    def disable(self):
         """ Disable Namespace.
             - Args :
                 - None.
@@ -90,7 +90,7 @@ class NVMeOFTargetNamespace(object):
         self.ns_attr['enable'] = '0'
         return Cmd.exec_cmd("echo 0 > " + self.ns_path + "/enable")
 
-    def ns_enable(self):
+    def enable(self):
         """ Enable Namespace.
             - Args :
                 - None.

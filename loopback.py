@@ -52,7 +52,7 @@ class Loopback:
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
         Cmd.exec_cmd("losetup -D")
-        Cmd.exec_cmd("modprobe -r loop")
+        Cmd.exec_cmd("modprobe -qr loop")
         Cmd.exec_cmd("modprobe loop max_loop=" + str(max_loop))
 
     def init(self):
@@ -99,8 +99,5 @@ class Loopback:
             os.remove(i)
             loop_cnt += Const.ONE
 
-        if Cmd.exec_cmd("modprobe -r loop") is False:
-            print(self.err_str + "failed to remove loop module.")
-            ret = False
-
+        Cmd.exec_cmd("modprobe -qr loop")
         return ret
