@@ -1,5 +1,5 @@
 {
-    "mount_path" : "/mnt",
+    "mount_path" : "/mnt/",
     "data_size"  : "128MB",
     "block_size" : "4KB",
     "nr_loop_dev" : "10",
