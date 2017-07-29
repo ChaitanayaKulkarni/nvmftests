@@ -57,7 +57,8 @@ plasma = State(name='plasma', on_enter=['entry_plasma'], on_exit=['exit_plasma']
 
 states=[solid, liquid, gas, plasma]
 
-machine = Machine(lump, states=states, transitions=transitions, initial='liquid')
+machine = Machine(lump, states=states, transitions=transitions, initial='liquid', 
+		auto_transitions=False)
 
 print lump.state
 lump.evaporate()
