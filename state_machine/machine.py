@@ -39,15 +39,26 @@ class Matter(object):
     def exit_plasma(self):
         print (sys._getframe().f_code.co_name)
 
+
+def before_evaporate():
+    print("BEFORE TRANSITION CALLBACK")
+    print(sys._getframe().f_code.co_name)
+
+def after_evaporate():
+    print("AFTER TRANSITION CALLBACK")
+    print(sys._getframe().f_code.co_name)
+
+
 lump = Matter('solid')
 
 # And some transitions between states. We're lazy, so we'll leave out
 # the inverse phase transitions (freezing, condensation, etc.).
 transitions = [
     { 'trigger': 'melt', 'source': 'solid', 'dest': 'liquid' },
-    { 'trigger': 'evaporate', 'source': 'liquid', 'dest': 'gas' },
+    { 'trigger': 'evaporate', 'source': 'liquid', 'dest': 'gas', 'before' : before_evaporate, 'after' : after_evaporate },
     { 'trigger': 'sublimate', 'source': 'solid', 'dest': 'gas' },
-    { 'trigger': 'ionize', 'source': 'gas', 'dest': 'plasma' }
+    { 'trigger': 'ionize', 'source': 'gas', 'dest': 'plasma' },
+    { 'trigger': 'transmogrify', 'source': ['solid', 'liquid', 'gas'], 'dest': 'plasma' }
 ]
 
 solid = State(name='solid', on_enter=['entry_solid'], on_exit=['exit_solid'])
@@ -58,7 +69,7 @@ plasma = State(name='plasma', on_enter=['entry_plasma'], on_exit=['exit_plasma']
 states=[solid, liquid, gas, plasma]
 
 machine = Machine(lump, states=states, transitions=transitions, initial='liquid', 
-		auto_transitions=False)
+        auto_transitions=False)
 
 print lump.state
 lump.evaporate()
@@ -67,4 +78,3 @@ lump.trigger('ionize')
 print "lump.is_ionize() " + str(lump.is_plasma())
 print "lump.is_solid() " + str(lump.is_solid())
 print lump.state
-
