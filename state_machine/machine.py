@@ -4,9 +4,16 @@ from transitions import Machine
 from transitions import State
 
 class Matter(object):
-    pass
-    def __init__(self):
+    def __init__(self, start_state):
         print (sys._getframe().f_code.co_name)
+        self.start_state_dict = {}
+        self.start_state_dict['solid'] = self.entry_solid
+        self.start_state_dict['liquid'] = self.entry_liquid
+        self.start_state_dict['gas'] = self.entry_gas
+        self.start_state_dict['plasma'] = self.entry_plasma
+        # the start state entry needs to call explicitely
+        print("Calling start state now :- ")
+        self.start_state_dict[start_state]()
 
     def entry_solid(self):
         print (sys._getframe().f_code.co_name)
@@ -32,7 +39,7 @@ class Matter(object):
     def exit_plasma(self):
         print (sys._getframe().f_code.co_name)
 
-lump = Matter()
+lump = Matter('solid')
 
 # And some transitions between states. We're lazy, so we'll leave out
 # the inverse phase transitions (freezing, condensation, etc.).
@@ -56,5 +63,7 @@ print lump.state
 lump.evaporate()
 print lump.state
 lump.trigger('ionize')
+print "lump.is_ionize() " + str(lump.is_plasma())
+print "lump.is_solid() " + str(lump.is_solid())
 print lump.state
 
