@@ -63,8 +63,9 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.target_subsys.delete()
         self.loopdev.delete()
 
-    def test_host(self):
+    def test_target(self):
         """ Testcase main """
+        success = True
         for target_subsys in iter(self.target_subsys):
             try:
                 print("Target Subsystem NQN " + target_subsys.nqn)
@@ -73,8 +74,10 @@ class TestNVMFHostTemplate(NVMeOFTest):
                         print(" Target NS ID " + str(target_ns.ns_id))
                         print(" Target NS Path " + target_ns.ns_path)
                     except StopIteration:
-                        break;
+                        success = False
+                        break
             except StopIteration:
-                break;
+                success = False
+                break
 
-        assert_equal(0, 0, "")
+        assert_equal(success, True, "ERROR : failed to scan target")

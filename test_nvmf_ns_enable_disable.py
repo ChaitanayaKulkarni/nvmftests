@@ -82,6 +82,6 @@ class TestNVMFHostTemplate(NVMeOFTest):
                     try:
                         self.target_ns_enable_disable(target_ns)
                     except StopIteration:
-                        break;
+                        break
             except StopIteration:
-                break;
+                break
