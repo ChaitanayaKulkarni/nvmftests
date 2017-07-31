@@ -22,7 +22,6 @@
 
 import sys
 import json
-import subprocess
 from nose.tools import assert_equal
 from port import NVMeOFTargetPort
 
@@ -83,8 +82,8 @@ class NVMeOFTarget(object):
                 print("Configfs mounted at " + self.cfgfs + ".")
                 ret = True
             else:
-                print(self.err_str + "unable to mount configfs at " + \
-                    self.cfgfs + ".")
+                print(self.err_str + "unable to mount configfs at " +
+                      self.cfgfs + ".")
                 ret = False
         return ret
 
@@ -116,7 +115,7 @@ class NVMeOFTarget(object):
             # Create Subsystem
             subsys = NVMeOFTargetSubsystem(self.cfgfs,
                                            sscfg['nqn'],
-                                           sscfg['allowed_hosts']\
+                                           sscfg['allowed_hosts']
                                            [Const.ALLOW_HOST_VALUE],
                                            sscfg['attr']['allow_any_host'])
             ret = subsys.init()
@@ -160,7 +159,7 @@ class NVMeOFTarget(object):
                 ret = port.add_subsys(subsys)
                 if ret is False:
                     # call unwind code here.
-                    print(self.err_str + "failed to add subsystem " + \
+                    print(self.err_str + "failed to add subsystem " +
                           subsys + " to port " + port.port_id)
                     return False
 
