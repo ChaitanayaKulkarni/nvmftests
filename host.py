@@ -22,7 +22,6 @@
 
 import json
 import random
-import subprocess
 
 from utils.shell import Cmd
 from utils.const import Const
@@ -103,7 +102,7 @@ class NVMeOFHost(object):
             ctrl = NVMeOFHostController(sscfg['nqn'], "loop")
             ret = ctrl.init_ctrl()
             if ret is False:
-                print(self.err_str + "failed init_ctrl() " + \
+                print(self.err_str + "failed init_ctrl() " +
                       str(ctrl.ctrl_dev) + ".")
                 return False
             self.ctrl_list.append(ctrl)
