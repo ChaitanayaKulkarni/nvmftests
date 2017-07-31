@@ -23,6 +23,7 @@
 import re
 import os
 import stat
+import time
 import random
 import string
 import subprocess
@@ -98,7 +99,7 @@ class NVMeOFHostController(object):
         for ns in iter(self):
             try:
                 ret = ns.wait_io()
-                if ret == False:
+                if ret is False:
                     return False
             except StopIteration:
                 break
@@ -181,21 +182,17 @@ class NVMeOFHostController(object):
 
         for line in proc.stdout:
             if "data_units_read" in line:
-                data_units_read = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                data_units_read = string.replace(temp_str, ",", "")
             if "data_units_written" in line:
-                data_units_written = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                data_units_written = string.replace(temp_str, ",", "")
             if "host_read_commands" in line:
-                host_read_commands = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                host_read_commands = string.replace(temp_str, ",", "")
             if "host_write_commands" in line:
-                host_write_commands = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                host_write_commands = string.replace(temp_str, ",", "")
 
         print("data_units_read " + data_units_read)
         print("data_units_written " + data_units_written)
@@ -228,6 +225,7 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
+        time.sleep(1)
         ctrl_bdev = self.ctrl_dev.split("/")[Const.CTRL_BLK_FILE_NAME]
         # Validate ctrl in the sysfs
         cmd = "basename $(dirname $(grep -ls " + self.nqn + \
@@ -239,7 +237,8 @@ class NVMeOFHostController(object):
             line = line.strip('\n')
             # compare nvmeN in /dev/nvmeN in sysfs
             if line != ctrl_bdev:
-                print(self.err_str + "host ctrl " + self.ctrl_dev + " not present.")
+                print(self.err_str + "host ctrl " + self.ctrl_dev +
+                      " not present.")
                 return False
         dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" + ctrl_bdev + "/")
 
@@ -419,15 +418,14 @@ class NVMeOFHostController(object):
             for line in proc.stdout:
                 line = line.strip('\n')
                 if not os.path.isdir(line):
-                    print(self.err_str + "host ctrl dir " + self.nqn + \
+                    print(self.err_str + "host ctrl dir " + self.nqn +
                           " not present.")
                     return False
-                cmd= "nvme disconnect -n " + self.nqn
-                print("disconnecting : " + cmd )
+                cmd = "nvme disconnect -n " + self.nqn
+                print("disconnecting : " + cmd)
                 ret = Cmd.exec_cmd(cmd)
-                #ret = Cmd.exec_cmd("echo > " + line + "/delete_controller")
                 if ret is False:
-                    print(self.err_str + "failed to delete ctrl " + \
+                    print(self.err_str + "failed to delete ctrl " +
                           self.nqn + ".")
                     return False
         except Exception, err:
