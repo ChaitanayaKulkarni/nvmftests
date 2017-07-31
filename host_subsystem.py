@@ -225,7 +225,6 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        time.sleep(1)
         ctrl_bdev = self.ctrl_dev.split("/")[Const.CTRL_BLK_FILE_NAME]
         # Validate ctrl in the sysfs
         cmd = "basename $(dirname $(grep -ls " + self.nqn + \
@@ -261,7 +260,7 @@ class NVMeOFHostController(object):
             - Returns :
                   - ctrl and ns list on success, None on failure.
         """
-        ctrl = "XXX"
+        ctrl = Const.XXX
         ns_list = []
         try:
             dev_list = os.listdir("/dev/")
@@ -280,7 +279,8 @@ class NVMeOFHostController(object):
         if ctrl == Const.XXX:
             print(self.err_str + "controller '/dev/nvme*' not found.")
             return None, None
-
+        # allow namespaces to appear in the /dev/
+        time.sleep(2)
         # find namespace(s) associated with ctrl
         try:
             dir_list = os.listdir("/dev/")
@@ -291,6 +291,7 @@ class NVMeOFHostController(object):
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
+                print("Generated namespace name /dev/" + line)
                 ns_list.append("/dev/" + line)
 
         if len(ns_list) == 0:
@@ -307,6 +308,7 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
+        print("Expecting following namespaces " + str(self.ns_dev_list))
         for ns_dev in self.ns_dev_list:
             if not stat.S_ISBLK(os.stat(ns_dev).st_mode):
                 print(self.err_str + "expected block dev " + ns_dev + ".")
@@ -316,6 +318,7 @@ class NVMeOFHostController(object):
             host_ns = NVMeOFHostNamespace(ns_dev)
             host_ns.init()
             self.ns_list.append(host_ns)
+        # allow sysfs entries to populate
         time.sleep(1)
         ret = self.validate_sysfs_ns()
         if ret is False:
