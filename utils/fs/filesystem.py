@@ -21,8 +21,8 @@
 """
 import os
 import stat
-import sys
 import subprocess
+
 
 class FileSystem(object):
     """
@@ -37,7 +37,7 @@ class FileSystem(object):
         self.fs_name = fs_name
         self.dev_path = dev_path
         self.mount_path = mount_path
-        if self.mount_path == None:
+        if self.mount_path is None:
             self.mount_path = "/mnt/" + self.dev_path.split('/')[-1]
 
     def exec_cmd(self, cmd):
@@ -64,18 +64,18 @@ class FileSystem(object):
                   - True on success, False on failure.
         """
         if not os.path.exists(self.dev_path):
-            print("device path %s is not present.", self.dev_path)
+            print("ERROR : device path %s is not present.", self.dev_path)
             return False
 
         if not stat.S_ISBLK(os.stat(self.dev_path).st_mode):
-            print("block device expected for mkfs.")
+            print("ERRO : block device expected for mkfs.")
             return False
         if self.is_mounted() is True:
-            print("device is already mounted.")
+            print("ERROR : device is already mounted.")
             return False
 
         return True
-        
+
     def mount(self):
         """ Check preconditions for the mount operation.
             - Args :
@@ -91,7 +91,7 @@ class FileSystem(object):
                 return False
 
         return True
-        
+
     def umount(self):
         """ Check preconditions for the umount operation.
             - Args :
@@ -100,9 +100,9 @@ class FileSystem(object):
                   - True on success, False on failure.
         """
         if not self.is_mounted():
-            print("fs is not mounted");
+            print("ERROR : fs is not mounted")
             return False
-		
+
         return True
 
     def is_mounted(self):

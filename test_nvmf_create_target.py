@@ -57,4 +57,3 @@ class TestNVMFCreateTarget(NVMeOFTest):
         """ Testcase main """
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : config target failed.")
-        raw_input("Press enter to coninue ...")

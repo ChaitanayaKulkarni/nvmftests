@@ -89,9 +89,9 @@ class NVMeOFTest(object):
             self.target_config_file = cfg['target_config_file']
 
             t = target_config(self.target_config_file,
-                            self.nr_target_subsys,
-                            self.nr_ns_per_subsys,
-                            self.nr_loop_dev)
+                              self.nr_target_subsys,
+                              self.nr_ns_per_subsys,
+                              self.nr_loop_dev)
             t.build_target_subsys()
 
     def load_config(self):

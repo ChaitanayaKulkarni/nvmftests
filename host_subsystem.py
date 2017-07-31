@@ -23,6 +23,7 @@
 import re
 import os
 import stat
+import time
 import random
 import string
 import subprocess
@@ -98,7 +99,7 @@ class NVMeOFHostController(object):
         for ns in iter(self):
             try:
                 ret = ns.wait_io()
-                if ret == False:
+                if ret is False:
                     return False
             except StopIteration:
                 break
@@ -181,21 +182,17 @@ class NVMeOFHostController(object):
 
         for line in proc.stdout:
             if "data_units_read" in line:
-                data_units_read = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                data_units_read = string.replace(temp_str, ",", "")
             if "data_units_written" in line:
-                data_units_written = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                data_units_written = string.replace(temp_str, ",", "")
             if "host_read_commands" in line:
-                host_read_commands = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                host_read_commands = string.replace(temp_str, ",", "")
             if "host_write_commands" in line:
-                host_write_commands = \
-                    string.replace(line.split(":")\
-                    [Const.SMART_LOG_VALUE].strip(), ",", "")
+                temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
+                host_write_commands = string.replace(temp_str, ",", "")
 
         print("data_units_read " + data_units_read)
         print("data_units_written " + data_units_written)
@@ -239,7 +236,8 @@ class NVMeOFHostController(object):
             line = line.strip('\n')
             # compare nvmeN in /dev/nvmeN in sysfs
             if line != ctrl_bdev:
-                print(self.err_str + "host ctrl " + self.ctrl_dev + " not present.")
+                print(self.err_str + "host ctrl " + self.ctrl_dev +
+                      " not present.")
                 return False
         dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" + ctrl_bdev + "/")
 
@@ -262,7 +260,7 @@ class NVMeOFHostController(object):
             - Returns :
                   - ctrl and ns list on success, None on failure.
         """
-        ctrl = "XXX"
+        ctrl = Const.XXX
         ns_list = []
         try:
             dev_list = os.listdir("/dev/")
@@ -281,7 +279,8 @@ class NVMeOFHostController(object):
         if ctrl == Const.XXX:
             print(self.err_str + "controller '/dev/nvme*' not found.")
             return None, None
-
+        # allow namespaces to appear in the /dev/
+        time.sleep(2)
         # find namespace(s) associated with ctrl
         try:
             dir_list = os.listdir("/dev/")
@@ -292,6 +291,7 @@ class NVMeOFHostController(object):
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
+                print("Generated namespace name /dev/" + line)
                 ns_list.append("/dev/" + line)
 
         if len(ns_list) == 0:
@@ -308,6 +308,7 @@ class NVMeOFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
+        print("Expecting following namespaces " + str(self.ns_dev_list))
         for ns_dev in self.ns_dev_list:
             if not stat.S_ISBLK(os.stat(ns_dev).st_mode):
                 print(self.err_str + "expected block dev " + ns_dev + ".")
@@ -317,6 +318,8 @@ class NVMeOFHostController(object):
             host_ns = NVMeOFHostNamespace(ns_dev)
             host_ns.init()
             self.ns_list.append(host_ns)
+        # allow sysfs entries to populate
+        time.sleep(1)
         ret = self.validate_sysfs_ns()
         if ret is False:
             print(self.err_str + "unable to verify sysfs entries")
@@ -419,15 +422,14 @@ class NVMeOFHostController(object):
             for line in proc.stdout:
                 line = line.strip('\n')
                 if not os.path.isdir(line):
-                    print(self.err_str + "host ctrl dir " + self.nqn + \
+                    print(self.err_str + "host ctrl dir " + self.nqn +
                           " not present.")
                     return False
-                cmd= "nvme disconnect -n " + self.nqn
-                print("disconnecting : " + cmd )
+                cmd = "nvme disconnect -n " + self.nqn
+                print("disconnecting : " + cmd)
                 ret = Cmd.exec_cmd(cmd)
-                #ret = Cmd.exec_cmd("echo > " + line + "/delete_controller")
                 if ret is False:
-                    print(self.err_str + "failed to delete ctrl " + \
+                    print(self.err_str + "failed to delete ctrl " +
                           self.nqn + ".")
                     return False
         except Exception, err:

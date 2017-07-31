@@ -20,10 +20,10 @@
 """ Represents Ext4 File system.
 """
 import os
-import sys
 import subprocess
 
 from .filesystem import FileSystem
+
 
 class Ext4FS(FileSystem):
     """

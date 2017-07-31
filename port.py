@@ -22,10 +22,10 @@
 
 import os
 import shutil
-import subprocess
 
 from utils.shell import Cmd
 from utils.const import Const
+
 
 class NVMeOFTargetPort(object):
     """
@@ -76,7 +76,7 @@ class NVMeOFTargetPort(object):
         print("Port " + self.port_path + " created successfully.")
 
         ret = Cmd.exec_cmd("echo -n \"" + self.port_conf['addr_trtype'] +
-                            "\" > " + self.port_path + "/addr_trtype")
+                           "\" > " + self.port_path + "/addr_trtype")
         status = "Port " + self.port_path + " initialized successfully."
         if ret is False:
             status = self.err_str + "trtype " + self.port_path + " failed."

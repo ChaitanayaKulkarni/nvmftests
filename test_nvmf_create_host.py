@@ -52,7 +52,8 @@ class TestNVMFCreateHost(NVMeOFTest):
         self.loopdev.init()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config(self.target_config_file)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : target config failed")
         self.host_subsys = NVMeOFHost(target_type)
 
     def tearDown(self):
@@ -64,5 +65,4 @@ class TestNVMFCreateHost(NVMeOFTest):
     def test_create_host(self):
         """ Testcase main """
         ret = self.host_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : config host failed")
-        raw_input("Waiting ....")
+        assert_equal(ret, True, "ERROR : host config failed")

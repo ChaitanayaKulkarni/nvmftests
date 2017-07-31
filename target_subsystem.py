@@ -22,7 +22,6 @@
 
 import os
 import shutil
-import subprocess
 
 from utils.shell import Cmd
 from utils.const import Const
@@ -86,7 +85,7 @@ class NVMeOFTargetSubsystem(object):
         # allow any host
         print("Configuring allowed hosts ...")
         ret = Cmd.exec_cmd("echo " + self.attr_allow_any_host + " >" +
-                            self.subsys_path + "/attr_allow_any_host")
+                           self.subsys_path + "/attr_allow_any_host")
         status = "Target Subsys " + self.subsys_path + " created successfully."
         if ret is False:
             status = self.err_str + "create " + self.subsys_path + " failed."

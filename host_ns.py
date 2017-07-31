@@ -20,7 +20,6 @@
 """ Represents NVMe Over Fabric Host Namespace.
 """
 
-import os
 import Queue
 import time
 import threading
@@ -28,6 +27,7 @@ import subprocess
 
 from utils.const import Const
 from utils.fs import Ext4FS
+
 
 class NVMeOFNSThread(threading.Thread):
     """
@@ -65,6 +65,7 @@ class NVMeOFNSThread(threading.Thread):
                 if ret is False:
                     self.workq.put(None)
         print("Exiting workther thread " + self.name)
+
 
 class NVMeOFHostNamespace(object):
     """
@@ -144,9 +145,9 @@ class NVMeOFHostNamespace(object):
             if self.fs.mkfs() is True and self.fs.mount():
                 return True
         else:
-             print(self.err_str + "file system is not supported")
+                print(self.err_str + "file system is not supported")
 
-        return False 
+        return False
 
     def unmount_cleanup(self):
         """ Unmount the namespace and cleanup the mount path.

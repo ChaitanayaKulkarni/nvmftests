@@ -53,9 +53,11 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.loopdev.init()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config(self.target_config_file)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : target config failed")
         self.host_subsys = NVMeOFHost(target_type)
-        self.host_subsys.config(self.target_config_file)
+        ret = self.host_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : host config failed")
 
     def tearDown(self):
         """ Post section of testcase """
@@ -65,6 +67,7 @@ class TestNVMFHostTemplate(NVMeOFTest):
 
     def test_host(self):
         """ Testcase main """
+        success = True
         for host_subsys in iter(self.host_subsys):
             try:
                 print("Host Controller " + host_subsys.ctrl_dev)
@@ -72,8 +75,10 @@ class TestNVMFHostTemplate(NVMeOFTest):
                     try:
                         print(" Host NS " + host_ns.ns_dev)
                     except StopIteration:
-                        break;
+                        success = False
+                        break
             except StopIteration:
-                break;
+                success = False
+                break
 
-        assert_equal(0, 0, "")
+        assert_equal(success, True, "ERROR : failed to scan host")

@@ -21,33 +21,62 @@
 """
 import json
 
+
 class port:
+    """
+    Represents target port config generator.
+
+        - Attributes:
+            - port_id: unique port identification number.
+            - port : list of the ports.
+            - port_dict : dictionary to hold port attributes.
+            - referrals : list of target port referals.
+            - subsystems : list of the subsystems associated with this port.
+    """
     def __init__(self, port_id):
         self.port_id = port_id
-        self.port = []
         self.port_dict = {}
         self.addr = {}
         self.referrals = [None]
         self.subsystems = []
 
     def build_addr(self):
+        """ build address attributes for this port.
+            - Args :
+                  - None
+            -Returns :
+                  - None
+        """
         self.addr['adrfam'] = ""
         self.addr['traddr'] = ""
         self.addr['treq'] = "not specified"
         self.addr['trsvcid'] = ""
         self.addr['trtype'] = "loop"
-        self.port_dict['addr']  = self.addr
+        self.port_dict['addr'] = self.addr
 
     def build_subsystems(self, subsys_list):
+        """ Build subsystem list associated with this port.
+            - Args :
+                  - None
+            -Returns :
+                  - True on success, False on failure.
+        """
         self.subsystem = subsys_list
-        self.port_dict['subsystems']  = self.subsystem
+        self.port_dict['subsystems'] = self.subsystem
 
     def build_port(self, nqn_list):
+        """ Builds port addr, subsystems, id, and referrals.
+            - Args :
+                  - List of the subsystem nqn associated with this port.
+            -Returns :
+                  - Port dictionary with valid values.
+        """
         self.build_addr()
         self.build_subsystems(nqn_list)
         self.port_dict['portid'] = self.port_id
         self.port_dict['referrals'] = self.referrals
         return self.port_dict
+
 
 class subsystem:
 
@@ -70,7 +99,7 @@ class subsystem:
         self.allowd_hosts.append('hostnqn')
         self.attr['allow_any_host'] = '1'
         self.device['nguid'] = ns_cfg['device']['nguid']
-        self.device['path'] =  ns_cfg['device']['path']
+        self.device['path'] = ns_cfg['device']['path']
         self.namespace['device'] = self.device
         self.namespace['enable'] = ns_cfg['enable']
         self.namespace['nsid'] = ns_cfg['nsid']
@@ -99,7 +128,20 @@ class subsystem:
         ss.append(ss_entry)
         return ss_entry
 
+
 class target_config:
+    """
+    Represents target config generator.
+
+        - Attributes:
+            - ss_list : list of subsystems associsted with this target.
+            - port_list : list of the ports associated with this target.
+            - config_file_path : path name for generated config file.
+            - nr_subsys : number of subsystems present in this target.
+            - nr_ns : number of namespaces associated with each subsystems.
+            - nr_loop_dev : number of loop devices to be used for all
+                            the namespaces.
+    """
 
     def __init__(self, config_file_path, nr_subsys, nr_ns, nr_loop_dev):
 
@@ -112,14 +154,26 @@ class target_config:
 
     def pp_json(self, json_thing, sort=True, indents=4):
 
+        """ Prints formatted JSON output.
+            - Args :
+                  - json_thing : JSON string.
+                  - sort : flag to sort JSON values before formatting.
+                  - idents : identation width.
+            -Returns :
+                  - formatted JSON string.
+        """
         if type(json_thing) is str:
             return json.dumps(json.loads(json_thing),
-            sort_keys=sort, indent=indents)
-        else:
-            return json.dumps(json_thing, sort_keys=sort, indent=indents)
+                              sort_keys=sort, indent=indents)
+        return json.dumps(json_thing, sort_keys=sort, indent=indents)
 
     def build_target_subsys(self):
-
+        """ Builds the Target config and dumps in JSON format.
+            - Args :
+                  - None
+            -Returns :
+                  - None.
+        """
         nqn_list = []
         ss_list = []
         port_list = []
@@ -132,9 +186,9 @@ class target_config:
         p = port(1)
         port_list.append(p.build_port(nqn_list))
 
-        l = {}
-        l['ports'] = port_list
-        l['subsystems'] = ss_list
-        data = self.pp_json(l)
+        target_config_str = {}
+        target_config_str['ports'] = port_list
+        target_config_str['subsystems'] = ss_list
+        data = self.pp_json(target_config_str)
         with open(self.config_file_path, "w+") as config_file:
             config_file.write(data)

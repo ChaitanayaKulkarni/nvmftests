@@ -21,12 +21,13 @@
 """
 import subprocess
 
+
 class Cmd(object):
 
     """
-    Represents a host.
+    Represents a shell command execution.
         - Attributes :
-	"""
+    """
 
     @staticmethod
     def exec_cmd(cmd):
@@ -35,12 +36,12 @@ class Cmd(object):
                 - cmd : command to execute.
             - Returns :
                 - True if cmd returns 0, False otherwise.
-        """  
-        proc = None 
-        try: 
+        """
+        proc = None
+        try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception as err: 
+        except Exception as err:
             print(str(err))
             return False
 
-        return True if proc.wait() == 0 else False   
+        return True if proc.wait() == 0 else False

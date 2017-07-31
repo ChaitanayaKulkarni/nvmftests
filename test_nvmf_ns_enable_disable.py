@@ -53,9 +53,11 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.loopdev.init()
         target_type = "loop"
         self.target_subsys = NVMeOFTarget(target_type)
-        self.target_subsys.config(self.target_config_file)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : target config failed")
         self.host_subsys = NVMeOFHost(target_type)
-        self.host_subsys.config(self.target_config_file)
+        ret = self.host_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : host config failed")
 
     def tearDown(self):
         """ Post section of testcase """
@@ -82,6 +84,6 @@ class TestNVMFHostTemplate(NVMeOFTest):
                     try:
                         self.target_ns_enable_disable(target_ns)
                     except StopIteration:
-                        break;
+                        break
             except StopIteration:
-                break;
+                break
