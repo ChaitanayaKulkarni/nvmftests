@@ -239,6 +239,7 @@ class NVMeOFHost(object):
         if self.target_type == "loop":
             print("Configuring loop host")
             ret = self.config_loop(config_file)
+            print("Host configure successfully")
         else:
             print(self.err_str + "only loop target type is supported.")
         return ret
