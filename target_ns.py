@@ -22,9 +22,9 @@
 
 import os
 import shutil
-import subprocess
 
 from utils.shell import Cmd
+
 
 class NVMeOFTargetNamespace(object):
     """
