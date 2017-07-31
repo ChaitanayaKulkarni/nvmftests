@@ -21,6 +21,7 @@
 """
 import json
 
+
 class port:
     """
     Represents target port config generator.
@@ -51,7 +52,7 @@ class port:
         self.addr['treq'] = "not specified"
         self.addr['trsvcid'] = ""
         self.addr['trtype'] = "loop"
-        self.port_dict['addr']  = self.addr
+        self.port_dict['addr'] = self.addr
 
     def build_subsystems(self, subsys_list):
         """ Build subsystem list associated with this port.
@@ -61,7 +62,7 @@ class port:
                   - True on success, False on failure.
         """
         self.subsystem = subsys_list
-        self.port_dict['subsystems']  = self.subsystem
+        self.port_dict['subsystems'] = self.subsystem
 
     def build_port(self, nqn_list):
         """ Builds port addr, subsystems, id, and referrals.
@@ -75,6 +76,7 @@ class port:
         self.port_dict['portid'] = self.port_id
         self.port_dict['referrals'] = self.referrals
         return self.port_dict
+
 
 class subsystem:
 
@@ -97,7 +99,7 @@ class subsystem:
         self.allowd_hosts.append('hostnqn')
         self.attr['allow_any_host'] = '1'
         self.device['nguid'] = ns_cfg['device']['nguid']
-        self.device['path'] =  ns_cfg['device']['path']
+        self.device['path'] = ns_cfg['device']['path']
         self.namespace['device'] = self.device
         self.namespace['enable'] = ns_cfg['enable']
         self.namespace['nsid'] = ns_cfg['nsid']
@@ -125,6 +127,7 @@ class subsystem:
         ss = []
         ss.append(ss_entry)
         return ss_entry
+
 
 class target_config:
     """
@@ -161,7 +164,7 @@ class target_config:
         """
         if type(json_thing) is str:
             return json.dumps(json.loads(json_thing),
-            sort_keys=sort, indent=indents)
+                              sort_keys=sort, indent=indents)
         return json.dumps(json_thing, sort_keys=sort, indent=indents)
 
     def build_target_subsys(self):
@@ -183,9 +186,9 @@ class target_config:
         p = port(1)
         port_list.append(p.build_port(nqn_list))
 
-        l = {}
-        l['ports'] = port_list
-        l['subsystems'] = ss_list
-        data = self.pp_json(l)
+        target_config_str = {}
+        target_config_str['ports'] = port_list
+        target_config_str['subsystems'] = ss_list
+        data = self.pp_json(target_config_str)
         with open(self.config_file_path, "w+") as config_file:
             config_file.write(data)
