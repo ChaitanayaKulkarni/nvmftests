@@ -146,14 +146,16 @@ class NVMeOFHost(object):
             - Args :
                   - None.
             - Returns :
-                  - None.
+                  - True on success, False on failure.
         """
-
+        ret = True
         print("Waiting for all threads to finish the IOs...")
         for ctrl in self.ctrl_list:
-            ctrl.wait_io_all_ns()
+            if ctrl.wait_io_all_ns() is False:
+                print(self.err_str + "failed to wait on " + ctrl.ctrl_dev)
+                ret = False
 
-        return True
+        return ret
 
     def run_ios_seq(self, iocfg):
         """ Run IOs on all host controllers one by one.
