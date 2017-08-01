@@ -127,6 +127,34 @@ class NVMeOFHost(object):
 
         return True
 
+    def run_traffic_parallel(self, iocfg):
+        """ Run parallel IO traffic on all host controller(s) and
+            wait for completion.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - None.
+        """
+        print("Starting traffic parallelly on all controllers ...")
+        for ctrl in self.ctrl_list:
+            if ctrl.run_io_all_ns(iocfg) is False:
+                return False
+
+    def wait_traffic_parallel(self):
+        """ Wait on parallel IO traffic on all host controller(s) and
+            wait for completion.
+            - Args :
+                  - None.
+            - Returns :
+                  - None.
+        """
+
+        print("Waiting for all threads to finish the IOs...")
+        for ctrl in self.ctrl_list:
+            ctrl.wait_io_all_ns()
+
+        return True
+
     def run_ios_seq(self, iocfg):
         """ Run IOs on all host controllers one by one.
             - Args :
