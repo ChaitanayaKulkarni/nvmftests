@@ -67,22 +67,28 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.loopdev.delete()
 
     def disable_target_ns(self):
+        ret = True
         for target_subsys in iter(self.target_subsys):
             try:
                 print("Target Subsystem NQN " + target_subsys.nqn)
                 for target_ns in iter(target_subsys):
                     try:
+                        ns_path = target_ns.ns_path
                         print(" Target NS ID " + str(target_ns.ns_id))
-                        print(" Disabling Target NS Path " + target_ns.ns_path)
-                        target_ns.disable()
+                        print(" Disabling Target NS Path " + ns_path)
+                        if target_ns.disable():
+                            print("ERROR : failed to disable ns " + ns_path)
+                            ret = False
                     except StopIteration:
                         break
             except StopIteration:
                 break
+        return ret
 
     def test_host(self):
         """ Testcase main """
         self.host_subsys.run_traffic_parallel(self.dd_read_traffic)
         time.sleep(5)
-        self.disable_target_ns()
+        ret = self.disable_target_ns()
+        assert_equal(ret, True, "ERROR : target ns disable failed")
         self.host_subsys.wait_traffic_parallel()
