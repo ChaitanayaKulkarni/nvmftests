@@ -44,7 +44,9 @@ class DD(object):
 
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         ret = True
-        if proc.wait() != iocfg['RC']:
+        rc = proc.wait()
+        print("############ DD COMMAND RETURNED " + str(rc))
+        if rc != iocfg['RC']:
             print("ERROR : Failed to execute " + cmd + ".")
             ret = False
 
