@@ -40,6 +40,14 @@ def __dd_worker__(iocfg):
     return DD.run_io(iocfg)
 
 
+def __run_traffic__(iocfg):
+    print("Run traffic :- ")
+    while True:
+        ret = DD.run_io(iocfg)
+        if ret is False:
+            return True
+
+
 class NVMeOFTest(object):
 
     def __init__(self):
@@ -65,6 +73,14 @@ class NVMeOFTest(object):
                         "BS": "4K",
                         "COUNT": str(self.data_size / self.block_size),
                         "RC": 0}
+
+        self.dd_read_traffic = {"IODIR": "read",
+                                "THREAD": __run_traffic__,
+                                "IF": None,
+                                "OF": "/dev/null",
+                                "BS": "4K",
+                                "COUNT": str(self.data_size / self.block_size),
+                                "RC": 0}
 
         self.dd_write = {"IODIR": "write",
                          "THREAD": __dd_worker__,
