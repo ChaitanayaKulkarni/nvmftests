@@ -38,16 +38,18 @@ class DD(object):
                   - True on success, False on failure.
         """
         cmd = "dd if=" + iocfg['IF'] + " of=" + iocfg['OF'] + \
-            " bs=" + iocfg['BS'] + " count=" + iocfg['COUNT']
+            " bs=" + iocfg['BS'] + " count=" + iocfg['COUNT'] + \
+            " > /tmp/op 2>&1"
 
-        print(" Running IOs now CMD :------- " + cmd)
+        # print(" Running IOs now CMD :------- " + cmd)
 
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         ret = True
         rc = proc.wait()
-        print("############ DD COMMAND RETURNED " + str(rc))
+        # print("############ DD COMMAND RETURNED " + str(rc))
         if rc != iocfg['RC']:
-            print("ERROR : Failed to execute " + cmd + ".")
+            # print("ERROR : Failed to execute " + cmd + ".")
+            print(".")
             ret = False
 
         return ret
