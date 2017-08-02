@@ -28,11 +28,26 @@ NVMeOF host template :-
 """
 
 import time
+from utils.diskio import DD
 from loopback import Loopback
 from nvmf_test import NVMeOFTest
 from target import NVMeOFTarget
 from host import NVMeOFHost
 from nose.tools import assert_equal
+
+
+def __run_traffic__(iocfg):
+    """ dd worker thread function to run IOs until it fails.
+        - Args :
+                - iocfg : io configuration.
+        - Returns :
+                - True when dd command fails.
+    """
+    print("Run traffic :- ")
+    while True:
+        ret = DD.run_io(iocfg)
+        if ret is False:
+            return True
 
 
 class TestNVMFHostTemplate(NVMeOFTest):
@@ -48,6 +63,14 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
+
+        self.dd_read_traffic = {"IODIR": "read",
+                                "THREAD": __run_traffic__,
+                                "IF": None,
+                                "OF": "/dev/null",
+                                "BS": "4K",
+                                "COUNT": str(self.data_size / self.block_size),
+                                "RC": 0}
 
     def setUp(self):
         """ Pre section of testcase """
@@ -76,7 +99,7 @@ class TestNVMFHostTemplate(NVMeOFTest):
                         ns_path = target_ns.ns_path
                         print(" Target NS ID " + str(target_ns.ns_id))
                         print(" Disabling Target NS Path " + ns_path)
-                        if target_ns.disable():
+                        if target_ns.disable() is False:
                             print("ERROR : failed to disable ns " + ns_path)
                             ret = False
                     except StopIteration:
