@@ -163,6 +163,19 @@ class NVMeOFHostController(object):
 
         return True
 
+    def ctrl_rescan(self):
+        """ Issue IOs to each namespace and wait, repeat for all the
+            namespaces of this controller.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        sysfs_path = "/sys/class/nvme-fabrics/ctl/"
+        cmd = "echo 1 >" + sysfs_path + self.ctrl_dev.split('/')[-1] \
+              + "/rescan_controller"
+        return Cmd.exec_cmd(cmd)
+
     def run_smart_log(self, nsid="0xFFFFFFFF"):
         """ Wrapper for nvme smart-log command.
             - Args :
