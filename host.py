@@ -209,6 +209,23 @@ class NVMeOFHost(object):
                 break
         return ret
 
+    def ctrl_reset(self):
+        """ Run controller_reset on all host controllers one by one.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        ret = True
+        for ctrl in iter(self):
+            try:
+                if ctrl.ctrl_reset() is False:
+                    ret = False
+                    break
+            except StopIteration:
+                break
+        return ret
+
     def smart_log(self):
         """ Execute smart log.
             - Args :
