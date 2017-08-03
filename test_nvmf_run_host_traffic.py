@@ -56,10 +56,6 @@ class TestNVMFHostTemplate(NVMeOFTest):
 
     def __init__(self):
         NVMeOFTest.__init__(self)
-        self.loopdev = None
-        self.host_subsys = None
-        self.target_subsys = None
-
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -71,23 +67,15 @@ class TestNVMFHostTemplate(NVMeOFTest):
                                 "BS": "4K",
                                 "COUNT": str(self.data_size / self.block_size),
                                 "RC": 0}
-
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
-        ret = self.target_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMeOFHost(target_type)
-        ret = self.host_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : host config failed")
+        super(TestNVMFHostTemplate, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.host_subsys.delete()
-        self.target_subsys.delete()
         self.loopdev.delete()
+        super(TestNVMFHostTemplate, self).common_tear_down()
 
     def disable_target_ns(self):
         ret = True
