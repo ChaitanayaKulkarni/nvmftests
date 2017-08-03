@@ -163,18 +163,37 @@ class NVMeOFHostController(object):
 
         return True
 
-    def ctrl_rescan(self):
-        """ Issue IOs to each namespace and wait, repeat for all the
-            namespaces of this controller.
+    def __ctrl_set_attr__(self, attr):
+        """ Set host controller attribute.
             - Args :
-                  - None.
+                  - attr : sysfs attribute to set.
             - Returns :
                   - True on success, False on failure.
         """
         sysfs_path = "/sys/class/nvme-fabrics/ctl/"
         cmd = "echo 1 >" + sysfs_path + self.ctrl_dev.split('/')[-1] \
-              + "/rescan_controller"
+              + "/" + attr
         return Cmd.exec_cmd(cmd)
+
+    def ctrl_rescan(self):
+        """ Issue controller rescan.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        # TODO : add sysfs entry check here
+        return self.__ctrl_set_attr__("rescan_controller")
+
+    def ctrl_reset(self):
+        """ Issue controller reset.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        # TODO : add sysfs entry check here
+        return self.__ctrl_set_attr__("reset_controller")
 
     def run_smart_log(self, nsid="0xFFFFFFFF"):
         """ Wrapper for nvme smart-log command.
