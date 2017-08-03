@@ -86,10 +86,6 @@ class NVMeOFHost(object):
             -Returns :
                   - True on success, False on failure.
         """
-        ret = Cmd.exec_cmd("modprobe nvme-loop")
-        if ret is False:
-            print(self.err_str + "failed to load nvme-loop.")
-            return False
         try:
             config_file_handle = open(config_file, "r")
             config = json.loads(config_file_handle.read())

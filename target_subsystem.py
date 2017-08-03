@@ -70,11 +70,6 @@ class NVMeOFTargetSubsystem(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Loading nvme-loop module ...")
-        ret = Cmd.exec_cmd("modprobe nvme-loop")
-        if ret is False:
-            print(self.err_str + "unable to load nvme-loop module.")
-            return False
         # create subsystem dir
         print("Creating subsys path " + self.subsys_path + ".")
         try:
