@@ -41,11 +41,11 @@ class port:
         self.subsystems = []
 
     def build_addr(self):
-        """ build address attributes for this port.
+        """ Initialize address attributes for this port.
             - Args :
-                  - None
-            -Returns :
-                  - None
+                  - None.
+            - Returns :
+                  - None.
         """
         self.addr['adrfam'] = ""
         self.addr['traddr'] = ""
@@ -55,11 +55,11 @@ class port:
         self.port_dict['addr'] = self.addr
 
     def build_subsystems(self, subsys_list):
-        """ Build subsystem list associated with this port.
+        """ Initialize subsystem list associated with this port.
             - Args :
-                  - None
+                  - None.
             -Returns :
-                  - True on success, False on failure.
+                  - Port attributes dictionary.
         """
         self.subsystem = subsys_list
         self.port_dict['subsystems'] = self.subsystem
@@ -68,7 +68,7 @@ class port:
         """ Builds port addr, subsystems, id, and referrals.
             - Args :
                   - List of the subsystem nqn associated with this port.
-            -Returns :
+            - Returns :
                   - Port dictionary with valid values.
         """
         self.build_addr()
@@ -79,7 +79,19 @@ class port:
 
 
 class subsystem:
+    """
+    Represents target subsystem config generator.
 
+        - Attributes:
+            - nr_ns : number of namespaces per subsystem.
+            - nr_loop_dev: number of loop devices to be used.
+            - nqn : subsystem nqn.
+			- ns_list : namespace list for this subsystem.
+            - allowd_hosts : allowd hosts.
+            - attr : subsystem attributes.
+            - namespace : namespace attributes.
+			- device : namespace device attibutes.
+    """
     def __init__(self, nr_ns, nqn, nr_loop_dev):
         self.nr_ns = nr_ns
         self.nr_loop_dev = nr_loop_dev
@@ -91,11 +103,17 @@ class subsystem:
         self.device = {}
 
     def add_ns(self, ns_cfg):
+        """ Updates subsystem namespace list with new namespace.
+            - Args :
+                  - ns_cfg : namespace configuration.
+            - Returns :
+				  - None.
+        """
         self.allowd_hosts = []
         self.attr = {}
         self.namespace = {}
         self.device = {}
-        # config device
+
         self.allowd_hosts.append('hostnqn')
         self.attr['allow_any_host'] = '1'
         self.device['nguid'] = ns_cfg['device']['nguid']
@@ -105,9 +123,14 @@ class subsystem:
         self.namespace['nsid'] = ns_cfg['nsid']
         n = self.namespace
         self.ns_list.append(n)
-        # reinitialize the lists and dictionaries
 
     def build_ns(self):
+        """ Build namespace configuration using available loop devices.
+            - Args :
+                  - ns_cfg : namespace configuration.
+            - Returns :
+                  - None.
+        """
         for i in range(0, self.nr_ns):
             ns_cfg = {}
             ns_cfg['device'] = {}
@@ -118,6 +141,12 @@ class subsystem:
             self.add_ns(ns_cfg)
 
     def build_subsys(self):
+        """ Initialize subsystem entry.
+            - Args :
+                  - None.
+            - Returns :
+                  - subsystem entry dictionary.
+		"""
         self.build_ns()
         ss_entry = {}
         ss_entry['allowed_hosts'] = self.allowd_hosts
@@ -142,9 +171,7 @@ class target_config:
             - nr_loop_dev : number of loop devices to be used for all
                             the namespaces.
     """
-
     def __init__(self, config_file_path, nr_subsys, nr_ns, nr_loop_dev):
-
         self.ss_list = []
         self.port_list = []
         self.config_file_path = config_file_path
@@ -153,7 +180,6 @@ class target_config:
         self.nr_loop_dev = nr_loop_dev
 
     def pp_json(self, json_thing, sort=True, indents=4):
-
         """ Prints formatted JSON output.
             - Args :
                   - json_thing : JSON string.
@@ -170,8 +196,8 @@ class target_config:
     def build_target_subsys(self):
         """ Builds the Target config and dumps in JSON format.
             - Args :
-                  - None
-            -Returns :
+                  - None.
+            - Returns :
                   - None.
         """
         nqn_list = []
