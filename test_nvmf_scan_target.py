@@ -18,28 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF host template :-
+NVMF scan target :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Write testcase code here.
+    3. Scan target subsystem.
     4. Delete Host.
     5. Delete Target.
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
-class TestNVMFHostTemplate(NVMeOFTest):
+class TestNVMFScanTarget(NVMFTest):
 
     """ Represents host template testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -47,14 +45,14 @@ class TestNVMFHostTemplate(NVMeOFTest):
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        super(TestNVMFHostTemplate, self).common_setup()
+        super(TestNVMFScanTarget, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
         self.loopdev.delete()
-        super(TestNVMFHostTemplate, self).common_tear_down()
+        super(TestNVMFScanTarget, self).common_tear_down()
 
-    def test_target(self):
+    def test_scan_target(self):
         """ Testcase main """
         success = True
         for target_subsys in iter(self.target_subsys):
