@@ -23,14 +23,14 @@
 import sys
 import json
 from nose.tools import assert_equal
-from port import NVMeOFTargetPort
+from port import NVMFTargetPort
 
 from utils.shell import Cmd
 from utils.const import Const
-from target_subsystem import NVMeOFTargetSubsystem
+from target_subsystem import NVMFTargetSubsystem
 
 
-class NVMeOFTarget(object):
+class NVMFTarget(object):
 
     """
     Represents a target subsystem.
@@ -113,7 +113,7 @@ class NVMeOFTarget(object):
         # Subsystem
         for sscfg in config['subsystems']:
             # Create Subsystem
-            subsys = NVMeOFTargetSubsystem(self.cfgfs,
+            subsys = NVMFTargetSubsystem(self.cfgfs,
                                            sscfg['nqn'],
                                            sscfg['allowed_hosts']
                                            [Const.ALLOW_HOST_VALUE],
@@ -147,7 +147,7 @@ class NVMeOFTarget(object):
             port_cfg['portid'] = str(pcfg['portid'])
             port_cfg['subsystems'] = pcfg['subsystems']
 
-            port = NVMeOFTargetPort(self.cfgfs, port_cfg['portid'], **port_cfg)
+            port = NVMFTargetPort(self.cfgfs, port_cfg['portid'], **port_cfg)
             ret = port.init()
             if ret is False:
                 # call unwind code here.
