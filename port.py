@@ -27,7 +27,7 @@ from utils.shell import Cmd
 from utils.const import Const
 
 
-class NVMeOFTargetPort(object):
+class NVMFTargetPort(object):
     """
     Represents a target port.
 
@@ -37,7 +37,7 @@ class NVMeOFTargetPort(object):
             - port_conf : dictionary to hold the port attributes.
     """
     def __init__(self, cfgfs, port_id, **port_conf):
-        """ Constructor for NVMeOFTargetPort.
+        """ Constructor for NVMFTargetPort.
             - Args :
                   - cfgfs : configfs path.
                   - port_id : port identifier.
