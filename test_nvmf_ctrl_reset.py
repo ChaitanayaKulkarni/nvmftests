@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF host template :-
+NVMF host controller reset :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -28,18 +28,16 @@ NVMeOF host template :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
-class TestNVMFHostTemplate(NVMeOFTest):
+class TestNVMFCtrlReset(NVMFTest):
 
-    """ Represents host template testcase """
+    """ Represents host controller reset testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -47,22 +45,12 @@ class TestNVMFHostTemplate(NVMeOFTest):
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        super(TestNVMFHostTemplate, self).common_setup()
+        super(TestNVMFCtrlReset, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
         self.loopdev.delete()
-        super(TestNVMFHostTemplate, self).common_tear_down()
-
-    def target_ns_enable_disable(self, target_ns):
-        target_ns_path_str = " Target NS Path " + target_ns.ns_path
-        print(" Target NS ID " + str(target_ns.ns_id))
-        ret = target_ns.disable()
-        assert_equal(ret, True, "ERROR : target ns enable failed ...")
-        print(target_ns_path_str + " disabled successfully")
-        ret = target_ns.enable()
-        assert_equal(ret, True, "ERROR : target ns disable failed ...")
-        print(target_ns_path_str + " enabled successfully")
+        super(TestNVMFCtrlReset, self).common_tear_down()
 
     def test_host(self):
         """ Testcase main """
