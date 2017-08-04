@@ -25,10 +25,10 @@ import shutil
 
 from utils.shell import Cmd
 from utils.const import Const
-from target_ns import NVMeOFTargetNamespace
+from target_ns import NVMFTargetNamespace
 
 
-class NVMeOFTargetSubsystem(object):
+class NVMFTargetSubsystem(object):
     """
     Represents a target controller.
 
@@ -97,7 +97,7 @@ class NVMeOFTargetSubsystem(object):
         """
         ns_id = self.generate_next_ns_id()
 
-        ns = NVMeOFTargetNamespace(self.cfgfs, self.nqn, ns_id, **ns_attr)
+        ns = NVMFTargetNamespace(self.cfgfs, self.nqn, ns_id, **ns_attr)
         if ns.init() is False:
             return None
         self.ns_list.append(ns)
