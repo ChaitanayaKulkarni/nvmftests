@@ -25,10 +25,10 @@ import random
 
 from utils.shell import Cmd
 from utils.const import Const
-from host_subsystem import NVMeOFHostController
+from host_subsystem import NVMFHostController
 
 
-class NVMeOFHost(object):
+class NVMFHost(object):
 
     """
     Represents a host.
@@ -37,7 +37,7 @@ class NVMeOFHost(object):
               - ctrl_list : list of the host controllers.
     """
     def __init__(self, target_type):
-        """ Constructor for NVMeOFHost.
+        """ Constructor for NVMFHost.
             - Args :
                   - target_type : represents target transport type.
                   - ctrl_list : list of host controllers.
@@ -64,7 +64,7 @@ class NVMeOFHost(object):
         return self.__next__()
 
     def load_modules(self):
-        """ Wrapper for Loading NVMeOF Host modules.
+        """ Wrapper for Loading NVMF Host modules.
             - Args :
                   - None.
             - Returns :
@@ -95,7 +95,7 @@ class NVMeOFHost(object):
             return False
 
         for sscfg in config['subsystems']:
-            ctrl = NVMeOFHostController(sscfg['nqn'], "loop")
+            ctrl = NVMFHostController(sscfg['nqn'], "loop")
             ret = ctrl.init_ctrl()
             if ret is False:
                 print(self.err_str + "failed init_ctrl() " +
