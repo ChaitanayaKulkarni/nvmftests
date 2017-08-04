@@ -18,11 +18,11 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF host template :-
+NVMF run host traffic and disable target namespace(s) :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Write testcase code here.
+    3. Start host traffic parallely on all host ns, disable target ns.
     4. Delete Host.
     5. Delete Target.
 """
@@ -30,9 +30,7 @@ NVMeOF host template :-
 import time
 from utils.diskio import DD
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
@@ -50,12 +48,13 @@ def __run_traffic__(iocfg):
             return True
 
 
-class TestNVMFHostTemplate(NVMeOFTest):
+class TestNVMFHostTraffic(NVMFTest):
 
-    """ Represents host template testcase """
+    """ Represents disable target namespace(s) while host traffic is running
+        testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -67,15 +66,16 @@ class TestNVMFHostTemplate(NVMeOFTest):
                                 "BS": "4K",
                                 "COUNT": str(self.data_size / self.block_size),
                                 "RC": 0}
+
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        super(TestNVMFHostTemplate, self).common_setup()
+        super(TestNVMFHostTraffic, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
         self.loopdev.delete()
-        super(TestNVMFHostTemplate, self).common_tear_down()
+        super(TestNVMFHostTraffic, self).common_tear_down()
 
     def disable_target_ns(self):
         ret = True
@@ -96,7 +96,7 @@ class TestNVMFHostTemplate(NVMeOFTest):
                 break
         return ret
 
-    def test_host(self):
+    def test_host_traffic(self):
         """ Testcase main """
         self.host_subsys.run_traffic_parallel(self.dd_read_traffic)
         time.sleep(5)
