@@ -18,27 +18,25 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF host template :-
+NVMF target template :-
 
     1. From the config file create Target.
-    2. From the config file create host and connect to target.
-    3. Write testcase code here.
-    4. Delete Host.
-    5. Delete Target.
+    2. Write testcase code here.
+    3. Delete Target.
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
+from nvmf_test import NVMFTest
+from target import NVMFTarget
 from nose.tools import assert_equal
 
 
-class TestNVMFTargetTemplate(NVMeOFTest):
+class TestNVMFTargetTemplate(NVMFTest):
 
     """ Represents target template testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.loopdev = None
         self.target_subsys = None
 
@@ -50,7 +48,7 @@ class TestNVMFTargetTemplate(NVMeOFTest):
         """ Pre section of testcase """
         self.loopdev.init()
         target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
+        self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
 
