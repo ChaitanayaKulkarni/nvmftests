@@ -17,7 +17,7 @@
 #
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
-""" Base Class for all NVMeOF testcases.
+""" Base Class for all NVMF testcases.
 """
 
 import os
@@ -27,11 +27,11 @@ import json
 
 from utils.const import Const
 from utils.diskio import DD
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from target import NVMFTarget
+from host import NVMFHost
 from nose.tools import assert_equal
 from target_config_generator import target_config
-from nvmf_test_logger import NVMeOFLogger
+from nvmf_test_logger import NVMFLogger
 
 
 def __dd_worker__(iocfg):
@@ -44,7 +44,7 @@ def __dd_worker__(iocfg):
     return DD.run_io(iocfg)
 
 
-class NVMeOFTest(object):
+class NVMFTest(object):
 
     def __init__(self):
         self.config_file = 'nvmftests.json'
@@ -150,15 +150,15 @@ class NVMeOFTest(object):
         self.test_log_dir = self.log_dir + "/" + test_name
         if not os.path.exists(self.test_log_dir):
             os.makedirs(self.test_log_dir)
-        sys.stdout = NVMeOFLogger(self.test_log_dir + "/" + "stdout.log")
-        sys.stderr = NVMeOFLogger(self.test_log_dir + "/" + "stderr.log")
+        sys.stdout = NVMFLogger(self.test_log_dir + "/" + "stdout.log")
+        sys.stderr = NVMFLogger(self.test_log_dir + "/" + "stderr.log")
 
     def common_setup(self):
         target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
+        self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMeOFHost(target_type)
+        self.host_subsys = NVMFHost(target_type)
         ret = self.host_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : host config failed")
 
