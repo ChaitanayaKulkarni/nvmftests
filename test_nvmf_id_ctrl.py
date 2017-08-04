@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF test id-ctrl on each controller :-
+NVMF test id-ctrl on each controller :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -28,18 +28,16 @@ NVMeOF test id-ctrl on each controller :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
-class TestNVMFIdentifyController(NVMeOFTest):
+class TestNVMFIdentifyController(NVMFTest):
 
     """ Represents Identify Controller Test testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
 
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
