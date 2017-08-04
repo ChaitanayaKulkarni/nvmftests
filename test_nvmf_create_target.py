@@ -18,24 +18,24 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF Create/Delete Target :-
+NVMF Create/Delete Target :-
 
     1. From the config file create Target.
     2. Delete Target.
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
+from nvmf_test import NVMFTest
+from target import NVMFTarget
 from nose.tools import assert_equal
 
 
-class TestNVMFCreateTarget(NVMeOFTest):
+class TestNVMFCreateTarget(NVMFTest):
 
-    """ Represents Create Delete Target testcase """
+    """ Represents Create Target testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.target_subsys = None
         self.loopdev = None
         self.setup_log_dir(self.__class__.__name__)
@@ -46,7 +46,7 @@ class TestNVMFCreateTarget(NVMeOFTest):
         """ Pre section of testcase """
         self.loopdev.init()
         target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
+        self.target_subsys = NVMFTarget(target_type)
 
     def tearDown(self):
         """ Post section of testcase """
