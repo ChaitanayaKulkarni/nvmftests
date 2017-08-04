@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF host template :-
+NVMF host template :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -28,18 +28,16 @@ NVMeOF host template :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
-class TestNVMFHostTemplate(NVMeOFTest):
+class TestNVMFHostTemplate(NVMFTest):
 
     """ Represents host template testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -47,19 +45,12 @@ class TestNVMFHostTemplate(NVMeOFTest):
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
-        ret = self.target_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMeOFHost(target_type)
-        ret = self.host_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : host config failed")
+        super(TestNVMFHostTemplate, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.host_subsys.delete()
-        self.target_subsys.delete()
         self.loopdev.delete()
+        super(TestNVMFHostTemplate, self).common_tear_down()
 
     def test_host(self):
         """ Testcase main """
