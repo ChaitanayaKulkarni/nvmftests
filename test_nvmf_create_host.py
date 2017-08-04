@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF Create/Delete Host, Target :-
+NVMF Create/Delete Host :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -27,18 +27,18 @@ NVMeOF Create/Delete Host, Target :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
+from target import NVMFTarget
+from host import NVMFHost
 from nose.tools import assert_equal
 
 
-class TestNVMFCreateHost(NVMeOFTest):
+class TestNVMFCreateHost(NVMFTest):
 
-    """ Represents Create Delete Fabric testcase """
+    """ Represents Host Creation testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.loopdev = None
         self.host_subsys = None
         self.target_subsys = None
@@ -51,10 +51,10 @@ class TestNVMFCreateHost(NVMeOFTest):
         """ Pre section of testcase """
         self.loopdev.init()
         target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
+        self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMeOFHost(target_type)
+        self.host_subsys = NVMFHost(target_type)
 
     def tearDown(self):
         """ Post section of testcase """
