@@ -22,7 +22,7 @@ NVMeOF host template :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Write testcase code here.
+    3. Call controller reset on each host controller.
     4. Delete Host.
     5. Delete Target.
 """
@@ -54,21 +54,17 @@ class TestNVMFHostTemplate(NVMeOFTest):
         self.loopdev.delete()
         super(TestNVMFHostTemplate, self).common_tear_down()
 
-    def test_target(self):
-        """ Testcase main """
-        success = True
-        for target_subsys in iter(self.target_subsys):
-            try:
-                print("Target Subsystem NQN " + target_subsys.nqn)
-                for target_ns in iter(target_subsys):
-                    try:
-                        print(" Target NS ID " + str(target_ns.ns_id))
-                        print(" Target NS Path " + target_ns.ns_path)
-                    except StopIteration:
-                        success = False
-                        break
-            except StopIteration:
-                success = False
-                break
+    def target_ns_enable_disable(self, target_ns):
+        target_ns_path_str = " Target NS Path " + target_ns.ns_path
+        print(" Target NS ID " + str(target_ns.ns_id))
+        ret = target_ns.disable()
+        assert_equal(ret, True, "ERROR : target ns enable failed ...")
+        print(target_ns_path_str + " disabled successfully")
+        ret = target_ns.enable()
+        assert_equal(ret, True, "ERROR : target ns disable failed ...")
+        print(target_ns_path_str + " enabled successfully")
 
-        assert_equal(success, True, "ERROR : failed to scan target")
+    def test_host(self):
+        """ Testcase main """
+        ret = self.host_subsys.ctrl_reset()
+        assert_equal(ret, True, "ERROR : ctrl reset failed")

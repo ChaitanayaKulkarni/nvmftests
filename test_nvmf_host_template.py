@@ -40,10 +40,6 @@ class TestNVMFHostTemplate(NVMeOFTest):
 
     def __init__(self):
         NVMeOFTest.__init__(self)
-        self.loopdev = None
-        self.host_subsys = None
-        self.target_subsys = None
-
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)

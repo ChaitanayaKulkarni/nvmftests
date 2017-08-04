@@ -40,9 +40,6 @@ class TestNVMFIdentifyController(NVMeOFTest):
 
     def __init__(self):
         NVMeOFTest.__init__(self)
-        self.loopdev = None
-        self.host_subsys = None
-        self.target_subsys = None
 
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
@@ -51,19 +48,12 @@ class TestNVMFIdentifyController(NVMeOFTest):
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        target_type = "loop"
-        self.target_subsys = NVMeOFTarget(target_type)
-        ret = self.target_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMeOFHost(target_type)
-        ret = self.host_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : host config failed")
+        super(TestNVMFIdentifyController, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.host_subsys.delete()
-        self.target_subsys.delete()
         self.loopdev.delete()
+        super(TestNVMFIdentifyController, self).common_tear_down()
 
     def test_identify_controller(self):
         """ Testcase main """

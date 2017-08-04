@@ -24,8 +24,12 @@ import os
 import sys
 import json
 
+
 from utils.const import Const
 from utils.diskio import DD
+from target import NVMeOFTarget
+from host import NVMeOFHost
+from nose.tools import assert_equal
 from target_config_generator import target_config
 from nvmf_test_logger import NVMeOFLogger
 
@@ -53,6 +57,10 @@ class NVMeOFTest(object):
         self.nr_target_subsys = Const.ZERO
         self.nr_ns_per_subsys = Const.ZERO
         self.target_config_file = Const.XXX
+
+        self.loopdev = None
+        self.host_subsys = None
+        self.target_subsys = None
 
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
 
@@ -144,3 +152,16 @@ class NVMeOFTest(object):
             os.makedirs(self.test_log_dir)
         sys.stdout = NVMeOFLogger(self.test_log_dir + "/" + "stdout.log")
         sys.stderr = NVMeOFLogger(self.test_log_dir + "/" + "stderr.log")
+
+    def common_setup(self):
+        target_type = "loop"
+        self.target_subsys = NVMeOFTarget(target_type)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : target config failed")
+        self.host_subsys = NVMeOFHost(target_type)
+        ret = self.host_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : host config failed")
+
+    def common_tear_down(self):
+        self.host_subsys.delete()
+        self.target_subsys.delete()
