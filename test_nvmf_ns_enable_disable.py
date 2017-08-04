@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF host template :-
+NVMF test enable disable target namespace :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -28,18 +28,16 @@ NVMeOF host template :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
-class TestNVMFNSEnableDisable(NVMeOFTest):
+class TestNVMFNSEnableDisable(NVMFTest):
 
-    """ Represents host template testcase """
+    """ Represents enable disable target namespace testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -64,7 +62,7 @@ class TestNVMFNSEnableDisable(NVMeOFTest):
         assert_equal(ret, True, "ERROR : target ns disable failed ...")
         print(target_ns_path_str + " enabled successfully")
 
-    def test_host(self):
+    def test_ns_enable_disable(self):
         """ Testcase main """
         for target_subsys in iter(self.target_subsys):
             try:
