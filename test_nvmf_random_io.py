@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF randomly select a controller and run IOs :-
+NVMF randomly select a controller and run IOs :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -28,18 +28,16 @@ NVMeOF randomly select a controller and run IOs :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
 from nose.tools import assert_equal
 
 
-class TestNVMeOFRandomFabric(NVMeOFTest):
+class TestNVMFRandomFabric(NVMFTest):
 
     """ Represents Random Susbsytem IO testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
@@ -47,12 +45,12 @@ class TestNVMeOFRandomFabric(NVMeOFTest):
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
-        super(TestNVMeOFRandomFabric, self).common_setup()
+        super(TestNVMFRandomFabric, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
         self.loopdev.delete()
-        super(TestNVMeOFRandomFabric, self).common_tear_down()
+        super(TestNVMFRandomFabric, self).common_tear_down()
 
     def test_random_io(self):
         """ Testcase main """
