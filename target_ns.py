@@ -26,7 +26,7 @@ import shutil
 from utils.shell import Cmd
 
 
-class NVMeOFTargetNamespace(object):
+class NVMFTargetNamespace(object):
     """
     Represents a target namespace.
 
