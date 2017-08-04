@@ -31,10 +31,10 @@ from natsort import natsorted
 
 from utils.const import Const
 from utils.shell import Cmd
-from host_ns import NVMeOFHostNamespace
+from host_ns import NVMFHostNamespace
 
 
-class NVMeOFHostController(object):
+class NVMFHostController(object):
     """
     Represents a host controller.
 
@@ -347,7 +347,7 @@ class NVMeOFHostController(object):
                 return False
 
             print("Found NS " + ns_dev)
-            host_ns = NVMeOFHostNamespace(ns_dev)
+            host_ns = NVMFHostNamespace(ns_dev)
             host_ns.init()
             self.ns_list.append(host_ns)
         # allow sysfs entries to populate
