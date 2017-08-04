@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
 """
-NVMeOF test id-ns on each namespace :-
+NVMF test id-ns on each namespace :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -28,18 +28,18 @@ NVMeOF test id-ns on each namespace :-
 """
 
 from loopback import Loopback
-from nvmf_test import NVMeOFTest
-from target import NVMeOFTarget
-from host import NVMeOFHost
+from nvmf_test import NVMFTest
+from target import NVMFTarget
+from host import NVMFHost
 from nose.tools import assert_equal
 
 
-class TestNVMFIdentifyNamespace(NVMeOFTest):
+class TestNVMFIdentifyNamespace(NVMFTest):
 
     """ Represents Identify Namespace Test testcase """
 
     def __init__(self):
-        NVMeOFTest.__init__(self)
+        NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
