@@ -29,7 +29,7 @@ from utils.const import Const
 from utils.fs import Ext4FS
 
 
-class NVMeOFNSThread(threading.Thread):
+class NVMFNSThread(threading.Thread):
     """
     Represents a worker thread.
 
@@ -40,7 +40,7 @@ class NVMeOFNSThread(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=[None], kwargs=None, verbose=None):
         """Default Thread Constructor."""
-        super(NVMeOFNSThread, self).__init__()
+        super(NVMFNSThread, self).__init__()
         self.target = target
         self.name = name
         self.workq = args[0]
@@ -67,7 +67,7 @@ class NVMeOFNSThread(threading.Thread):
         print("Exiting workther thread " + self.name)
 
 
-class NVMeOFHostNamespace(object):
+class NVMFHostNamespace(object):
     """
     Represents a host namespace.
 
@@ -109,7 +109,7 @@ class NVMeOFHostNamespace(object):
             return False
 
         # Create worker thread for this ns
-        self.worker_thread = NVMeOFNSThread(args=[self.workq, self.q_cond_var])
+        self.worker_thread = NVMFNSThread(args=[self.workq, self.q_cond_var])
         self.worker_thread.setDaemon(True)
         self.worker_thread.start()
         return True
