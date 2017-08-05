@@ -61,12 +61,13 @@ class NVMFTargetSubsystem(object):
         raise StopIteration
 
     def next(self):
+        """ Iterator next function """
         return self.__next__()
 
     def init(self):
         """ create and initialize subsystem.
             - Args :
-                - None.
+                  - None.
             - Returns :
                   - True on success, False on failure.
         """
@@ -91,9 +92,9 @@ class NVMFTargetSubsystem(object):
     def create_ns(self, **ns_attr):
         """ Create, initialize and store namespace in subsystem's list.
             - Args :
-                - ns_attr : namespace attributes.
+                  - ns_attr : namespace attributes.
             - Returns :
-                - namespace handle on success, None on error.
+                  - namespace handle on success, None on error.
         """
         ns_id = self.generate_next_ns_id()
 
@@ -106,9 +107,9 @@ class NVMFTargetSubsystem(object):
     def delete_ns(self, ns):
         """ Delete single namespace.
             - Args :
-                - ns : target namespace object to be deleted.
+                  - ns : target namespace object to be deleted.
             - Returns :
-                - True on success, False on failure.
+                  - True on success, False on failure.
         """
         print("Deleting namespace " + self.nqn + " : " + ns.ns_path)
 
@@ -121,9 +122,9 @@ class NVMFTargetSubsystem(object):
     def delete(self):
         """ Delete subsystem and associated namespace(s).
             - Args :
-                - None.
+                  - None.
             - Returns :
-                - True on success, False on failure.
+                  - True on success, False on failure.
         """
         print("Deleting subsystem " + self.nqn)
         ret = True
@@ -140,8 +141,8 @@ class NVMFTargetSubsystem(object):
     def generate_next_ns_id(self):
         """ Return next namespace id.
             - Args :
-                - None.
+                  - None.
             - Returns :
-                - next namespace id.
+                  - next namespace id.
         """
         return len(self.ns_list) + Const.ONE
