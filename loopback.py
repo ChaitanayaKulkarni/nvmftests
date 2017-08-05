@@ -26,7 +26,7 @@ from utils.shell import Cmd
 from utils.const import Const
 
 
-class Loopback:
+class Loopback(object):
     """
     Represents Loopback driver block devices.
 

@@ -46,6 +46,7 @@ class NVMFHost(object):
         """
         self.target_type = target_type
         self.ctrl_list = []
+        self.ctrl_list_index = Const.ZERO
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
         self.load_modules()
 
@@ -56,7 +57,7 @@ class NVMFHost(object):
     def __next__(self):
         index = self.ctrl_list_index
         self.ctrl_list_index += 1
-        if (len(self.ctrl_list) > index):
+        if len(self.ctrl_list) > index:
             return self.ctrl_list[index]
         raise StopIteration
 

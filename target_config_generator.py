@@ -86,11 +86,11 @@ class subsystem:
             - nr_ns : number of namespaces per subsystem.
             - nr_loop_dev: number of loop devices to be used.
             - nqn : subsystem nqn.
-			- ns_list : namespace list for this subsystem.
+            - ns_list : namespace list for this subsystem.
             - allowd_hosts : allowd hosts.
             - attr : subsystem attributes.
             - namespace : namespace attributes.
-			- device : namespace device attibutes.
+            - device : namespace device attibutes.
     """
     def __init__(self, nr_ns, nqn, nr_loop_dev):
         self.nr_ns = nr_ns
@@ -107,7 +107,7 @@ class subsystem:
             - Args :
                   - ns_cfg : namespace configuration.
             - Returns :
-				  - None.
+                  - None.
         """
         self.allowd_hosts = []
         self.attr = {}
@@ -146,7 +146,7 @@ class subsystem:
                   - None.
             - Returns :
                   - subsystem entry dictionary.
-		"""
+        """
         self.build_ns()
         ss_entry = {}
         ss_entry['allowed_hosts'] = self.allowd_hosts
