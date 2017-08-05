@@ -34,7 +34,7 @@ from nose.tools import assert_equal
 
 class TestNVMFScanTarget(NVMFTest):
 
-    """ Represents host template testcase """
+    """ Represents scan target subsystems testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
