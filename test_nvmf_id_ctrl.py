@@ -34,7 +34,7 @@ from nose.tools import assert_equal
 
 class TestNVMFIdentifyController(NVMFTest):
 
-    """ Represents Identify Controller Test testcase """
+    """ Represents Identify Controller testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
