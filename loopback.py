@@ -17,7 +17,7 @@
 #
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
-""" Represents Loopback driver block devices.
+""" Represents Loopback block devices.
 """
 
 import os
@@ -38,13 +38,6 @@ class Loopback(object):
             - dev_list : list of loop back files.
     """
     def __init__(self, path, dev_size, block_size, max_loop):
-        """ Constructor for Loopback.
-            - Args :
-                  path : directory path where backend file is stired.
-                  dev_size : device size.
-                  block_size : block size to write backend file.
-                  max_loop : number of loop back devices.
-        """
         self.path = path
         self.dev_size = dev_size
         self.block_size = block_size
@@ -59,9 +52,9 @@ class Loopback(object):
     def init(self):
         """ Create and initialize Loopback.
             - Args :
-                - None.
+                  - None.
             - Returns :
-                - True on success, False on failure.
+                  - True on success, False on failure.
         """
         count = self.dev_size / self.block_size
 
@@ -87,9 +80,9 @@ class Loopback(object):
     def delete(self):
         """ Delete this Loopback.
             - Args :
-                - None.
+                  - None.
             -Returns :
-                - True on success, False on failure.
+                  - True on success, False on failure.
         """
         ret = True
         loop_cnt = Const.ZERO
