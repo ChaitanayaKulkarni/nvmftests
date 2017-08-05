@@ -25,19 +25,19 @@ import sys
 class NVMFLogger(object):
     """ Represents Logger for NVMe Testframework.  """
     def __init__(self, log_file_path):
-        """ Logger setup
-            - Args:
-                log_file_path : path to store the log.
+        """ Logger setup.
+            - Args :
+                  - log_file_path : path to store the log.
         """
         self.terminal = sys.stdout
         self.log = open(log_file_path, "w")
 
     def write(self, log_message):
-        """ Logger setup
-            - Args:
-                log_message: string to write in the log file.
+        """ Logger write.
+            - Args :
+                  - log_message: string to write in the log file.
             - Returns:
-                None
+                  - None.
         """
         self.terminal.write(log_message)
         self.log.write(log_message)
