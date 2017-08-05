@@ -62,6 +62,7 @@ class NVMFTarget(object):
         raise StopIteration
 
     def next(self):
+        """ Iterator next function """
         return self.__next__()
 
     def load_configfs(self):
@@ -93,7 +94,7 @@ class NVMFTarget(object):
             2. Create port(s) and linked them to respective subsystem(s).
             3. Create in memory configuration from JSON config file.
             - Args :
-                  - None
+                  - None.
             -Returns :
                   - True on success, False on failure.
         """
@@ -168,9 +169,9 @@ class NVMFTarget(object):
     def config(self, config_file="loop.json"):
         """ Wrapper for creating target configuration.
             - Args :
-                - None
+                  - None.
             -Returns :
-                - None
+                  - None.
         """
         ret = Cmd.exec_cmd("modprobe nvmet")
         if ret is False:
@@ -189,9 +190,9 @@ class NVMFTarget(object):
     def delete(self):
         """ Target Cleanup.
             - Args :
-                - None
+                  - None.
             -Returns :
-                - True on success, False on failure
+                  - True on success, False on failure.
         """
         print("Cleanup is in progress...")
         ret = True
