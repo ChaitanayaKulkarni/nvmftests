@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA  02110-1301, USA.
 #
-#   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
+#   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
 NVMF Create/Delete Host, Target :-
