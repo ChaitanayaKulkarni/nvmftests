@@ -68,6 +68,7 @@ class NVMFHostController(object):
         raise StopIteration
 
     def next(self):
+        """ Iterator next function """
         return self.__next__()
 
     def run_io_all_ns(self, iocfg):
@@ -107,7 +108,7 @@ class NVMFHostController(object):
         return True
 
     def run_io_seq(self, iocfg):
-        """ Issue IOs to each namespace and wait, repeat for all the
+        """ Issue IOs to each namespace and wait one by one, repeat for all the
             namespaces of this controller.
             - Args :
                   - iocfg : io configuration.
@@ -183,7 +184,6 @@ class NVMFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        # TODO : add sysfs entry check here
         return self.__ctrl_set_attr__("rescan_controller")
 
     def ctrl_reset(self):
@@ -193,7 +193,6 @@ class NVMFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        # TODO : add sysfs entry check here
         return self.__ctrl_set_attr__("reset_controller")
 
     def run_smart_log(self, nsid="0xFFFFFFFF"):
@@ -252,7 +251,7 @@ class NVMFHostController(object):
         return True
 
     def validate_sysfs_ns(self):
-        """ Validate sysfs entries for the host controller and namespace(s)
+        """ Validate sysfs entries for the host controller and namespace(s).
             - Args :
                   - None.
             - Returns :
@@ -423,7 +422,8 @@ class NVMFHostController(object):
                   - True on success, False on failure.
         """
         for host_ns in self.ns_list:
-            host_ns.id_ns()
+            if host_ns.id_ns() is False:
+                return False
             print("--------------------------------------------------")
         return True
 
