@@ -22,7 +22,7 @@ NVMF test mkfs on each subsystem :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Execute mkfs on all controllers and its namespaces.
+    3. Execute mkfs on all host namespaces.
     4. Delete Host.
     5. Delete Target.
 """
