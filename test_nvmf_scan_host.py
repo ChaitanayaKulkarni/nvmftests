@@ -22,7 +22,7 @@ NVMF scan host :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Scan host subsystem
+    3. Scan host subsystem.
     4. Delete Host.
     5. Delete Target.
 """
@@ -34,7 +34,7 @@ from nose.tools import assert_equal
 
 class TestNVMFHostTemplate(NVMFTest):
 
-    """ Represents host template testcase """
+    """ Represents host controller scan testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
