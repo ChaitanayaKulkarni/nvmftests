@@ -29,8 +29,6 @@ NVMF test mkfs on each subsystem :-
 
 from loopback import Loopback
 from nvmf_test import NVMFTest
-from target import NVMFTarget
-from host import NVMFHost
 from nose.tools import assert_equal
 
 

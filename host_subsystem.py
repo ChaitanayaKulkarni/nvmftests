@@ -53,6 +53,7 @@ class NVMFHostController(object):
         self.ns_list = []
         self.ns_dev_list = []
         self.transport = transport
+        self.ns_list_index = Const.ZERO
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def __iter__(self):
@@ -241,7 +242,7 @@ class NVMFHostController(object):
         """
         self.run_smart_log()
         i = Const.ONE
-        for namespace in iter(self):
+        for ns in iter(self):
             try:
                 if self.run_smart_log(i) is False:
                     return False
@@ -277,7 +278,7 @@ class NVMFHostController(object):
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
-                if not "/dev/" + line in self.ns_dev_list:
+                if "/dev/" + line not in self.ns_dev_list:
                     print(self.err_str + "ns " + line + " not found in sysfs.")
                     return False
 

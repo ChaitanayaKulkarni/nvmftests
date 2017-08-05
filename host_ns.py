@@ -73,11 +73,6 @@ class NVMFHostNamespace(object):
 
         - Attributes :
             - ns_dev : block device associated with this namespace.
-            - lbaf_cnt : logical block format count.
-            - lbaf : dictionary for logical block format.
-            - ms : dictionary to store medata size information.
-            - lbads : dictionary to store LBA Data Size.
-            - rp : dictionary to store relative performance.
             - mount_path : mounted directory.
             - worker_thread : handle for io worker thread.
             - workq : workqueue shared between producer and worker thread.
@@ -85,16 +80,11 @@ class NVMFHostNamespace(object):
     """
     def __init__(self, ns_dev):
         self.ns_dev = ns_dev
-        self.lbaf_cnt = Const.ZERO
-        self.lbaf = {}
-        self.ms = {}
-        self.lbads = {}
-        self.rp = {}
         self.mount_path = None
         self.worker_thread = None
         self.workq = Queue.Queue()
         self.q_cond_var = threading.Condition()
-        self.fs = None
+        self.fs_type = None
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def init(self):
@@ -141,11 +131,11 @@ class NVMFHostNamespace(object):
                   - True on success, False on failure.
         """
         if fs_type == "ext4":
-            self.fs = Ext4FS(self.ns_dev)
-            if self.fs.mkfs() is True and self.fs.mount():
+            self.fs_type = Ext4FS(self.ns_dev)
+            if self.fs_type.mkfs() is True and self.fs_type.mount():
                 return True
         else:
-                print(self.err_str + "file system is not supported")
+            print(self.err_str + "file system is not supported")
 
         return False
 
@@ -156,8 +146,8 @@ class NVMFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        if self.fs is not None:
-            return self.fs.umount()
+        if self.fs_type is not None:
+            return self.fs_type.umount()
 
         return True
 
@@ -203,7 +193,7 @@ class NVMFHostNamespace(object):
                 else:
                     break
         else:
-            print(self.str_err + "worker thread is not alive")
+            print(self.err_str + "worker thread is not alive")
             return False
         print("# WAIT COMPLETE " + self.ns_dev + ".")
         return True

@@ -29,10 +29,9 @@ from utils.const import Const
 from utils.diskio import DD
 from target import NVMFTarget
 from host import NVMFHost
-from nose.tools import assert_equal
 from target_config_generator import target_config
 from nvmf_test_logger import NVMFLogger
-
+from nose.tools import assert_equal
 
 def __dd_worker__(iocfg):
     """ dd worker thread function.
@@ -57,13 +56,11 @@ class NVMFTest(object):
         self.nr_target_subsys = Const.ZERO
         self.nr_ns_per_subsys = Const.ZERO
         self.target_config_file = Const.XXX
-
         self.loopdev = None
         self.host_subsys = None
         self.target_subsys = None
-
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
-
+        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
         self.load_config()
 
         self.dd_read = {"IODIR": "read",
@@ -96,11 +93,11 @@ class NVMFTest(object):
             self.nr_ns_per_subsys = int(cfg['nr_ns_per_subsys'])
             self.target_config_file = cfg['target_config_file']
 
-            t = target_config(self.target_config_file,
-                              self.nr_target_subsys,
-                              self.nr_ns_per_subsys,
-                              self.nr_loop_dev)
-            t.build_target_subsys()
+            target_cfg = target_config(self.target_config_file,
+                                       self.nr_target_subsys,
+                                       self.nr_ns_per_subsys,
+                                       self.nr_loop_dev)
+            target_cfg.build_target_subsys()
 
     def load_config(self):
         """ Load Basic test configuration.
@@ -127,18 +124,18 @@ class NVMFTest(object):
             Returns:
               - On success decimal equivalant of num_str, 0 on failure
         """
-        no = 0
+        decimal_bytes = 0
         num_suffix = str(num_str[-2:]).upper()
         if num_suffix == Const.KB:
-            no = int(num_str.split("K")[0]) * Const.ONE_KB
+            decimal_bytes = int(num_str.split("K")[0]) * Const.ONE_KB
         elif num_suffix == Const.MB:
-            no = int(num_str.split("M")[0]) * Const.ONE_MB
+            decimal_bytes = int(num_str.split("M")[0]) * Const.ONE_MB
         elif num_suffix == Const.GB:
-            no = int(num_str.split("G")[0]) * Const.ONE_GB
+            decimal_bytes = int(num_str.split("G")[0]) * Const.ONE_GB
         else:
             print(self.err_str + "invalid suffix " + num_str)
 
-        return no
+        return decimal_bytes
 
     def setup_log_dir(self, test_name):
         """ Set up the log directory for a testcase

@@ -114,10 +114,10 @@ class NVMFTarget(object):
         for sscfg in config['subsystems']:
             # Create Subsystem
             subsys = NVMFTargetSubsystem(self.cfgfs,
-                                           sscfg['nqn'],
-                                           sscfg['allowed_hosts']
-                                           [Const.ALLOW_HOST_VALUE],
-                                           sscfg['attr']['allow_any_host'])
+                                         sscfg['nqn'],
+                                         sscfg['allowed_hosts']
+                                         [Const.ALLOW_HOST_VALUE],
+                                         sscfg['attr']['allow_any_host'])
             ret = subsys.init()
             if ret is False:
                 # call unwind code here.
