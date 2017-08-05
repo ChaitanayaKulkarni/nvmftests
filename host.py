@@ -32,6 +32,7 @@ class NVMFHost(object):
 
     """
     Represents a host.
+
         - Attributes :
               - target_type : rdma/loop/fc. (only loop supported now)
               - ctrl_list : list of the host controllers.
@@ -62,6 +63,7 @@ class NVMFHost(object):
         raise StopIteration
 
     def next(self):
+        """ Iterator next function """
         return self.__next__()
 
     def load_modules(self):
@@ -83,7 +85,7 @@ class NVMFHost(object):
             2. Load config from json file.
             3. Create Controller list.
             - Args :
-                  - None
+                  - None.
             -Returns :
                   - True on success, False on failure.
         """
@@ -190,7 +192,6 @@ class NVMFHost(object):
             if ctrl.run_io_random(iocfg) is False:
                 ret = False
                 break
-
         return ret
 
     def ctrl_rescan(self):
@@ -239,7 +240,6 @@ class NVMFHost(object):
             if ctrl.smart_log() is False:
                 ret = False
                 break
-
         return ret
 
     def id_ctrl(self):
@@ -254,7 +254,6 @@ class NVMFHost(object):
             if ctrl.id_ctrl() is False:
                 ret = False
                 break
-
         return ret
 
     def id_ns(self):
@@ -269,7 +268,6 @@ class NVMFHost(object):
             if ctrl.id_ns() is False:
                 ret = False
                 break
-
         return ret
 
     def mkfs_seq(self, fs_type):
@@ -277,7 +275,7 @@ class NVMFHost(object):
             - Args :
                   - fs_type : file system type.
             - Returns :
-                  - True on success, False on failure..
+                  - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
