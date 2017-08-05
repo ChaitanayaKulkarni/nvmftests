@@ -22,7 +22,7 @@ NVMF randomly select a controller and run IOs :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Randomly select the controller and its  namespaces(s) for IOs.
+    3. Randomly select the controller and run IOS on all namespaces(s).
     4. Delete Host.
     5. Delete Target.
 """
