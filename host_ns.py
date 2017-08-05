@@ -38,7 +38,7 @@ class NVMFNSThread(threading.Thread):
             - workq : workqueue shared between producer and worker thread.
     """
     def __init__(self, group=None, target=None, name=None,
-                 args=[None], kwargs=None, verbose=None):
+                 args=[], kwargs=None, verbose=None):
         """Default Thread Constructor."""
         super(NVMFNSThread, self).__init__()
         self.target = target
@@ -88,8 +88,7 @@ class NVMFHostNamespace(object):
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def init(self):
-        """ Initialize namespace, create worker thread and
-            build controller attributes.
+        """ Create worker thread.
             - Args :
                   - None.
             - Returns :
@@ -152,7 +151,7 @@ class NVMFHostNamespace(object):
         return True
 
     def start_io(self, iocfg):
-        """ Add new work item to workqueue. Triggers wake up in worker thread.
+        """ Add new work IO item to workqueue and notify worker thread.
             - Args :
                   - IO Configuration passed to worker thread.
             - Returns :
@@ -177,12 +176,11 @@ class NVMFHostNamespace(object):
         return True
 
     def wait_io(self):
-        """ Wait until all the items are completed from workqueue.
+        """ Wait until queue is empty.
             - Args :
                   - None.
             - Returns :
-                  - True if worker thread is alive and queue is empty,
-                    False otherwise.
+                  - True on success, False otherwise.
         """
         print("Checking for worker thread " + self.ns_dev + ".")
         if self.worker_thread.is_alive():
