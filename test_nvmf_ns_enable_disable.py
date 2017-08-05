@@ -22,7 +22,7 @@ NVMF test enable disable target namespace :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Write testcase code here.
+    3. Exercise enable disable target namespace options.
     4. Delete Host.
     5. Delete Target.
 """
