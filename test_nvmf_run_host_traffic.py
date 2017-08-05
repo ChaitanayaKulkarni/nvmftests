@@ -37,9 +37,9 @@ from nose.tools import assert_equal
 def __run_traffic__(iocfg):
     """ dd worker thread function to run IOs until it fails.
         - Args :
-                - iocfg : io configuration.
+              - iocfg : io configuration.
         - Returns :
-                - True when dd command fails.
+              - True when dd command fails.
     """
     print("Run traffic :- ")
     while True:
