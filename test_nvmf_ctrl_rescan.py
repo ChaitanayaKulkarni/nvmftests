@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF host template :-
+NVMF host controller rescan :-
 
     1. From config file create Target.
     2. From config file create host and connect to target.
