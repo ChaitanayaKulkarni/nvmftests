@@ -37,12 +37,6 @@ class NVMFTargetPort(object):
             - port_conf : dictionary to hold the port attributes.
     """
     def __init__(self, cfgfs, port_id, **port_conf):
-        """ Constructor for NVMFTargetPort.
-            - Args :
-                  - cfgfs : configfs path.
-                  - port_id : port identifier.
-                  - port_conf : port configuration list.
-        """
         self.cfgfs = cfgfs
         self.port_id = port_id
         self.port_conf = {}
@@ -87,7 +81,7 @@ class NVMFTargetPort(object):
     def add_subsys(self, subsys_name):
         """ Link Subsystem to this port.
             - Args :
-                 - subsys_name : subsstem nqn to be linked
+                  - subsys_name : subsystem nqn to be linked.
             - Returns :
                   - True on success, False on failure.
         """
@@ -104,7 +98,7 @@ class NVMFTargetPort(object):
     def delete(self):
         """ Delete this port.
             - Args :
-                - None
+                  - None.
             -Returns :
                   - True on success, False on failure.
         """
