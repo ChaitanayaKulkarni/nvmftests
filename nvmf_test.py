@@ -33,17 +33,20 @@ from target_config_generator import target_config
 from nvmf_test_logger import NVMFLogger
 from nose.tools import assert_equal
 
+
 def __dd_worker__(iocfg):
     """ dd worker thread function.
         - Args :
-                - iocfg : io configuration.
+              - iocfg : io configuration.
         - Returns :
-                - Return valud of dd command.
+              - Return value of dd command.
     """
     return DD.run_io(iocfg)
 
 
 class NVMFTest(object):
+
+    """ Common attributes for all testcases """
 
     def __init__(self):
         self.config_file = 'nvmftests.json'
@@ -61,7 +64,8 @@ class NVMFTest(object):
         self.target_subsys = None
         self.log_dir = "./logs/" + self.__class__.__name__ + "/"
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
-        self.load_config()
+        if self.load_config() is False:
+            return None
 
         self.dd_read = {"IODIR": "read",
                         "THREAD": __dd_worker__,
@@ -81,10 +85,10 @@ class NVMFTest(object):
 
     def build_target_config(self, nvmf_test_config):
         """ Generates target config file in JSON format from test config file.
-            - Args:
-                - nvmf_test_config : path to test config file
-            - Returns:
-                - None
+            - Args :
+                  - nvmf_test_config : path to test config file.
+            - Returns :
+                  - None.
         """
         with open(nvmf_test_config) as cfg_file:
             cfg = json.load(cfg_file)
@@ -101,10 +105,10 @@ class NVMFTest(object):
 
     def load_config(self):
         """ Load Basic test configuration.
-            - Args:
-                - None
-            - Returns:
-                - None
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
         """
         with open(self.config_file) as nvmftest_config:
             config = json.load(nvmftest_config)
@@ -116,13 +120,16 @@ class NVMFTest(object):
             print("dev_size %d block_size %d nr_loop_dev %d",
                   (self.data_size, self.block_size, self.nr_loop_dev))
             self.build_target_config(self.config_file)
+            return True
+
+        return False
 
     def human_to_bytes(self, num_str):
-        """ Converts num_str from human redable format to decimal
-            Args:
-              - num_str : human redable string.
-            Returns:
-              - On success decimal equivalant of num_str, 0 on failure
+        """ Converts num_str from human redable format to bytes.
+            Args :
+                - num_str : human redable string.
+            Returns :
+                - On success decimal equivalant of num_str, 0 on failure.
         """
         decimal_bytes = 0
         num_suffix = str(num_str[-2:]).upper()
@@ -138,11 +145,11 @@ class NVMFTest(object):
         return decimal_bytes
 
     def setup_log_dir(self, test_name):
-        """ Set up the log directory for a testcase
-            Args:
-              - test_name : name of the testcase.
-            Returns:
-              - None
+        """ Set up the log directory for a testcase.
+            Args :
+                - test_name : name of the testcase.
+            Returns :
+                - None.
         """
         self.test_log_dir = self.log_dir + "/" + test_name
         if not os.path.exists(self.test_log_dir):
@@ -151,6 +158,12 @@ class NVMFTest(object):
         sys.stderr = NVMFLogger(self.test_log_dir + "/" + "stderr.log")
 
     def common_setup(self):
+        """ Common test case setup function.
+            Args :
+                - test_name : name of the testcase.
+            Returns :
+                - None.
+        """
         target_type = "loop"
         self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
@@ -160,5 +173,11 @@ class NVMFTest(object):
         assert_equal(ret, True, "ERROR : host config failed")
 
     def common_tear_down(self):
+        """ Common test case tear down function.
+            Args :
+                - test_name : name of the testcase.
+            Returns :
+                - None.
+        """
         self.host_subsys.delete()
         self.target_subsys.delete()
