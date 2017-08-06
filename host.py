@@ -126,6 +126,28 @@ class NVMFHost(object):
 
         return True
 
+    def run_perf_parallel(self, iocfg):
+        """ Run parallel IO traffic on all host controller(s) and
+            wait for completion.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - None.
+        """
+        ret = True
+        print("Starting traffic parallelly on all controllers ...")
+        for ctrl in self.ctrl_list:
+            if ctrl.run_io_all_ns(iocfg) is False:
+                return False
+
+        print("Waiting for all threads to finish the IOs...")
+        for ctrl in self.ctrl_list:
+            if ctrl.wait_io_all_ns() is False:
+                print(self.err_str + "failed to wait on " + ctrl.ctrl_dev)
+                ret = False
+
+        return ret
+
     def run_traffic_parallel(self, iocfg):
         """ Run parallel IO traffic on all host controller(s) and
             wait for completion.
@@ -138,16 +160,6 @@ class NVMFHost(object):
         for ctrl in self.ctrl_list:
             if ctrl.run_io_all_ns(iocfg) is False:
                 return False
-
-    def wait_traffic_parallel(self):
-        """ Wait on parallel IO traffic on all host controller(s) and
-            wait for completion.
-            - Args :
-                  - None.
-            - Returns :
-                  - True on success, False on failure.
-        """
-        ret = True
         print("Waiting for all threads to finish the IOs...")
         for ctrl in self.ctrl_list:
             if ctrl.wait_io_all_ns() is False:
