@@ -22,6 +22,7 @@
 
 import Queue
 import time
+import copy
 import threading
 import subprocess
 
@@ -157,14 +158,19 @@ class NVMFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        if iocfg['IODIR'] == "read":
-            iocfg['IF'] = self.ns_dev
-        elif iocfg['IODIR'] == "write":
-            iocfg['OF'] = self.ns_dev
+        iocfg = copy.deepcopy(iocfg)
+        if iocfg['IO_TYPE'] == 'dd':
+            if iocfg['IODIR'] == "read":
+                iocfg['IF'] = self.ns_dev
+            elif iocfg['IODIR'] == "write":
+                iocfg['OF'] = self.ns_dev
+            else:
+                print(self.err_str + "io config " + iocfg + " not supported.")
+                return False
+        elif iocfg['IO_TYPE'] == 'fio':
+            iocfg['filename'] = self.ns_dev
         else:
-            print(self.err_str + "io config " + iocfg + " not supported.")
-            return False
-
+            print(self.err_str + "invalid IO type " + iocfg['IO_TYPE'])
         if self.worker_thread.is_alive():
             with self.q_cond_var:
                 self.workq.put(iocfg)
