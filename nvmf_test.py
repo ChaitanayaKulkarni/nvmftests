@@ -23,15 +23,15 @@
 import os
 import sys
 import json
-
+from nose.tools import assert_equal
 
 from utils.const import Const
 from utils.diskio import DD
+from utils.diskio import FIO
 from target import NVMFTarget
 from host import NVMFHost
 from target_config_generator import target_config
 from nvmf_test_logger import NVMFLogger
-from nose.tools import assert_equal
 
 
 def __dd_worker__(iocfg):
@@ -42,6 +42,16 @@ def __dd_worker__(iocfg):
               - Return value of dd command.
     """
     return DD.run_io(iocfg)
+
+
+def __fio_worker__(iocfg):
+    """ fio worker thread function.
+        - Args :
+              - iocfg : io configuration.
+        - Returns :
+              - Return value of fio command.
+    """
+    return FIO.run_io(iocfg)
 
 
 class NVMFTest(object):
@@ -62,26 +72,46 @@ class NVMFTest(object):
         self.loopdev = None
         self.host_subsys = None
         self.target_subsys = None
-        self.log_dir = "./logs/" + self.__class__.__name__ + "/"
+        self.log_dir = './logs/' + self.__class__.__name__ + '/'
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
         if self.load_config() is False:
             return None
 
-        self.dd_read = {"IODIR": "read",
-                        "THREAD": __dd_worker__,
-                        "IF": None,
-                        "OF": "/dev/null",
-                        "BS": "4K",
-                        "COUNT": str(self.data_size / self.block_size),
-                        "RC": 0}
+        self.dd_read = {'IO_TYPE': 'dd',
+                        'IODIR': 'read',
+                        'THREAD': __dd_worker__,
+                        'IF': None,
+                        'OF': '/dev/null',
+                        'BS': '4K',
+                        'COUNT': str(self.data_size / self.block_size),
+                        'RC': 0}
 
-        self.dd_write = {"IODIR": "write",
-                         "THREAD": __dd_worker__,
-                         "IF": "/dev/zero",
-                         "OF": None,
-                         "BS": "4K",
-                         "COUNT": str(self.data_size / self.block_size),
-                         "RC": 0}
+        self.dd_write = {'IO_TYPE': 'dd',
+                         'IODIR': 'write',
+                         'THREAD': __dd_worker__,
+                         'IF': '/dev/zero',
+                         'OF': None,
+                         'BS': '4K',
+                         'COUNT': str(self.data_size / self.block_size),
+                         'RC': 0}
+
+        self.fio_read = {'IO_TYPE': 'fio',
+                         'group_reporting': '1',
+                         'rw': 'randread',
+                         'bs': '4k',
+                         'numjobs': '4',
+                         'iodepth': '8',
+                         'runtime': '30',
+                         'loop': '1',
+                         'ioengine': 'libaio',
+                         'direct': '1',
+                         'invalidate': '1',
+                         'randrepeat': '1',
+                         'size': '100M',
+                         'filename': Const.XXX,
+                         'name': 'test1',
+                         'THREAD': __fio_worker__,
+                         'RC': '0'}
 
     def build_target_config(self, nvmf_test_config):
         """ Generates target config file in JSON format from test config file.
@@ -164,7 +194,7 @@ class NVMFTest(object):
             Returns :
                 - None.
         """
-        target_type = "loop"
+        target_type = 'loop'
         self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
