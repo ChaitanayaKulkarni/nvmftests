@@ -30,7 +30,7 @@ class FIO(object):
     """
 
     @staticmethod
-    def run_fio(iocfg):
+    def run_io(iocfg):
         """ Executes fio command based on the config argument.
             - Args :
                   - IO Configuration for fio command.
@@ -55,7 +55,7 @@ class FIO(object):
         cmd += " --size=" + iocfg['size']
         cmd += " --filename=" + iocfg['filename']
         cmd += " --name=" + iocfg['name']
-
+        cmd += " --output=" + iocfg['filename'].split('/')[-1] + "_fio.log"
         print(cmd)
         ret = True
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -64,23 +64,3 @@ class FIO(object):
             print(".")
             ret = False
         return ret
-
-
-iocfg = {}
-
-iocfg['group_reporting'] = "1"
-iocfg['rw'] = "randread"
-iocfg['bs'] = "4k"
-iocfg['numjobs'] = "4"
-iocfg['iodepth'] = "8"
-iocfg['runtime'] = "10"
-iocfg['loop'] = "1"
-iocfg['ioengine'] = "libaio"
-iocfg['direct'] = "1"
-iocfg['invalidate'] = "1"
-iocfg['randrepeat'] = "1"
-iocfg['size'] = "100M"
-iocfg['filename'] = "/dev/nvme1n1"
-iocfg['name'] = "test1"
-iocfg['RC'] = "0"
-FIO.run_fio(iocfg)
