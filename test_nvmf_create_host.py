@@ -66,3 +66,4 @@ class TestNVMFCreateHost(NVMFTest):
         """ Testcase main """
         ret = self.host_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : host config failed")
+        raw_input("waiting ....")
