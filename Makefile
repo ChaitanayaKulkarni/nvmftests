@@ -37,7 +37,7 @@ static_check:
 	done
 
 cleanall: clean
-	@rm -fr Documentation logs/*
+	@rm -fr Documentation logs/* *fio.log
 
 clean:
 	@find . -name \*pyc | xargs rm -fr
