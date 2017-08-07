@@ -27,9 +27,10 @@ NVMF test mkfs on each subsystem :-
     5. Delete Target.
 """
 
+
+from nose.tools import assert_equal
 from loopback import Loopback
 from nvmf_test import NVMFTest
-from nose.tools import assert_equal
 
 
 class TestNVMFMKFS(NVMFTest):
