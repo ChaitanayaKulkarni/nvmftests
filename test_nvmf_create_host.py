@@ -26,11 +26,12 @@ NVMF Create/Delete Host :-
     4. Delete Target.
 """
 
+
+from nose.tools import assert_equal
 from loopback import Loopback
 from nvmf_test import NVMFTest
 from target import NVMFTarget
 from host import NVMFHost
-from nose.tools import assert_equal
 
 
 class TestNVMFCreateHost(NVMFTest):
