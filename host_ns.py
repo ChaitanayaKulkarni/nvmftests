@@ -65,7 +65,7 @@ class NVMFNSThread(threading.Thread):
                 # complete all the remaining operations and quit
                 if ret is False:
                     self.workq.put(None)
-        print("Exiting workther thread " + self.name)
+        print("Exiting workther thread " + self.name + ".")
 
 
 class NVMFHostNamespace(object):
@@ -135,7 +135,7 @@ class NVMFHostNamespace(object):
             if self.fs_type.mkfs() is True and self.fs_type.mount():
                 return True
         else:
-            print(self.err_str + "file system is not supported")
+            print(self.err_str + "file system is not supported.")
 
         return False
 
