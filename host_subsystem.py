@@ -82,7 +82,7 @@ class NVMFHostController(object):
         for ns in iter(self):
             try:
                 if ns.start_io(iocfg) is False:
-                    print("start IO " + ns.ns_dev + " failed.")
+                    print(self.err_str + "start IO " + ns.ns_dev + ".")
                     ret = False
                     break
                 print("start IO " + ns.ns_dev + " SUCCESS.")
@@ -119,7 +119,7 @@ class NVMFHostController(object):
         for ns in iter(self):
             try:
                 if ns.start_io(iocfg) is False:
-                    print("start IO " + ns.ns_dev + " failed.")
+                    print(self.err_str + "start IO " + ns.ns_dev + ".")
                     ret = False
                     break
                 ret = ns.wait_io()
@@ -209,7 +209,7 @@ class NVMFHostController(object):
                                 stdout=subprocess.PIPE)
         err = proc.wait()
         if err != Const.ZERO:
-            print(self.err_str + "nvme smart log failed")
+            print(self.err_str + "nvme smart log failed.")
             return False
 
         for line in proc.stdout:
@@ -297,7 +297,7 @@ class NVMFHostController(object):
         try:
             dev_list = os.listdir("/dev/")
         except Exception, err:
-            print(self.err_str + str(err))
+            print(self.err_str + str(err) + ".")
             return None, None
         dev_list = natsorted(dev_list, key=lambda y: y.lower())
         # we assume that atleast one namespace is created on target
@@ -323,7 +323,7 @@ class NVMFHostController(object):
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
-                print("Generated namespace name /dev/" + line)
+                print("Generated namespace name /dev/" + line + ".")
                 ns_list.append("/dev/" + line)
 
         if len(ns_list) == 0:
@@ -340,13 +340,13 @@ class NVMFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Expecting following namespaces " + str(self.ns_dev_list))
+        print("Expecting following namespaces " + str(self.ns_dev_list) + ".")
         for ns_dev in self.ns_dev_list:
             if not stat.S_ISBLK(os.stat(ns_dev).st_mode):
                 print(self.err_str + "expected block dev " + ns_dev + ".")
                 return False
 
-            print("Found NS " + ns_dev)
+            print("Found NS " + ns_dev + ".")
             host_ns = NVMFHostNamespace(ns_dev)
             host_ns.init()
             self.ns_list.append(host_ns)
@@ -354,9 +354,9 @@ class NVMFHostController(object):
         time.sleep(1)
         ret = self.validate_sysfs_ns()
         if ret is False:
-            print(self.err_str + "unable to verify sysfs entries")
+            print(self.err_str + "unable to verify sysfs entries.")
             return False
-        print("Host sysfs entries are validated " + str(ret))
+        print("Host sysfs entries are validated " + str(ret) + ".")
         return ret
 
     def init_ctrl(self):
@@ -369,7 +369,7 @@ class NVMFHostController(object):
         # initialize nqn and transport
         cmd = "echo  \"transport=" + self.transport + ",nqn=" + \
               self.nqn + "\" > /dev/nvme-fabrics"
-        print("CMD :- " + cmd)
+        print("Host Connect command : " + cmd)
         if Cmd.exec_cmd(cmd) is False:
             return False
         self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
@@ -397,7 +397,7 @@ class NVMFHostController(object):
                                 stdout=subprocess.PIPE)
         err = proc.wait()
         if err != 0:
-            print(self.err_str + "nvme id-ctrl failed")
+            print(self.err_str + "nvme id-ctrl failed.")
             return False
 
         for line in proc.stdout:
@@ -443,7 +443,7 @@ class NVMFHostController(object):
             - Returns :
                  - True on success, False on failure.
         """
-        print("Deleting subsystem " + self.nqn)
+        print("Deleting subsystem " + self.nqn + ".")
         for host_ns in self.ns_list:
             host_ns.delete()
         cmd = "dirname $(grep -ls " + self.nqn + \
@@ -466,7 +466,7 @@ class NVMFHostController(object):
                           self.nqn + ".")
                     return False
         except Exception, err:
-            print(self.err_str + str(err))
+            print(self.err_str + str(err) + ".")
             return False
 
         return True
