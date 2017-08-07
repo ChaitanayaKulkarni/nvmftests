@@ -162,6 +162,9 @@ class NVMFHost(object):
         for ctrl in self.ctrl_list:
             if ctrl.run_io_all_ns(iocfg) is False:
                 return False
+
+    def wait_traffic_parallel(self):
+        ret = True
         print("Waiting for all threads to finish the IOs ...")
         for ctrl in self.ctrl_list:
             if ctrl.wait_io_all_ns() is False:
