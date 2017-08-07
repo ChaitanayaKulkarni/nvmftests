@@ -19,6 +19,7 @@
 #
 """ Represents NVMe Over Fabric Target config file generator.
 """
+
 import json
 
 
