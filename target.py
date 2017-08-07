@@ -108,7 +108,7 @@ class NVMFTarget(object):
             config = json.loads(config_file_handle.read())
             config_file_handle.close()
         except Exception, err:
-            print(self.err_str + str(err))
+            print(self.err_str + str(err) + ".")
             return False
 
         # Subsystem
@@ -161,7 +161,7 @@ class NVMFTarget(object):
                 if ret is False:
                     # call unwind code here.
                     print(self.err_str + "failed to add subsystem " +
-                          subsys + " to port " + port.port_id)
+                          subsys + " to port " + port.port_id + ".")
                     return False
 
         return True
@@ -180,7 +180,7 @@ class NVMFTarget(object):
 
         ret = False
         if self.target_type == "loop":
-            print("Configuring loop target")
+            print("Configuring loop target ... ")
             ret = self.config_loop_target(config_file)
         else:
             print(self.err_str + "only loop target type is supported.")
@@ -194,7 +194,7 @@ class NVMFTarget(object):
             -Returns :
                   - True on success, False on failure.
         """
-        print("Cleanup is in progress...")
+        print("Cleanup is in progress ...")
         ret = True
         for port in self.port_list:
             if port.delete() is False:
@@ -204,7 +204,7 @@ class NVMFTarget(object):
             if subsys.delete() is False:
                 ret = False
 
-        print("Removing Modules :- ")
+        print("Removing Modules ...")
         Cmd.exec_cmd("modprobe -r nvme_loop")
         Cmd.exec_cmd("modprobe -r nvmet")
         Cmd.exec_cmd("modprobe -r nvme_fabrics")
