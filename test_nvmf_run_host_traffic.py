@@ -27,11 +27,12 @@ NVMF run host traffic and disable target namespace(s) :-
     5. Delete Target.
 """
 
+
 import time
+from nose.tools import assert_equal
 from utils.diskio import DD
 from loopback import Loopback
 from nvmf_test import NVMFTest
-from nose.tools import assert_equal
 
 
 def __run_traffic__(iocfg):
