@@ -94,7 +94,7 @@ class NVMFHost(object):
             config = json.loads(config_file_handle.read())
             config_file_handle.close()
         except Exception, err:
-            print(self.err_str + str(err))
+            print(self.err_str + str(err) + ".")
             return False
 
         for sscfg in config['subsystems']:
@@ -120,7 +120,7 @@ class NVMFHost(object):
             if ctrl.run_io_all_ns(iocfg) is False:
                 return False
 
-        print("Waiting for all threads to finish the IOs...")
+        print("Waiting for all threads to finish the IOs ...")
         for ctrl in self.ctrl_list:
             ctrl.wait_io_all_ns()
 
@@ -140,12 +140,13 @@ class NVMFHost(object):
             if ctrl.run_io_all_ns(iocfg) is False:
                 return False
 
-        print("Waiting for all threads to finish the IOs...")
+        print("Waiting for all threads to finish the IOs ...")
         for ctrl in self.ctrl_list:
             if ctrl.wait_io_all_ns() is False:
-                print(self.err_str + "failed to wait on " + ctrl.ctrl_dev)
+                print(self.err_str + "wait on " + ctrl.ctrl_dev + ".")
                 ret = False
 
+        # add perf report generation mechanism here
         return ret
 
     def run_traffic_parallel(self, iocfg):
@@ -156,14 +157,15 @@ class NVMFHost(object):
             - Returns :
                   - None.
         """
+        ret = True
         print("Starting traffic parallelly on all controllers ...")
         for ctrl in self.ctrl_list:
             if ctrl.run_io_all_ns(iocfg) is False:
                 return False
-        print("Waiting for all threads to finish the IOs...")
+        print("Waiting for all threads to finish the IOs ...")
         for ctrl in self.ctrl_list:
             if ctrl.wait_io_all_ns() is False:
-                print(self.err_str + "failed to wait on " + ctrl.ctrl_dev)
+                print(self.err_str + "wait on " + ctrl.ctrl_dev + ".")
                 ret = False
 
         return ret
