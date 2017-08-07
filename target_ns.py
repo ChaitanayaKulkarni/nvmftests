@@ -57,7 +57,7 @@ class NVMFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("####Creating ns " + self.ns_path)
+        print("Creating ns " + self.ns_path + " ...")
         try:
             os.makedirs(self.ns_path)
         except Exception, err:
@@ -107,7 +107,7 @@ class NVMFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Removing NS " + self.ns_path)
+        print("Removing NS " + self.ns_path + ".")
         ret = os.path.exists(self.ns_path)
         if ret is True:
             # TODO : improve cleanup funcitonality.
