@@ -27,9 +27,10 @@ NVMF test parallel IOs on all controllers :-
     5. Delete Target.
 """
 
+
+from nose.tools import assert_equal
 from loopback import Loopback
 from nvmf_test import NVMFTest
-from nose.tools import assert_equal
 
 
 class TestNVMFParallelFabric(NVMFTest):
