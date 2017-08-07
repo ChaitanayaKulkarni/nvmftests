@@ -25,10 +25,11 @@ NVMF target template :-
     3. Delete Target.
 """
 
+
+from nose.tools import assert_equal
 from loopback import Loopback
 from nvmf_test import NVMFTest
 from target import NVMFTarget
-from nose.tools import assert_equal
 
 
 class TestNVMFTargetTemplate(NVMFTest):
