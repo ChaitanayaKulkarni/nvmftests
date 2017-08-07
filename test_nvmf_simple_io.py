@@ -27,9 +27,10 @@ NVMF sequntially select a controller and run IOs:-
     4. Delete Target.
 """
 
+
+from nose.tools import assert_equal
 from loopback import Loopback
 from nvmf_test import NVMFTest
-from nose.tools import assert_equal
 
 
 class TestNVMFSeqIO(NVMFTest):
