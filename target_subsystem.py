@@ -48,6 +48,7 @@ class NVMFTargetSubsystem(object):
         self.allowed_hosts = allowed_hosts
         self.attr_allow_any_host = attr_allow_any_host
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.ns_list_index = Const.ZERO
 
     def __iter__(self):
         self.ns_list_index = Const.ZERO
@@ -56,7 +57,7 @@ class NVMFTargetSubsystem(object):
     def __next__(self):
         index = self.ns_list_index
         self.ns_list_index += Const.ONE
-        if (len(self.ns_list) > index):
+        if len(self.ns_list) > index:
             return self.ns_list[index]
         raise StopIteration
 
@@ -76,7 +77,7 @@ class NVMFTargetSubsystem(object):
         try:
             os.makedirs(self.subsys_path)
         except Exception, err:
-            print(self.err_str + str(err))
+            print(self.err_str + str(err) + ".")
             return False
         # allow any host
         print("Configuring allowed hosts ...")
@@ -111,11 +112,11 @@ class NVMFTargetSubsystem(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Deleting namespace " + self.nqn + " : " + ns.ns_path)
+        print("Deleting namespace " + self.nqn + " : " + ns.ns_path + ".")
 
         ret = ns.delete()
         if ret is False:
-            print("ERROR : delete ns failed for " + ns.ns_path + ".")
+            print(self.err_str + "delete ns failed for " + ns.ns_path + ".")
 
         return ret
 
@@ -130,7 +131,6 @@ class NVMFTargetSubsystem(object):
         ret = True
         for ns in self.ns_list:
             if self.delete_ns(ns) is False:
-                print("#####$$$$$$$$$$$$$$ delete_ns returned False")
                 ret = False
 
         if os.path.exists(self.subsys_path):
