@@ -174,8 +174,8 @@ class NVMFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        if self.fs_type is not None:
-            return self.fs_type.umount()
+        if self.fs is not None:
+            return self.fs.umount()
 
         return True
 
@@ -237,7 +237,7 @@ class NVMFHostNamespace(object):
             - Returns :
                   - None.
         """
-        print("##### Deleting Namespace ")
+        print("##### Deleting Namespace, waiting for workq to finish all items")
         if self.worker_thread.is_alive():
             with self.q_cond_var:
                 self.workq.put(None)
