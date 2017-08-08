@@ -108,8 +108,7 @@ class NVMFHostController(object):
         return True
 
     def run_io_seq(self, iocfg):
-        """ Issue IOs to each namespace and wait one by one, repeat for all the
-            namespaces of this controller.
+        """ Exercie IOs on each namespace.
             - Args :
                   - iocfg : io configuration.
             - Returns :
