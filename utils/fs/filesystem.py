@@ -92,6 +92,15 @@ class FileSystem(object):
 
         return True
 
+    def get_mount_path(self):
+        """ Accessor for file system mountpath.
+            - Args :
+                  - None.
+            - Returns :
+                  - File system mountpath.
+        """
+        return self.mount_path
+
     def umount(self):
         """ Check preconditions for the umount operation.
             - Args :

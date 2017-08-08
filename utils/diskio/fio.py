@@ -53,9 +53,13 @@ class FIO(object):
         cmd += " --norandommap"
         cmd += " --exitall"
         cmd += " --size=" + iocfg['size']
-        cmd += " --filename=" + iocfg['filename']
+        if 'filename' in iocfg:
+            cmd += " --filename=" + iocfg['filename']
+            cmd += " --output=" + iocfg['filename'].split('/')[-1] + "_fio.log"
+        else:
+            cmd += " --directory=" + iocfg['directory']
+            cmd += " --output=" + iocfg['directory'].split('/')[-1] + "_fio.log"
         cmd += " --name=" + iocfg['name']
-        cmd += " --output=" + iocfg['filename'].split('/')[-1] + "_fio.log"
         print(cmd)
         ret = True
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)

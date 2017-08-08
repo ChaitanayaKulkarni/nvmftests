@@ -34,6 +34,15 @@ class Ext4FS(FileSystem):
     def __init__(self, dev_path, mount_path=None):
         super(Ext4FS, self).__init__("ext4", dev_path, mount_path)
 
+    def get_mount_path(self):
+        """ Accessor for file system mountpath.
+            - Args :
+                - None.
+            - Returns :
+                - File system mountpath.
+        """
+        return super(Ext4FS, self).get_mount_path()
+
     def exec_cmd(self, cmd):
         """ Wrapper for executing a shell command.
             - Args :
@@ -74,6 +83,15 @@ class Ext4FS(FileSystem):
         if super(Ext4FS, self).mount() is False:
             return False
         return self.exec_cmd("mount " + self.dev_path + " " + self.mount_path)
+
+    def is_mounted(self):
+        """ Check if namespace is mounted.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        return self.exec_cmd("mountpoint -q " + self.mount_path)
 
     def umount(self):
         """ Unmount target device from mount path.
