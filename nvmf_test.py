@@ -113,6 +113,24 @@ class NVMFTest(object):
                          'THREAD': __fio_worker__,
                          'RC': '0'}
 
+        self.fio_fs_write = {'IO_TYPE': 'fio',
+                             'group_reporting': '1',
+                             'rw': 'randwrite',
+                             'bs': '4k',
+                             'numjobs': '4',
+                             'iodepth': '8',
+                             'runtime': '30',
+                             'loop': '1',
+                             'ioengine': 'libaio',
+                             'direct': '1',
+                             'invalidate': '1',
+                             'randrepeat': '1',
+                             'size': '10M',
+                             'directory': Const.XXX,
+                             'name': 'test1',
+                             'THREAD': __fio_worker__,
+                             'RC': '0'}
+
     def build_target_config(self, nvmf_test_config):
         """ Generates target config file in JSON format from test config file.
             - Args :

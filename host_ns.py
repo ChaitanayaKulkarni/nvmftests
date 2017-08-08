@@ -78,6 +78,8 @@ class NVMFHostNamespace(object):
             - worker_thread : handle for io worker thread.
             - workq : workqueue shared between producer and worker thread.
             - q_cond_var : Condition variable for queue operations.
+            - fs_type : File system type for mkfs.
+            - fs : file system object.
     """
     def __init__(self, ns_dev):
         self.ns_dev = ns_dev
@@ -86,6 +88,7 @@ class NVMFHostNamespace(object):
         self.workq = Queue.Queue()
         self.q_cond_var = threading.Condition()
         self.fs_type = None
+        self.fs = None
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def init(self):
@@ -131,13 +134,38 @@ class NVMFHostNamespace(object):
                   - True on success, False on failure.
         """
         if fs_type == "ext4":
-            self.fs_type = Ext4FS(self.ns_dev)
-            if self.fs_type.mkfs() is True and self.fs_type.mount():
+            self.fs = Ext4FS(self.ns_dev)
+            if self.fs.mkfs() is True and self.fs.mount() is True:
                 return True
+            else:
+                print(self.err_str + "mkfs failed for " + self.ns_dev + ".")
+                return False
         else:
             print(self.err_str + "file system is not supported.")
 
         return False
+
+    def run_fs_ios(self, iocfg):
+        """ Run IOs on mounted file system.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        if self.fs.is_mounted() is False:
+            return False
+
+        mount_path = self.fs.get_mount_path()
+        iocfg['directory'] = mount_path + "/"
+
+        if self.worker_thread.is_alive():
+            with self.q_cond_var:
+                self.workq.put(iocfg)
+                self.q_cond_var.notifyAll()
+        else:
+            print(self.err_str + "worker thread is not running.")
+            return False
+        return True
 
     def unmount_cleanup(self):
         """ Unmount the namespace and cleanup the mount path.

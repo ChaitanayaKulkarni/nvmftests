@@ -143,6 +143,23 @@ class NVMFHostController(object):
                 break
         return ret
 
+    def run_fs_ios(self, iocfg):
+        """ Run IOs on mounted file system.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        ret = True
+        for ns in iter(self):
+            try:
+                if ns.run_fs_ios(iocfg) is False:
+                    ret = False
+                    break
+            except StopIteration:
+                break
+        return ret
+
     def run_io_random(self, iocfg):
         """ Select the namespce randomely and wait for the IOs completion,
             repeat this for all the namespaces.

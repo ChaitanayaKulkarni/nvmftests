@@ -161,9 +161,16 @@ class NVMFHost(object):
         print("Starting traffic parallelly on all controllers ...")
         for ctrl in self.ctrl_list:
             if ctrl.run_io_all_ns(iocfg) is False:
-                return False
+                ret = False
+        return ret
 
     def wait_traffic_parallel(self):
+        """ Wait for IOs completion on all controllers.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - None.
+        """
         ret = True
         print("Waiting for all threads to finish the IOs ...")
         for ctrl in self.ctrl_list:
@@ -298,6 +305,23 @@ class NVMFHost(object):
         for ctrl in iter(self):
             try:
                 if ctrl.run_mkfs_seq(fs_type) is False:
+                    ret = False
+                    break
+            except StopIteration:
+                break
+        return ret
+
+    def run_fs_ios(self, iocfg):
+        """ Run IOs on mounted file system.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        ret = True
+        for ctrl in iter(self):
+            try:
+                if ctrl.run_fs_ios(iocfg) is False:
                     ret = False
                     break
             except StopIteration:
