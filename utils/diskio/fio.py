@@ -58,7 +58,7 @@ class FIO(object):
             cmd += " --output=" + iocfg['filename'].split('/')[-1] + "_fio.log"
         else:
             cmd += " --directory=" + iocfg['directory']
-            cmd += " --output=" + iocfg['directory'].split('/')[-1] + "_fio.log"
+            cmd += " --output=" + iocfg['directory'].split('/')[-2] + "_fio.log"
         cmd += " --name=" + iocfg['name']
         print(cmd)
         ret = True
