@@ -60,7 +60,8 @@ class TestNVMFHostTraffic(NVMFTest):
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_loop_dev)
 
-        self.dd_read_traffic = {"IODIR": "read",
+        self.dd_read_traffic = {"IO_TYPE": "dd",
+                                "IODIR": "read",
                                 "THREAD": __run_traffic__,
                                 "IF": None,
                                 "OF": "/dev/null",
