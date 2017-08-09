@@ -97,7 +97,7 @@ class NVMFTargetSubsystem(object):
             - Returns :
                   - namespace handle on success, None on error.
         """
-        ns_id = self.generate_next_ns_id()
+        ns_id = len(self.ns_list) + Const.ONE
 
         ns = NVMFTargetNamespace(self.cfgfs, self.nqn, ns_id, **ns_attr)
         if ns.init() is False:
@@ -137,12 +137,3 @@ class NVMFTargetSubsystem(object):
             shutil.rmtree(self.subsys_path, ignore_errors=True)
 
         return ret
-
-    def generate_next_ns_id(self):
-        """ Return next namespace id.
-            - Args :
-                  - None.
-            - Returns :
-                  - next namespace id.
-        """
-        return len(self.ns_list) + Const.ONE
