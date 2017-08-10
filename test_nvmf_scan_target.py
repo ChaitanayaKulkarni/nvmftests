@@ -18,52 +18,50 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF scan target :-
+NVMF scan host :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Scan target subsystem.
+    3. Scan host subsystem.
     4. Delete Host.
     5. Delete Target.
 """
 
 
 from nose.tools import assert_equal
-from loopback import Loopback
+from null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFScanTarget(NVMFTest):
+class TestNVMFHostTemplate(NVMFTest):
 
-    """ Represents scan target subsystems testcase """
+    """ Represents host controller scan testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
-        self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_dev)
 
     def setUp(self):
         """ Pre section of testcase """
-        self.loopdev.init()
-        self.build_target_config(self.loopdev.dev_list)
-        super(TestNVMFScanTarget, self).common_setup()
+        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
+        self.null_blk.init()
+        self.build_target_config(self.null_blk.dev_list)
+        super(TestNVMFHostTemplate, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFScanTarget, self).common_tear_down()
-        self.loopdev.delete()
+        super(TestNVMFHostTemplate, self).common_tear_down()
+        self.null_blk.delete()
 
-    def test_scan_target(self):
+    def test_scan_host(self):
         """ Testcase main """
         success = True
-        for target_subsys in iter(self.target_subsys):
+        for host_subsys in iter(self.host_subsys):
             try:
-                print("Target Subsystem NQN " + target_subsys.nqn)
-                for target_ns in iter(target_subsys):
+                print("Host Controller " + host_subsys.ctrl_dev)
+                for host_ns in iter(host_subsys):
                     try:
-                        print(" Target NS ID " + str(target_ns.ns_id))
-                        print(" Target NS Path " + target_ns.ns_path)
+                        print(" Host NS " + host_ns.ns_dev)
                     except StopIteration:
                         success = False
                         break
@@ -71,4 +69,4 @@ class TestNVMFScanTarget(NVMFTest):
                 success = False
                 break
 
-        assert_equal(success, True, "ERROR : failed to scan target")
+        assert_equal(success, True, "ERROR : failed to scan host")
