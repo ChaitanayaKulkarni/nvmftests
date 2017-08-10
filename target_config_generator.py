@@ -85,7 +85,7 @@ class subsystem:
 
         - Attributes:
             - nr_ns : number of namespaces per subsystem.
-            - nr_loop_dev: number of loop devices to be used.
+            - nr_dev: number of loop devices to be used.
             - nqn : subsystem nqn.
             - ns_list : namespace list for this subsystem.
             - allowd_hosts : allowd hosts.
@@ -93,9 +93,9 @@ class subsystem:
             - namespace : namespace attributes.
             - device : namespace device attibutes.
     """
-    def __init__(self, nr_ns, nqn, nr_loop_dev):
+    def __init__(self, nr_ns, nqn, dev_list):
         self.nr_ns = nr_ns
-        self.nr_loop_dev = nr_loop_dev
+        self.dev_list = dev_list
         self.nqn = nqn
         self.ns_list = []
         self.allowd_hosts = []
@@ -136,7 +136,7 @@ class subsystem:
             ns_cfg = {}
             ns_cfg['device'] = {}
             ns_cfg['device']['nguid'] = '123456'
-            ns_cfg['device']['path'] = '/dev/loop' + str(i % self.nr_loop_dev)
+            ns_cfg['device']['path'] = self.dev_list[i % len(self.dev_list)]
             ns_cfg['enable'] = 1
             ns_cfg['nsid'] = i + 1
             self.add_ns(ns_cfg)
@@ -168,17 +168,15 @@ class target_config:
             - port_list : list of the ports associated with this target.
             - config_file_path : path name for generated config file.
             - nr_subsys : number of subsystems present in this target.
-            - nr_ns : number of namespaces associated with each subsystems.
-            - nr_loop_dev : number of loop devices to be used for all
-                            the namespaces.
+            - dev_list : list of devices to be used for namespaces.
     """
-    def __init__(self, config_file_path, nr_subsys, nr_ns, nr_loop_dev):
+    def __init__(self, config_file_path, nr_subsys, nr_ns, dev_list):
         self.ss_list = []
         self.port_list = []
         self.config_file_path = config_file_path
         self.nr_subsys = nr_subsys
         self.nr_ns = nr_ns
-        self.nr_loop_dev = nr_loop_dev
+        self.dev_list = dev_list
 
     def pp_json(self, json_thing, sort=True, indents=4):
         """ Prints formatted JSON output.
@@ -206,7 +204,7 @@ class target_config:
         port_list = []
         for i in range(0, self.nr_subsys):
             nqn = "testnqn" + str(i + 1)
-            subsys = subsystem(self.nr_ns, nqn, self.nr_loop_dev)
+            subsys = subsystem(self.nr_ns, nqn, self.dev_list)
             ss_list.append(subsys.build_subsys())
             nqn_list.append(nqn)
 
