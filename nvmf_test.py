@@ -62,10 +62,10 @@ class NVMFTest(object):
         self.config_file = 'nvmftests.json'
         self.data_size = Const.ZERO
         self.block_size = Const.ZERO
-        self.nr_loop_dev = Const.ZERO
+        self.nr_dev = Const.ZERO
         self.mount_path = Const.XXX
         self.test_log_dir = Const.XXX
-        self.nr_loop_dev = Const.ZERO
+        self.nr_dev = Const.ZERO
         self.nr_target_subsys = Const.ZERO
         self.nr_ns_per_subsys = Const.ZERO
         self.target_config_file = Const.XXX
@@ -74,27 +74,8 @@ class NVMFTest(object):
         self.target_subsys = None
         self.log_dir = './logs/' + self.__class__.__name__ + '/'
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
-        if self.load_config() is False:
-            return None
 
-        self.dd_read = {'IO_TYPE': 'dd',
-                        'IODIR': 'read',
-                        'THREAD': __dd_worker__,
-                        'IF': None,
-                        'OF': '/dev/null',
-                        'BS': '4K',
-                        'COUNT': str(self.data_size / self.block_size),
-                        'RC': 0}
-
-        self.dd_write = {'IO_TYPE': 'dd',
-                         'IODIR': 'write',
-                         'THREAD': __dd_worker__,
-                         'IF': '/dev/zero',
-                         'OF': None,
-                         'BS': '4K',
-                         'COUNT': str(self.data_size / self.block_size),
-                         'RC': 0}
-
+        self.load_config()
         self.fio_read = {'IO_TYPE': 'fio',
                          'group_reporting': '1',
                          'rw': 'randread',
@@ -131,16 +112,34 @@ class NVMFTest(object):
                              'THREAD': __fio_worker__,
                              'RC': '0'}
 
-    def build_target_config(self, nvmf_test_config):
+        self.dd_read = {'IO_TYPE': 'dd',
+                        'IODIR': 'read',
+                        'THREAD': __dd_worker__,
+                        'IF': None,
+                        'OF': '/dev/null',
+                        'BS': '4K',
+                        'COUNT': str(self.data_size / self.block_size),
+                        'RC': 0}
+
+        self.dd_write = {'IO_TYPE': 'dd',
+                         'IODIR': 'write',
+                         'THREAD': __dd_worker__,
+                         'IF': '/dev/zero',
+                         'OF': None,
+                         'BS': '4K',
+                         'COUNT': str(self.data_size / self.block_size),
+                         'RC': 0}
+
+    def build_target_config(self, dev_list):
         """ Generates target config file in JSON format from test config file.
             - Args :
-                  - nvmf_test_config : path to test config file.
+                  - None.
             - Returns :
                   - None.
         """
-        with open(nvmf_test_config) as cfg_file:
+        with open(self.config_file) as cfg_file:
             cfg = json.load(cfg_file)
-            self.nr_loop_dev = int(cfg['nr_loop_dev'])
+            self.nr_dev = int(cfg['nr_dev'])
             self.nr_target_subsys = int(cfg['nr_target_subsys'])
             self.nr_ns_per_subsys = int(cfg['nr_ns_per_subsys'])
             self.target_config_file = cfg['target_config_file']
@@ -148,7 +147,7 @@ class NVMFTest(object):
             target_cfg = target_config(self.target_config_file,
                                        self.nr_target_subsys,
                                        self.nr_ns_per_subsys,
-                                       self.nr_loop_dev)
+                                       dev_list)
             target_cfg.build_target_subsys()
 
     def load_config(self):
@@ -163,11 +162,7 @@ class NVMFTest(object):
             self.mount_path = config['mount_path']
             self.data_size = self.human_to_bytes(config['data_size'])
             self.block_size = self.human_to_bytes(config['block_size'])
-            self.nr_loop_dev = int(config['nr_loop_dev'])
-
-            print("dev_size %d block_size %d nr_loop_dev %d",
-                  (self.data_size, self.block_size, self.nr_loop_dev))
-            self.build_target_config(self.config_file)
+            self.nr_dev = int(config['nr_dev'])
             return True
 
         return False
