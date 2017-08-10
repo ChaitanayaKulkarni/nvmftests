@@ -32,7 +32,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop0"
+                        "path": "/dev/nullb0"
                     }, 
                     "enable": 1, 
                     "nsid": 1
@@ -40,7 +40,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop1"
+                        "path": "/dev/nullb1"
                     }, 
                     "enable": 1, 
                     "nsid": 2
@@ -48,7 +48,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop2"
+                        "path": "/dev/nullb2"
                     }, 
                     "enable": 1, 
                     "nsid": 3
@@ -56,7 +56,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop3"
+                        "path": "/dev/nullb3"
                     }, 
                     "enable": 1, 
                     "nsid": 4
@@ -75,7 +75,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop0"
+                        "path": "/dev/nullb0"
                     }, 
                     "enable": 1, 
                     "nsid": 1
@@ -83,7 +83,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop1"
+                        "path": "/dev/nullb1"
                     }, 
                     "enable": 1, 
                     "nsid": 2
@@ -91,7 +91,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop2"
+                        "path": "/dev/nullb2"
                     }, 
                     "enable": 1, 
                     "nsid": 3
@@ -99,7 +99,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop3"
+                        "path": "/dev/nullb3"
                     }, 
                     "enable": 1, 
                     "nsid": 4
@@ -118,7 +118,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop0"
+                        "path": "/dev/nullb0"
                     }, 
                     "enable": 1, 
                     "nsid": 1
@@ -126,7 +126,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop1"
+                        "path": "/dev/nullb1"
                     }, 
                     "enable": 1, 
                     "nsid": 2
@@ -134,7 +134,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop2"
+                        "path": "/dev/nullb2"
                     }, 
                     "enable": 1, 
                     "nsid": 3
@@ -142,7 +142,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop3"
+                        "path": "/dev/nullb3"
                     }, 
                     "enable": 1, 
                     "nsid": 4
@@ -161,7 +161,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop0"
+                        "path": "/dev/nullb0"
                     }, 
                     "enable": 1, 
                     "nsid": 1
@@ -169,7 +169,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop1"
+                        "path": "/dev/nullb1"
                     }, 
                     "enable": 1, 
                     "nsid": 2
@@ -177,7 +177,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop2"
+                        "path": "/dev/nullb2"
                     }, 
                     "enable": 1, 
                     "nsid": 3
@@ -185,7 +185,7 @@
                 {
                     "device": {
                         "nguid": "123456", 
-                        "path": "/dev/loop3"
+                        "path": "/dev/nullb3"
                     }, 
                     "enable": 1, 
                     "nsid": 4
