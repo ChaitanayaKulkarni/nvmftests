@@ -29,7 +29,7 @@ NVMF sequntially select a controller and run IOs:-
 
 
 from nose.tools import assert_equal
-from loopback import Loopback
+from null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
@@ -40,19 +40,18 @@ class TestNVMFSeqIO(NVMFTest):
     def __init__(self):
         NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
-        self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_dev)
 
     def setUp(self):
         """ Pre section of testcase """
-        self.loopdev.init()
-        self.build_target_config(self.loopdev.dev_list)
+        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
+        self.null_blk.init()
+        self.build_target_config(self.null_blk.dev_list)
         super(TestNVMFSeqIO, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
         super(TestNVMFSeqIO, self).common_tear_down()
-        self.loopdev.delete()
+        self.null_blk.delete()
 
     def test_seq_io(self):
         """ Testcase main """
