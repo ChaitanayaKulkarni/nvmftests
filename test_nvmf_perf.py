@@ -40,10 +40,10 @@ class TestNVMFParallelFabric(NVMFTest):
     def __init__(self):
         NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
-        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
 
     def setUp(self):
         """ Pre section of testcase """
+        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
         super(TestNVMFParallelFabric, self).common_setup()
