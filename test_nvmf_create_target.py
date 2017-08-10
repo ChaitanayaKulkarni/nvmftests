@@ -26,7 +26,7 @@ NVMF Create/Delete Target :-
 
 
 from nose.tools import assert_equal
-from loopback import Loopback
+from null_blk import NullBlk
 from nvmf_test import NVMFTest
 from target import NVMFTarget
 
@@ -38,22 +38,21 @@ class TestNVMFCreateTarget(NVMFTest):
     def __init__(self):
         NVMFTest.__init__(self)
         self.target_subsys = None
-        self.loopdev = None
+        self.null_blk = None
         self.setup_log_dir(self.__class__.__name__)
-        self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_dev)
 
     def setUp(self):
         """ Pre section of testcase """
-        self.loopdev.init()
-        self.build_target_config(self.loopdev.dev_list)
+        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
+        self.null_blk.init()
+        self.build_target_config(self.null_blk.dev_list)
         target_type = "loop"
         self.target_subsys = NVMFTarget(target_type)
 
     def tearDown(self):
         """ Post section of testcase """
         self.target_subsys.delete()
-        self.loopdev.delete()
+        self.null_blk.delete()
 
     def test_create_target(self):
         """ Testcase main """
