@@ -387,6 +387,7 @@ class NVMFHostController(object):
               self.nqn + "\" > /dev/nvme-fabrics"
         print("Host Connect command : " + cmd)
         if Cmd.exec_cmd(cmd) is False:
+            print("ERROR : host connect command failed")
             return False
         self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
 
