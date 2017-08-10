@@ -41,17 +41,18 @@ class TestNVMFNSEnableDisable(NVMFTest):
         NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
         self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_loop_dev)
+                                self.block_size, self.nr_dev)
 
     def setUp(self):
         """ Pre section of testcase """
         self.loopdev.init()
+        self.build_target_config(self.loopdev.dev_list)
         super(TestNVMFNSEnableDisable, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.loopdev.delete()
         super(TestNVMFNSEnableDisable, self).common_tear_down()
+        self.loopdev.delete()
 
     def target_ns_enable_disable(self, target_ns):
         target_ns_path_str = " Target NS Path " + target_ns.ns_path
