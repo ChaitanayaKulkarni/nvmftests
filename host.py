@@ -107,48 +107,6 @@ class NVMFHost(object):
             self.ctrl_list.append(ctrl)
         return True
 
-    def run_ios_parallel(self, iocfg):
-        """ Run parallel IOs on all host controller(s) and
-            wait for completion.
-            - Args :
-                  - iocfg : io configuration.
-            - Returns :
-                  - None.
-        """
-        print("Starting IOs parallelly on all controllers ...")
-        for ctrl in self.ctrl_list:
-            if ctrl.run_io_all_ns(iocfg) is False:
-                return False
-
-        print("Waiting for all threads to finish the IOs ...")
-        for ctrl in self.ctrl_list:
-            ctrl.wait_io_all_ns()
-
-        return True
-
-    def run_perf_parallel(self, iocfg):
-        """ Run parallel IO traffic on all host controller(s) and
-            wait for completion.
-            - Args :
-                  - iocfg : io configuration.
-            - Returns :
-                  - None.
-        """
-        ret = True
-        print("Starting traffic parallelly on all controllers ...")
-        for ctrl in self.ctrl_list:
-            if ctrl.run_io_all_ns(iocfg) is False:
-                return False
-
-        print("Waiting for all threads to finish the IOs ...")
-        for ctrl in self.ctrl_list:
-            if ctrl.wait_io_all_ns() is False:
-                print(self.err_str + "wait on " + ctrl.ctrl_dev + ".")
-                ret = False
-
-        # add perf report generation mechanism here
-        return ret
-
     def run_traffic_parallel(self, iocfg):
         """ Run parallel IO traffic on all host controller(s) and
             wait for completion.
@@ -179,6 +137,37 @@ class NVMFHost(object):
                 ret = False
 
         return ret
+
+    def run_ios_parallel(self, iocfg):
+        """ Run parallel IOs on all host controller(s) and
+            wait for completion.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - None.
+        """
+        if self.run_traffic_parallel(iocfg) is False:
+            return False
+
+        if self.wait_traffic_parallel() is False:
+            return False
+
+        return True
+
+    def run_perf_parallel(self, iocfg):
+        """ Run parallel IO traffic on all host controller(s) and
+            wait for completion.
+            - Args :
+                  - iocfg : io configuration.
+            - Returns :
+                  - None.
+        """
+        if self.run_ios_parallel(iocfg) is False:
+            return False
+
+        # add perf report generation mechanism here
+
+        return True
 
     def run_ios_seq(self, iocfg):
         """ Run IOs on all host controllers one by one.
