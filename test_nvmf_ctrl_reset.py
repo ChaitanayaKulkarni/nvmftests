@@ -40,7 +40,6 @@ class TestNVMFCtrlReset(NVMFTest):
     def __init__(self):
         NVMFTest.__init__(self)
         self.setup_log_dir(self.__class__.__name__)
-        self.null_blk = None
 
     def setUp(self):
         """ Pre section of testcase """

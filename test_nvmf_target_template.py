@@ -38,7 +38,6 @@ class TestNVMFTargetTemplate(NVMFTest):
 
     def __init__(self):
         NVMFTest.__init__(self)
-        self.loopdev = None
         self.target_subsys = None
         self.setup_log_dir(self.__class__.__name__)
 

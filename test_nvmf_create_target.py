@@ -38,7 +38,6 @@ class TestNVMFCreateTarget(NVMFTest):
     def __init__(self):
         NVMFTest.__init__(self)
         self.target_subsys = None
-        self.null_blk = None
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):

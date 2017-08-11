@@ -39,7 +39,6 @@ class TestNVMFIdentifyController(NVMFTest):
 
     def __init__(self):
         NVMFTest.__init__(self)
-
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):
