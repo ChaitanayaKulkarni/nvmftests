@@ -167,18 +167,6 @@ class NVMFHostNamespace(object):
             return False
         return True
 
-    def unmount_cleanup(self):
-        """ Unmount the namespace and cleanup the mount path.
-            - Args :
-                  - None.
-            - Returns :
-                  - True on success, False on failure.
-        """
-        if self.fs is not None:
-            return self.fs.umount()
-
-        return True
-
     def start_io(self, iocfg):
         """ Add new work IO item to workqueue and notify worker thread.
             - Args :
@@ -187,6 +175,7 @@ class NVMFHostNamespace(object):
                   - True on success, False on failure.
         """
         iocfg = copy.deepcopy(iocfg)
+        print iocfg
         if iocfg['IO_TYPE'] == 'dd':
             if iocfg['IODIR'] == "read":
                 iocfg['IF'] = self.ns_dev
@@ -230,6 +219,18 @@ class NVMFHostNamespace(object):
         print("# WAIT COMPLETE " + self.ns_dev + ".")
         return True
 
+    def unmount_cleanup(self):
+        """ Unmount the namespace and cleanup the mount path.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        if self.fs is not None:
+            return self.fs.umount()
+
+        return True
+
     def delete(self):
         """ Namespace clanup.
             - Args :
@@ -237,7 +238,7 @@ class NVMFHostNamespace(object):
             - Returns :
                   - None.
         """
-        print("##### Deleting Namespace, waiting for workq to finish all items")
+        print("### Deleting Namespace, waiting for workq to finish all items")
         if self.worker_thread.is_alive():
             with self.q_cond_var:
                 self.workq.put(None)
