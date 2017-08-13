@@ -74,61 +74,12 @@ class NVMFTest(object):
         self.target_subsys = None
         self.log_dir = './logs/' + self.__class__.__name__ + '/'
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.fio_read = {}
+        self.fio_fs_write = {}
+        self.dd_read = {}
+        self.dd_write = {}
 
         self.load_config()
-        self.fio_read = {'IO_TYPE': 'fio',
-                         'group_reporting': '1',
-                         'rw': 'randread',
-                         'bs': '4k',
-                         'numjobs': '4',
-                         'iodepth': '8',
-                         'runtime': '30',
-                         'loop': '1',
-                         'ioengine': 'libaio',
-                         'direct': '1',
-                         'invalidate': '1',
-                         'randrepeat': '1',
-                         'size': '100M',
-                         'filename': Const.XXX,
-                         'name': 'test1',
-                         'THREAD': __fio_worker__,
-                         'RC': '0'}
-
-        self.fio_fs_write = {'IO_TYPE': 'fio',
-                             'group_reporting': '1',
-                             'rw': 'randwrite',
-                             'bs': '4k',
-                             'numjobs': '4',
-                             'iodepth': '8',
-                             'runtime': '30',
-                             'loop': '1',
-                             'ioengine': 'libaio',
-                             'direct': '1',
-                             'invalidate': '1',
-                             'randrepeat': '1',
-                             'size': '10M',
-                             'directory': Const.XXX,
-                             'name': 'test1',
-                             'THREAD': __fio_worker__,
-                             'RC': '0'}
-
-        self.dd_read = {'IO_TYPE': 'dd',
-                        'IODIR': 'read',
-                        'THREAD': __dd_worker__,
-                        'IF': None,
-                        'OF': '/dev/null',
-                        'BS': '4K',
-                        'COUNT': str(self.data_size / self.block_size),
-                        'RC': 0}
-
-        self.dd_write = {'IO_TYPE': 'dd',
-                         'IODIR': 'write',
-                         'THREAD': __dd_worker__,
-                         'IF': '/dev/zero',
-                         'OF': None,
-                         'BS': '4K',
-                         'COUNT': str(self.data_size / self.block_size),
-                         'RC': 0}
 
     def build_target_config(self, dev_list):
         """ Generates target config file in JSON format from test config file.
@@ -139,11 +90,11 @@ class NVMFTest(object):
         """
         with open(self.config_file) as cfg_file:
             cfg = json.load(cfg_file)
+            # target subsystem and namespsce config
             self.nr_dev = int(cfg['nr_dev'])
             self.nr_target_subsys = int(cfg['nr_target_subsys'])
             self.nr_ns_per_subsys = int(cfg['nr_ns_per_subsys'])
             self.target_config_file = cfg['target_config_file']
-
             target_cfg = target_config(self.target_config_file,
                                        self.nr_target_subsys,
                                        self.nr_ns_per_subsys,
@@ -158,13 +109,34 @@ class NVMFTest(object):
                   - True on success, False on failure.
         """
         with open(self.config_file) as nvmftest_config:
-            config = json.load(nvmftest_config)
-            self.mount_path = config['mount_path']
-            self.data_size = self.human_to_bytes(config['data_size'])
-            self.block_size = self.human_to_bytes(config['block_size'])
-            self.nr_dev = int(config['nr_dev'])
+            cfg = json.load(nvmftest_config)
+            self.mount_path = cfg['mount_path']
+            self.data_size = self.human_to_bytes(cfg['data_size'])
+            self.block_size = self.human_to_bytes(cfg['block_size'])
+            self.nr_dev = int(cfg['nr_dev'])
+            # fio device read
+            self.fio_read = cfg['fio_read']
+            self.fio_read['filename'] = Const.XXX
+            self.fio_read['THREAD'] = __fio_worker__
+            self.fio_read['RC'] = 0
+            # fio file system write
+            self.fio_fs_write = cfg['fio_fs_write']
+            self.fio_fs_write['directory'] = Const.XXX
+            self.fio_fs_write['THREAD'] = __fio_worker__
+            self.fio_fs_write['RC'] = 0
+            # dd write
+            self.dd_read = cfg['dd_read']
+            self.dd_read['THREAD'] = __dd_worker__
+            self.dd_read['IF'] = None
+            self.dd_read['COUNT'] = str(self.data_size / self.block_size)
+            self.dd_read['RC'] = 0
+            # dd read
+            self.dd_write = cfg['dd_write']
+            self.dd_write['THREAD'] = __dd_worker__
+            self.dd_write['OF'] = None
+            self.dd_write['COUNT'] = str(self.data_size / self.block_size)
+            self.dd_write['RC'] = 0
             return True
-
         return False
 
     def human_to_bytes(self, num_str):
