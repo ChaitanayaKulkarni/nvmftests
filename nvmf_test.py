@@ -30,7 +30,7 @@ from utils.diskio import DD
 from utils.diskio import FIO
 from nvmf.target import NVMFTarget
 from nvmf.host import NVMFHost
-from target_config_generator import target_config
+from target_config_generator import TargetConfig
 from nvmf_test_logger import NVMFLogger
 
 
@@ -95,10 +95,10 @@ class NVMFTest(object):
             self.nr_target_subsys = int(cfg['nr_target_subsys'])
             self.nr_ns_per_subsys = int(cfg['nr_ns_per_subsys'])
             self.target_config_file = cfg['target_config_file']
-            target_cfg = target_config(self.target_config_file,
-                                       self.nr_target_subsys,
-                                       self.nr_ns_per_subsys,
-                                       dev_list)
+            target_cfg = TargetConfig(self.target_config_file,
+                                      self.nr_target_subsys,
+                                      self.nr_ns_per_subsys,
+                                      dev_list)
             target_cfg.build_target_subsys()
 
     def load_config(self):
