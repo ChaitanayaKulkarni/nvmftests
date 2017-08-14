@@ -29,7 +29,7 @@ NVMF target template :-
 from nose.tools import assert_equal
 from null_blk import NullBlk
 from nvmf_test import NVMFTest
-from target import NVMFTarget
+from nvmf.target import NVMFTarget
 
 
 class TestNVMFTargetTemplate(NVMFTest):
