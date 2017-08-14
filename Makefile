@@ -38,7 +38,8 @@ static_check:
 
 cleanall: clean
 	@rm -fr Documentation logs/* *fio.log
-
+ 
 clean:
 	@find . -name \*pyc | xargs rm -fr
 	@find . -name __pycache__ | xargs rm -fr
+	@find . -name \*ropeproject | xargs rm -fr
