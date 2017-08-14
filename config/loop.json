@@ -1,0 +1,197 @@
+{
+    "ports": [
+        {
+            "addr": {
+                "adrfam": "", 
+                "traddr": "", 
+                "treq": "not specified", 
+                "trsvcid": "", 
+                "trtype": "loop"
+            }, 
+            "portid": 1, 
+            "referrals": [
+                null
+            ], 
+            "subsystems": [
+                "testnqn1", 
+                "testnqn2", 
+                "testnqn3", 
+                "testnqn4"
+            ]
+        }
+    ], 
+    "subsystems": [
+        {
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
+            "namespaces": [
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb0"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 1
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb1"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb2"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb3"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 4
+                }
+            ], 
+            "nqn": "testnqn1"
+        }, 
+        {
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
+            "namespaces": [
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb0"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 1
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb1"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb2"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb3"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 4
+                }
+            ], 
+            "nqn": "testnqn2"
+        }, 
+        {
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
+            "namespaces": [
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb0"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 1
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb1"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb2"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb3"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 4
+                }
+            ], 
+            "nqn": "testnqn3"
+        }, 
+        {
+            "allowed_hosts": [
+                "hostnqn"
+            ], 
+            "attr": {
+                "allow_any_host": "1"
+            }, 
+            "namespaces": [
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb0"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 1
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb1"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 2
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb2"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 3
+                }, 
+                {
+                    "device": {
+                        "nguid": "123456", 
+                        "path": "/dev/nullb3"
+                    }, 
+                    "enable": 1, 
+                    "nsid": 4
+                }
+            ], 
+            "nqn": "testnqn4"
+        }
+    ]
+}
