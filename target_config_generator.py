@@ -102,6 +102,7 @@ class Subsystem:
         self.attr = {}
         self.namespace = {}
         self.device = {}
+        self.nguid = "00000000-0000-0000-0000-000000000000"
 
     def add_ns(self, ns_cfg):
         """ Updates subsystem namespace list with new namespace.
@@ -135,7 +136,7 @@ class Subsystem:
         for i in range(0, self.nr_ns):
             ns_cfg = {}
             ns_cfg['device'] = {}
-            ns_cfg['device']['nguid'] = '123456'
+            ns_cfg['device']['nguid'] = self.nguid
             ns_cfg['device']['path'] = self.dev_list[i % len(self.dev_list)]
             ns_cfg['enable'] = 1
             ns_cfg['nsid'] = i + 1
