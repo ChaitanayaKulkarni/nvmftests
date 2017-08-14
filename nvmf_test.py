@@ -28,8 +28,8 @@ from nose.tools import assert_equal
 from utils.const import Const
 from utils.diskio import DD
 from utils.diskio import FIO
-from target import NVMFTarget
-from host import NVMFHost
+from nvmf.target import NVMFTarget
+from nvmf.host import NVMFHost
 from target_config_generator import target_config
 from nvmf_test_logger import NVMFLogger
 
