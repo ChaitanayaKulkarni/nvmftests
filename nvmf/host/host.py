@@ -317,7 +317,7 @@ class NVMFHost(object):
                 break
         return ret
 
-    def config(self, config_file="loop.json"):
+    def config(self, config_file="config/loop.json"):
         """ Configure Host based on the target transport.
             - Args :
                   - None.

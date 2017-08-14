@@ -166,7 +166,7 @@ class NVMFTarget(object):
 
         return True
 
-    def config(self, config_file="loop.json"):
+    def config(self, config_file="config/loop.json"):
         """ Wrapper for creating target configuration.
             - Args :
                   - None.
