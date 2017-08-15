@@ -29,7 +29,7 @@ NVMF test mkfs on each subsystem :-
 
 
 from nose.tools import assert_equal
-from loopback import Loopback
+from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 

@@ -31,7 +31,7 @@ NVMF run host traffic and disable target namespace(s) :-
 import time
 from nose.tools import assert_equal
 from utils.diskio import DD
-from loopback import Loopback
+from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 
