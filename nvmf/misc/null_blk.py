@@ -19,9 +19,10 @@
 #
 """ Represents null block device.
 """
+import sys
 
+sys.path.append('../../')
 from utils.shell import Cmd
-# from utils.const import Const
 
 
 class NullBlk(object):

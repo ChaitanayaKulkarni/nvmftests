@@ -6,3 +6,6 @@ from .target import NVMFTarget
 from .target import NVMFTargetSubsystem
 from .target import NVMFTargetNamespace
 from .target import NVMFTargetPort
+
+from .misc import NullBlk
+from .misc import Loopback

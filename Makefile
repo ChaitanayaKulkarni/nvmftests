@@ -37,7 +37,7 @@ static_check:
 	done
 
 cleanall: clean
-	@rm -fr Documentation logs/* *fio.log
+	@rm -fr Documentation logs/* *fio.log tags cscope* *fio*logs
  
 clean:
 	@find . -name \*pyc | xargs rm -fr
