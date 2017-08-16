@@ -72,6 +72,7 @@ class NVMFTarget(object):
             -Returns :
                   - True on success, False on failure.
         """
+        Cmd.exec_cmd("modprobe configfs")
         ret = Cmd.exec_cmd("mountpoint -q " + self.cfgfs)
         if ret is False:
             ret = Cmd.exec_cmd("mount -t configfs none " + self.cfgfs)
