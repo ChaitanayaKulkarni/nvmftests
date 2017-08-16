@@ -41,15 +41,10 @@ class DD(object):
             " bs=" + iocfg['BS'] + " count=" + iocfg['COUNT'] + \
             " > /tmp/op 2>&1"
 
-        # print(" Running IOs now CMD :------- " + cmd)
-
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         ret = True
         rc = proc.wait()
-        # print("############ DD COMMAND RETURNED " + str(rc))
         if rc != iocfg['RC']:
-            # print("ERROR : Failed to execute " + cmd + ".")
-            print(".")
             ret = False
 
         return ret

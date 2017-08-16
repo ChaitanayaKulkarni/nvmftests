@@ -30,11 +30,6 @@ class Const:
     """
 
     XXX = "XXX"
-    ZERO = 0
-    ONE = 1
-    TWO = 2
-    FOUR = 4
-    TEN = 10
     ONE_KB = 1024
     ONE_MB = ONE_KB * ONE_KB
     ONE_GB = ONE_MB * ONE_KB
@@ -45,6 +40,6 @@ class Const:
 
     EXT4 = "ext4"
 
-    CTRL_BLK_FILE_NAME = TWO
-    SMART_LOG_VALUE = ONE
-    ALLOW_HOST_VALUE = ZERO
+    CTRL_BLK_FILE_NAME = 2
+    SMART_LOG_VALUE = 1
+    ALLOW_HOST_VALUE = 0

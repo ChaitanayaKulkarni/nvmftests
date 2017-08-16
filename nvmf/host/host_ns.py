@@ -119,7 +119,7 @@ class NVMFHostNamespace(object):
                                 shell=True,
                                 stdout=subprocess.PIPE)
         ret = proc.wait()
-        if ret != Const.ZERO:
+        if ret != 0:
             print(self.err_str + "nvme id-ctrl failed")
             return False
 
@@ -208,11 +208,10 @@ class NVMFHostNamespace(object):
         print("Checking for worker thread " + self.ns_dev + ".")
         if self.worker_thread.is_alive():
             print("Waiting for thread completion " + self.ns_dev + ".")
-            while not self.workq.empty():
-                if self.worker_thread.is_alive():
-                    time.sleep(Const.ONE)
-                else:
-                    break
+            while not self.workq.empty() and \
+				self.worker_thread.is_alive() is True:
+                    # Wait till waorker thread is alive.
+                    time.sleep(1)
         else:
             print(self.err_str + "worker thread is not alive")
             return False
@@ -244,13 +243,9 @@ class NVMFHostNamespace(object):
                 self.workq.put(None)
                 self.q_cond_var.notifyAll()
 
-            while not self.workq.empty():
-                if self.worker_thread.is_alive():
-                    time.sleep(Const.ONE)
-                else:
+            while not self.workq.empty() and \
+				  self.worker_thread.is_alive() is True:
+                    time.sleep(1)
                     break
-
-            if self.worker_thread.is_alive():
-                print(self.err_str + "Worker thread is still alive ...!!!")
 
         self.unmount_cleanup()

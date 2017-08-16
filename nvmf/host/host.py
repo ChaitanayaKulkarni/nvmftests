@@ -47,12 +47,12 @@ class NVMFHost(object):
         """
         self.target_type = target_type
         self.ctrl_list = []
-        self.ctrl_list_index = Const.ZERO
+        self.ctrl_list_index = 0
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
         self.load_modules()
 
     def __iter__(self):
-        self.ctrl_list_index = Const.ZERO
+        self.ctrl_list_index = 0
         return self
 
     def __next__(self):

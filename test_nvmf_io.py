@@ -33,7 +33,7 @@ from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFSeqIO(NVMFTest):
+class TestNVMFIO(NVMFTest):
 
     """ Represents Sequential Subsystem IO testcase """
 
@@ -46,14 +46,14 @@ class TestNVMFSeqIO(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFSeqIO, self).common_setup()
+        super(TestNVMFIO, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFSeqIO, self).common_tear_down()
+        super(TestNVMFIO, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_seq_io(self):
+    def test_io(self):
         """ Testcase main """
         ret = self.host_subsys.run_ios_seq(self.dd_read)
         assert_equal(ret, True, "ERROR : running IOs failed.")

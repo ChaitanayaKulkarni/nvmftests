@@ -53,16 +53,16 @@ class NVMFHostController(object):
         self.ns_list = []
         self.ns_dev_list = []
         self.transport = transport
-        self.ns_list_index = Const.ZERO
+        self.ns_list_index = 0
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
 
     def __iter__(self):
-        self.ns_list_index = Const.ZERO
+        self.ns_list_index = 0
         return self
 
     def __next__(self):
         index = self.ns_list_index
-        self.ns_list_index += Const.ONE
+        self.ns_list_index += 1
         if (len(self.ns_list) > index):
             return self.ns_list[index]
         raise StopIteration
@@ -168,9 +168,9 @@ class NVMFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        num_list = range(Const.ZERO, len(self.ns_list))
+        num_list = range(0, len(self.ns_list))
 
-        for i in range(Const.ZERO, len(self.ns_list)):
+        for i in range(0, len(self.ns_list)):
             random.shuffle(num_list)
             ns_id = num_list.pop()
 
@@ -224,7 +224,7 @@ class NVMFHostController(object):
                                 shell=True,
                                 stdout=subprocess.PIPE)
         err = proc.wait()
-        if err != Const.ZERO:
+        if err != 0:
             print(self.err_str + "nvme smart log failed.")
             return False
 
@@ -256,12 +256,12 @@ class NVMFHostController(object):
                   - True on success, False on failure.
         """
         self.run_smart_log()
-        i = Const.ONE
+        i = 1
         for ns in iter(self):
             try:
                 if self.run_smart_log(i) is False:
                     return False
-                i += Const.ONE
+                i += 1
             except StopIteration:
                 break
         return True

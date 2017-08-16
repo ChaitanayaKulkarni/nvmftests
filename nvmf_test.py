@@ -60,14 +60,14 @@ class NVMFTest(object):
 
     def __init__(self):
         self.config_file = 'config/nvmftests.json'
-        self.data_size = Const.ZERO
-        self.block_size = Const.ZERO
-        self.nr_dev = Const.ZERO
+        self.data_size = 0
+        self.block_size = 0
+        self.nr_dev = 0
         self.mount_path = Const.XXX
         self.test_log_dir = Const.XXX
-        self.nr_dev = Const.ZERO
-        self.nr_target_subsys = Const.ZERO
-        self.nr_ns_per_subsys = Const.ZERO
+        self.nr_dev = 0
+        self.nr_target_subsys = 0
+        self.nr_ns_per_subsys = 0
         self.target_config_file = Const.XXX
         self.loopdev = None
         self.host_subsys = None

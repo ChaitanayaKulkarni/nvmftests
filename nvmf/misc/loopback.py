@@ -58,7 +58,7 @@ class Loopback(object):
         """
         count = self.dev_size / self.block_size
 
-        for i in range(Const.ZERO, self.max_loop):
+        for i in range(0, self.max_loop):
             file_path = self.path + "/test" + str(i)
             cmd = "dd if=/dev/zero of=" + file_path + \
                 " count=" + str(count) + " bs=" + str(self.block_size)
@@ -86,7 +86,7 @@ class Loopback(object):
                   - True on success, False on failure.
         """
         ret = True
-        loop_cnt = Const.ZERO
+        loop_cnt = 0
         for i in self.dev_list:
             cmd = "losetup -d /dev/loop" + str(loop_cnt)
             print(cmd)
@@ -94,7 +94,7 @@ class Loopback(object):
             file_path = self.path + "/test" + str(loop_cnt)
             print file_path
             os.remove(file_path)
-            loop_cnt += Const.ONE
+            loop_cnt += 1
 
         Cmd.exec_cmd("modprobe -qr loop")
         return ret

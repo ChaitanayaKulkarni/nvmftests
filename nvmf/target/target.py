@@ -51,7 +51,7 @@ class NVMFTarget(object):
         assert_equal(self.load_configfs(), True)
 
     def __iter__(self):
-        self.subsys_list_index = Const.ZERO
+        self.subsys_list_index = 0
         return self
 
     def __next__(self):

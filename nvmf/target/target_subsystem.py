@@ -48,15 +48,15 @@ class NVMFTargetSubsystem(object):
         self.allowed_hosts = allowed_hosts
         self.attr_allow_any_host = attr_allow_any_host
         self.err_str = "ERROR : " + self.__class__.__name__ + " : "
-        self.ns_list_index = Const.ZERO
+        self.ns_list_index = 0
 
     def __iter__(self):
-        self.ns_list_index = Const.ZERO
+        self.ns_list_index = 0
         return self
 
     def __next__(self):
         index = self.ns_list_index
-        self.ns_list_index += Const.ONE
+        self.ns_list_index += 1
         if len(self.ns_list) > index:
             return self.ns_list[index]
         raise StopIteration
@@ -97,7 +97,7 @@ class NVMFTargetSubsystem(object):
             - Returns :
                   - namespace handle on success, None on error.
         """
-        ns_id = len(self.ns_list) + Const.ONE
+        ns_id = len(self.ns_list) + 1
 
         ns = NVMFTargetNamespace(self.cfgfs, self.nqn, ns_id, **ns_attr)
         if ns.init() is False:
