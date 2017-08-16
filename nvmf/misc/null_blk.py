@@ -30,6 +30,10 @@ class NullBlk(object):
     Represents Null BLK driver block devices.
 
         - Attributes :
+            - dev_size : device file size.
+            - block size : block size to create file.
+            - nr_devices : max null block devices.
+            - dev_list : list of null devices.
     """
     def __init__(self, dev_size, block_size, nr_devices):
         self.dev_size = str(dev_size)
