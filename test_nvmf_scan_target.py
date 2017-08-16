@@ -53,15 +53,15 @@ class TestNVMFHostTemplate(NVMFTest):
         super(TestNVMFHostTemplate, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_scan_host(self):
+    def test_scan_target(self):
         """ Testcase main """
         success = True
-        for host_subsys in iter(self.host_subsys):
+        for target_subsys in iter(self.target_subsys):
             try:
-                print("Host Controller " + host_subsys.ctrl_dev)
-                for host_ns in iter(host_subsys):
+                print("Target Controller " + target_subsys.nqn)
+                for target_ns in iter(target_subsys):
                     try:
-                        print(" Host NS " + host_ns.ns_dev)
+                        print(" Target NS " + target_ns.ns_path)
                     except StopIteration:
                         success = False
                         break
