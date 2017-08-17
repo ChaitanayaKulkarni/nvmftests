@@ -24,7 +24,6 @@ import os
 import shutil
 
 from utils.shell import Cmd
-from utils.const import Const
 from target_ns import NVMFTargetNamespace
 
 

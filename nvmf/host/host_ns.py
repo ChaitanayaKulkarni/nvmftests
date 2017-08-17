@@ -26,7 +26,6 @@ import copy
 import threading
 import subprocess
 
-from utils.const import Const
 from utils.fs import Ext4FS
 
 
@@ -209,9 +208,9 @@ class NVMFHostNamespace(object):
         if self.worker_thread.is_alive():
             print("Waiting for thread completion " + self.ns_dev + ".")
             while not self.workq.empty() and \
-				self.worker_thread.is_alive() is True:
-                    # Wait till waorker thread is alive.
-                    time.sleep(1)
+                  self.worker_thread.is_alive() is True:
+                # Wait till waorker thread is alive.
+                time.sleep(1)
         else:
             print(self.err_str + "worker thread is not alive")
             return False
@@ -244,8 +243,7 @@ class NVMFHostNamespace(object):
                 self.q_cond_var.notifyAll()
 
             while not self.workq.empty() and \
-				  self.worker_thread.is_alive() is True:
-                    time.sleep(1)
-                    break
+                  self.worker_thread.is_alive() is True:
+                time.sleep(1)
 
         self.unmount_cleanup()

@@ -24,7 +24,6 @@ import json
 import random
 
 from utils.shell import Cmd
-from utils.const import Const
 from host_subsystem import NVMFHostController
 
 
