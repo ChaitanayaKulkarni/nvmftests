@@ -24,7 +24,7 @@ import json
 import random
 
 from utils.shell import Cmd
-from host_subsystem import NVMFHostController
+from nvmf.host.host_subsystem import NVMFHostController
 
 
 class NVMFHost(object):

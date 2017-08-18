@@ -31,7 +31,7 @@ from natsort import natsorted
 
 from utils.const import Const
 from utils.shell import Cmd
-from host_ns import NVMFHostNamespace
+from nvmf.host.host_ns import NVMFHostNamespace
 
 
 class NVMFHostController(object):
