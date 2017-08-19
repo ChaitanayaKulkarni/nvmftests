@@ -23,7 +23,7 @@
 import json
 
 
-class port:
+class Port:
     """
     Represents target port config generator.
 
@@ -79,7 +79,7 @@ class port:
         return self.port_dict
 
 
-class subsystem:
+class Subsystem:
     """
     Represents target subsystem config generator.
 
@@ -102,6 +102,7 @@ class subsystem:
         self.attr = {}
         self.namespace = {}
         self.device = {}
+        self.nguid = "00000000-0000-0000-0000-000000000000"
 
     def add_ns(self, ns_cfg):
         """ Updates subsystem namespace list with new namespace.
@@ -135,7 +136,7 @@ class subsystem:
         for i in range(0, self.nr_ns):
             ns_cfg = {}
             ns_cfg['device'] = {}
-            ns_cfg['device']['nguid'] = '123456'
+            ns_cfg['device']['nguid'] = self.nguid
             ns_cfg['device']['path'] = self.dev_list[i % len(self.dev_list)]
             ns_cfg['enable'] = 1
             ns_cfg['nsid'] = i + 1
@@ -159,7 +160,7 @@ class subsystem:
         return ss_entry
 
 
-class target_config:
+class TargetConfig:
     """
     Represents target config generator.
 
@@ -204,11 +205,11 @@ class target_config:
         port_list = []
         for i in range(0, self.nr_subsys):
             nqn = "testnqn" + str(i + 1)
-            subsys = subsystem(self.nr_ns, nqn, self.dev_list)
+            subsys = Subsystem(self.nr_ns, nqn, self.dev_list)
             ss_list.append(subsys.build_subsys())
             nqn_list.append(nqn)
 
-        p = port(1)
+        p = Port(1)
         port_list.append(p.build_port(nqn_list))
 
         target_config_str = {}
