@@ -24,7 +24,7 @@ run:
 	nose2 ${NOSE2_OPTIONS}
 
 cleanall: clean
-	@rm -fr Documentation logs/* *fio.log tags cscope* *fio*logs
+	@rm -fr tests/logs/* tests/*fio.log
 	@make -C doc/ clean
  
 clean:

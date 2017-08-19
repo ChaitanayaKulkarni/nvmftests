@@ -1,5 +1,5 @@
 doc:
-	@epydoc -v --output=Documentation ../nvmf/*py ../*py ../utils/*py
+	@epydoc -v --output=Documentation ../nvmf/*py ../tests/*py ../utils/*py
 	@make -C sequence-diag/
 
 clean:
