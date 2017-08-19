@@ -24,7 +24,7 @@ import os
 import shutil
 
 from utils.shell import Cmd
-from target_ns import NVMFTargetNamespace
+from nvmf.target.target_ns import NVMFTargetNamespace
 
 
 class NVMFTargetSubsystem(object):

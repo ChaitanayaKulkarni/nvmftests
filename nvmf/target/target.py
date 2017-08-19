@@ -23,11 +23,11 @@
 import sys
 import json
 from nose.tools import assert_equal
-from port import NVMFTargetPort
 
 from utils.shell import Cmd
 from utils.const import Const
-from target_subsystem import NVMFTargetSubsystem
+from nvmf.target.target_subsystem import NVMFTargetSubsystem
+from nvmf.target.port import NVMFTargetPort
 
 
 class NVMFTarget(object):
