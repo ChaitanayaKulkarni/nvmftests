@@ -30,7 +30,7 @@ from utils.diskio import DD
 from utils.diskio import FIO
 from nvmf.target import NVMFTarget
 from nvmf.host import NVMFHost
-from target_config_generator import TargetConfig
+from nvmf.target.target_config_generator import TargetConfig
 from nvmf_test_logger import NVMFLogger
 
 
