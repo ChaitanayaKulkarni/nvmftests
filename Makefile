@@ -18,28 +18,18 @@ all:
 	@echo "  make static_check- runs pep8, flake8, pylint on code."
 
 doc:
-	@epydoc -v --output=Documentation *.py
+	make -C doc/
 
 run:
 	nose2 ${NOSE2_OPTIONS}
 
-static_check:
-	@for i in `ls *.py`; \
-	do \
-		echo "Pylint :- " ; \
-		printf "%10s    " $${i}; \
-		pylint $${i} 2>&1  | grep "^Your code" |  awk '{print $$7}';\
-		echo "--------------------------------------------";\
-		pep8 $${i}; \
-		echo "pep8 :- "; \
-		echo "flake8 :- "; \
-		flake8 $${i}; \
-	done
-
 cleanall: clean
 	@rm -fr Documentation logs/* *fio.log tags cscope* *fio*logs
+	@make -C doc/ clean
  
 clean:
 	@find . -name \*pyc | xargs rm -fr
 	@find . -name __pycache__ | xargs rm -fr
 	@find . -name \*ropeproject | xargs rm -fr
+
+.PHONY: doc clean cleanall
