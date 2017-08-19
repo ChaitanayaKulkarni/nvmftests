@@ -61,11 +61,9 @@ class FIO(object):
             cmd += " --output=" + iocfg['directory'].split('/')[-2] + \
                    "_fio.log"
         cmd += " --name=" + iocfg['name']
-        print(cmd)
         ret = True
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         rc = proc.wait()
         if rc != iocfg['RC']:
-            print(".")
             ret = False
         return ret

@@ -23,6 +23,7 @@
 import Queue
 import time
 import copy
+import logging
 import threading
 import subprocess
 
@@ -64,7 +65,6 @@ class NVMFNSThread(threading.Thread):
                 # complete all the remaining operations and quit
                 if ret is False:
                     self.workq.put(None)
-        print("Exiting workther thread " + self.name + ".")
 
 
 class NVMFHostNamespace(object):
@@ -88,7 +88,12 @@ class NVMFHostNamespace(object):
         self.q_cond_var = threading.Condition()
         self.fs_type = None
         self.fs = None
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
     def init(self):
         """ Create worker thread.
@@ -119,7 +124,7 @@ class NVMFHostNamespace(object):
                                 stdout=subprocess.PIPE)
         ret = proc.wait()
         if ret != 0:
-            print(self.err_str + "nvme id-ctrl failed")
+            self.logger.error("nvme id-ctrl failed")
             return False
 
         return True
@@ -137,10 +142,10 @@ class NVMFHostNamespace(object):
             if self.fs.mkfs() is True and self.fs.mount() is True:
                 return True
             else:
-                print(self.err_str + "mkfs failed for " + self.ns_dev + ".")
+                self.logger.error("mkfs failed for " + self.ns_dev + ".")
                 return False
         else:
-            print(self.err_str + "file system is not supported.")
+            self.logger.error("file system is not supported.")
 
         return False
 
@@ -162,7 +167,7 @@ class NVMFHostNamespace(object):
                 self.workq.put(iocfg)
                 self.q_cond_var.notifyAll()
         else:
-            print(self.err_str + "worker thread is not running.")
+            self.logger.error("worker thread is not running.")
             return False
         return True
 
@@ -174,25 +179,25 @@ class NVMFHostNamespace(object):
                   - True on success, False on failure.
         """
         iocfg = copy.deepcopy(iocfg)
-        print iocfg
+        self.logger.info(iocfg)
         if iocfg['IO_TYPE'] == 'dd':
             if iocfg['IODIR'] == "read":
                 iocfg['IF'] = self.ns_dev
             elif iocfg['IODIR'] == "write":
                 iocfg['OF'] = self.ns_dev
             else:
-                print(self.err_str + "io config " + iocfg + " not supported.")
+                self.logger.error("io config " + iocfg + " not supported.")
                 return False
         elif iocfg['IO_TYPE'] == 'fio':
             iocfg['filename'] = self.ns_dev
         else:
-            print(self.err_str + "invalid IO type " + iocfg['IO_TYPE'])
+            self.logger.error("invalid IO type " + iocfg['IO_TYPE'])
         if self.worker_thread.is_alive():
             with self.q_cond_var:
                 self.workq.put(iocfg)
                 self.q_cond_var.notifyAll()
         else:
-            print(self.err_str + "worker thread is not running.")
+            self.logger.error("worker thread is not running.")
             return False
 
         return True
@@ -204,17 +209,17 @@ class NVMFHostNamespace(object):
             - Returns :
                   - True on success, False otherwise.
         """
-        print("Checking for worker thread " + self.ns_dev + ".")
+        self.logger.info("Checking for worker thread " + self.ns_dev + ".")
         if self.worker_thread.is_alive():
-            print("Waiting for thread completion " + self.ns_dev + ".")
+            self.logger.info("Waiting for thread " + self.ns_dev + ".")
             while not self.workq.empty() and \
-                  self.worker_thread.is_alive() is True:
+                               self.worker_thread.is_alive() is True:
                 # Wait till waorker thread is alive.
                 time.sleep(1)
         else:
-            print(self.err_str + "worker thread is not alive")
+            self.logger.error("worker thread is not alive")
             return False
-        print("# WAIT COMPLETE " + self.ns_dev + ".")
+        self.logger.info("# WAIT COMPLETE " + self.ns_dev + ".")
         return True
 
     def unmount_cleanup(self):
@@ -236,7 +241,7 @@ class NVMFHostNamespace(object):
             - Returns :
                   - None.
         """
-        print("### Deleting Namespace, waiting for workq to finish all items")
+        self.logger.info("delete ns waiting for workq to finish all items")
         if self.worker_thread.is_alive():
             with self.q_cond_var:
                 self.workq.put(None)

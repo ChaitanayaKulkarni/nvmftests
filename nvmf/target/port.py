@@ -22,6 +22,7 @@
 
 import os
 import shutil
+import logging
 
 from utils.shell import Cmd
 from utils.const import Const
@@ -48,7 +49,12 @@ class NVMFTargetPort(object):
         self.port_conf['addr_trsvcid'] = port_conf['addr_trsvcid']
         self.port_conf['referrals'] = Const.XXX
         self.port_conf['subsystems'] = port_conf['subsystems']
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
     def init(self):
         """ Create and initialize port.
@@ -58,16 +64,16 @@ class NVMFTargetPort(object):
                 - True on success, False on failure.
         """
         if self.port_conf['addr_trtype'] != "loop":
-            print(self.err_str + "only loop transport type is supported.")
+            self.logger.error("only loop transport type is supported.")
             return False
 
         ret = Cmd.exec_cmd("mkdir -p " + self.port_path)
         if ret is False:
-            print(self.err_str + "failed to create " + self.port_path + ".")
+            self.logger.error("failed to create " + self.port_path + ".")
             return False
 
         # initialize transport type
-        print("Port " + self.port_path + " created successfully.")
+        self.logger.info("Port " + self.port_path + " created successfully.")
 
         ret = Cmd.exec_cmd("echo -n \"" + self.port_conf['addr_trtype'] +
                            "\" > " + self.port_path + "/addr_trtype")
@@ -75,7 +81,7 @@ class NVMFTargetPort(object):
         if ret is False:
             status = self.err_str + "trtype " + self.port_path + " failed."
 
-        print(status)
+        self.logger.info(status)
         return ret
 
     def add_subsys(self, subsys_name):
@@ -87,11 +93,11 @@ class NVMFTargetPort(object):
         """
         src = self.cfgfs + "/nvmet/subsystems/" + subsys_name
         if not os.path.exists(src):
-            print(self.err_str + "subsystem '" + src + "' not present.")
+            self.logger.error("subsystem '" + src + "' not present.")
             return False
         dest = self.port_path + "/subsystems/"
         cmd = "ln -s " + src + " " + dest
-        print(cmd)
+        self.logger.info(cmd)
         ret = Cmd.exec_cmd("ln -s " + src + " " + dest)
         return ret
 
@@ -102,20 +108,20 @@ class NVMFTargetPort(object):
             -Returns :
                   - True on success, False on failure.
         """
-        print("Deleting port " + self.port_id + ".")
+        self.logger.info("Deleting port " + self.port_id + ".")
         subsys_symlink = self.port_path + "/subsystem/"
         try:
 
             if os.path.isdir(subsys_symlink):
                 shutil.rmtree(subsys_symlink, ignore_errors=True)
-                print("Unlink subsystem fromn port successfully.")
+                self.logger.info("Unlink subsystem fromn port successfully.")
 
             if os.path.isdir(self.port_path):
                 shutil.rmtree(self.port_path, ignore_errors=True)
 
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return False
 
-        print("Removed port " + self.port_path + " successfully.")
+        self.logger.info("Removed port " + self.port_path + " successfully.")
         return True

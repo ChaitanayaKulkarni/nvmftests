@@ -22,6 +22,7 @@
 
 import os
 import shutil
+import logging
 
 from utils.shell import Cmd
 
@@ -48,7 +49,12 @@ class NVMFTargetNamespace(object):
         self.ns_attr['device_nguid'] = ns_attr['device_nguid']
         self.ns_attr['device_path'] = ns_attr['device_path']
         self.ns_attr['enable'] = ns_attr['enable']
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
     def init(self):
         """ Create and initialize namespace.
@@ -57,27 +63,27 @@ class NVMFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Creating ns " + self.ns_path + " ...")
+        self.logger.info("Creating ns " + self.ns_path + " ...")
         try:
             os.makedirs(self.ns_path)
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return False
 
         cmd = "echo -n " + self.ns_attr['device_path'] + " > " + \
               self.ns_path + "/device_path"
         ret = Cmd.exec_cmd(cmd)
         if ret is False:
-            print(self.err_str + "failed to configure device path.")
+            self.logger.error("failed to configure device path.")
             return False
 
         if self.ns_attr['enable'] == '1':
             ret = self.enable()
             if ret is False:
-                print(self.err_str + "enable ns " + self.ns_path + " failed.")
+                self.logger.error("enable ns " + self.ns_path + " failed.")
                 return False
 
-        print("NS " + self.ns_path + " enabled.")
+        self.logger.info("NS " + self.ns_path + " enabled.")
         return True
 
     def disable(self):
@@ -107,11 +113,11 @@ class NVMFTargetNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Removing NS " + self.ns_path + ".")
+        self.logger.info("Removing NS " + self.ns_path + ".")
         ret = os.path.exists(self.ns_path)
         if ret is True:
             # TODO : improve cleanup funcitonality.
             shutil.rmtree(self.ns_path, ignore_errors=True)
         else:
-            print(self.err_str + "path " + self.ns_path + " doesn't exists.")
+            self.logger.error("path " + self.ns_path + " doesn't exists.")
         return ret

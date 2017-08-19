@@ -26,6 +26,7 @@ import stat
 import time
 import random
 import string
+import logging
 import subprocess
 from natsort import natsorted
 
@@ -54,7 +55,12 @@ class NVMFHostController(object):
         self.ns_dev_list = []
         self.transport = transport
         self.ns_list_index = 0
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
     def __iter__(self):
         self.ns_list_index = 0
@@ -82,10 +88,10 @@ class NVMFHostController(object):
         for ns in iter(self):
             try:
                 if ns.start_io(iocfg) is False:
-                    print(self.err_str + "start IO " + ns.ns_dev + ".")
+                    self.logger.error("start IO " + ns.ns_dev + ".")
                     ret = False
                     break
-                print("start IO " + ns.ns_dev + " SUCCESS.")
+                self.logger.info("start IO " + ns.ns_dev + " SUCCESS.")
             except StopIteration:
                 break
 
@@ -118,7 +124,7 @@ class NVMFHostController(object):
         for ns in iter(self):
             try:
                 if ns.start_io(iocfg) is False:
-                    print(self.err_str + "start IO " + ns.ns_dev + ".")
+                    self.logger.error("start IO " + ns.ns_dev + ".")
                     ret = False
                     break
                 ret = ns.wait_io()
@@ -219,13 +225,13 @@ class NVMFHostController(object):
                   - True on success, False on failure.
         """
         smart_log_cmd = "nvme smart-log " + self.ctrl_dev + " -n " + str(nsid)
-        print(smart_log_cmd)
+        self.logger.info(smart_log_cmd)
         proc = subprocess.Popen(smart_log_cmd,
                                 shell=True,
                                 stdout=subprocess.PIPE)
         err = proc.wait()
         if err != 0:
-            print(self.err_str + "nvme smart log failed.")
+            self.logger.error("nvme smart log failed.")
             return False
 
         for line in proc.stdout:
@@ -242,10 +248,10 @@ class NVMFHostController(object):
                 temp_str = line.split(":")[Const.SMART_LOG_VALUE].strip()
                 host_write_commands = string.replace(temp_str, ",", "")
 
-        print("data_units_read " + data_units_read)
-        print("data_units_written " + data_units_written)
-        print("host_read_commands " + host_read_commands)
-        print("host_write_commands " + host_write_commands)
+        self.logger.info("data_units_read " + data_units_read)
+        self.logger.info("data_units_written " + data_units_written)
+        self.logger.info("host_read_commands " + host_read_commands)
+        self.logger.info("host_write_commands " + host_write_commands)
         return True
 
     def smart_log(self):
@@ -284,8 +290,8 @@ class NVMFHostController(object):
             line = line.strip('\n')
             # compare nvmeN in /dev/nvmeN in sysfs
             if line != ctrl_bdev:
-                print(self.err_str + "host ctrl " + self.ctrl_dev +
-                      " not present.")
+                self.logger.error("host ctrl " + self.ctrl_dev +
+                                  " not present.")
                 return False
         dir_list = os.listdir("/sys/class/nvme-fabrics/ctl/" + ctrl_bdev + "/")
 
@@ -294,10 +300,10 @@ class NVMFHostController(object):
             line = line.strip('\n')
             if pat.match(line):
                 if "/dev/" + line not in self.ns_dev_list:
-                    print(self.err_str + "ns " + line + " not found in sysfs.")
+                    self.logger.error("ns " + line + " not found in sysfs.")
                     return False
 
-        print("sysfs entries for ctrl and ns created successfully.")
+        self.logger.info("sysfs entries for ctrl and ns created successfully.")
         return True
 
     def build_ns_list(self):
@@ -313,7 +319,7 @@ class NVMFHostController(object):
         try:
             dev_list = os.listdir("/dev/")
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return None, None
         dev_list = natsorted(dev_list, key=lambda y: y.lower())
         # we assume that atleast one namespace is created on target
@@ -325,7 +331,7 @@ class NVMFHostController(object):
                 ctrl = line
 
         if ctrl == Const.XXX:
-            print(self.err_str + "controller '/dev/nvme*' not found.")
+            self.logger.error("controller '/dev/nvme*' not found.")
             return None, None
         # allow namespaces to appear in the /dev/
         time.sleep(2)
@@ -333,17 +339,17 @@ class NVMFHostController(object):
         try:
             dir_list = os.listdir("/dev/")
         except Exception, err:
-            print(self.err_str + str(err))
+            self.logger.error(str(err))
             return None, None
         pat = re.compile("^" + ctrl + "+n[0-9]+$")
         for line in dir_list:
             line = line.strip('\n')
             if pat.match(line):
-                print("Generated namespace name /dev/" + line + ".")
+                self.logger.info("Generated namespace name /dev/" + line + ".")
                 ns_list.append("/dev/" + line)
 
         if len(ns_list) == 0:
-            print(self.err_str + "host ns not found for ctrl " + ctrl + ".")
+            self.logger.error("host ns not found for ctrl " + ctrl + ".")
             return None, None
 
         ctrl = "/dev/" + ctrl
@@ -356,13 +362,14 @@ class NVMFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Expecting following namespaces " + str(self.ns_dev_list) + ".")
+        self.logger.info("Expecting following namespaces " +
+                         str(self.ns_dev_list) + ".")
         for ns_dev in self.ns_dev_list:
             if not stat.S_ISBLK(os.stat(ns_dev).st_mode):
-                print(self.err_str + "expected block dev " + ns_dev + ".")
+                self.logger.error("expected block dev " + ns_dev + ".")
                 return False
 
-            print("Found NS " + ns_dev + ".")
+            self.logger.info("Found NS " + ns_dev + ".")
             host_ns = NVMFHostNamespace(ns_dev)
             host_ns.init()
             self.ns_list.append(host_ns)
@@ -370,9 +377,9 @@ class NVMFHostController(object):
         time.sleep(1)
         ret = self.validate_sysfs_ns()
         if ret is False:
-            print(self.err_str + "unable to verify sysfs entries.")
+            self.logger.error("unable to verify sysfs entries.")
             return False
-        print("Host sysfs entries are validated " + str(ret) + ".")
+        self.logger.info("Host sysfs entries are validated " + str(ret) + ".")
         return ret
 
     def init_ctrl(self):
@@ -385,14 +392,14 @@ class NVMFHostController(object):
         # initialize nqn and transport
         cmd = "echo  \"transport=" + self.transport + ",nqn=" + \
               self.nqn + "\" > /dev/nvme-fabrics"
-        print("Host Connect command : " + cmd)
+        self.logger.info("Host Connect command : " + cmd)
         if Cmd.exec_cmd(cmd) is False:
-            print("ERROR : host connect command failed")
+            self.logger.info("ERROR : host connect command failed")
             return False
         self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
 
         if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
-            print(self.err_str + "failed to find char device for host ctrl.")
+            self.logger.error("failed to find char device for host ctrl.")
             return False
 
         ret = self.id_ctrl()
@@ -414,7 +421,7 @@ class NVMFHostController(object):
                                 stdout=subprocess.PIPE)
         err = proc.wait()
         if err != 0:
-            print(self.err_str + "nvme id-ctrl failed.")
+            self.logger.error("nvme id-ctrl failed.")
             return False
 
         for line in proc.stdout:
@@ -426,8 +433,8 @@ class NVMFHostController(object):
             key, val = line.split(':')
             self.ctrl_dict[key.strip()] = val.strip()
 
-        print(self.ctrl_dict)
-        print("--------------------------------------------------")
+        self.logger.info(self.ctrl_dict)
+        self.logger.info("-----------------------------------------------")
         return True
 
     def id_ns(self):
@@ -441,7 +448,7 @@ class NVMFHostController(object):
         for host_ns in self.ns_list:
             if host_ns.id_ns() is False:
                 return False
-            print("--------------------------------------------------")
+            self.logger.info("------------------------------------------------")
         return True
 
     def generate_next_ns_id(self):
@@ -460,7 +467,7 @@ class NVMFHostController(object):
             - Returns :
                  - True on success, False on failure.
         """
-        print("Deleting subsystem " + self.nqn + ".")
+        self.logger.info("Deleting subsystem " + self.nqn + ".")
         for host_ns in self.ns_list:
             host_ns.delete()
         cmd = "dirname $(grep -ls " + self.nqn + \
@@ -472,18 +479,18 @@ class NVMFHostController(object):
             for line in proc.stdout:
                 line = line.strip('\n')
                 if not os.path.isdir(line):
-                    print(self.err_str + "host ctrl dir " + self.nqn +
-                          " not present.")
+                    self.logger.error("host ctrl dir " + self.nqn +
+                                      " not present.")
                     return False
                 cmd = "nvme disconnect -n " + self.nqn
-                print("disconnecting : " + cmd)
+                self.logger.info("disconnecting : " + cmd)
                 ret = Cmd.exec_cmd(cmd)
                 if ret is False:
-                    print(self.err_str + "failed to delete ctrl " +
-                          self.nqn + ".")
+                    self.logger.error("failed to delete ctrl " +
+                                      self.nqn + ".")
                     return False
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return False
 
         return True

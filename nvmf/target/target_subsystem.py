@@ -22,6 +22,7 @@
 
 import os
 import shutil
+import logging
 
 from utils.shell import Cmd
 from nvmf.target.target_ns import NVMFTargetNamespace
@@ -46,7 +47,12 @@ class NVMFTargetSubsystem(object):
         self.subsys_path = self.cfgfs + "/nvmet/subsystems/" + nqn + "/"
         self.allowed_hosts = allowed_hosts
         self.attr_allow_any_host = attr_allow_any_host
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
         self.ns_list_index = 0
 
     def __iter__(self):
@@ -72,20 +78,20 @@ class NVMFTargetSubsystem(object):
                   - True on success, False on failure.
         """
         # create subsystem dir
-        print("Creating subsys path " + self.subsys_path + ".")
+        self.logger.info("Creating subsys path " + self.subsys_path + ".")
         try:
             os.makedirs(self.subsys_path)
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return False
         # allow any host
-        print("Configuring allowed hosts ...")
+        self.logger.info("Configuring allowed hosts ...")
         ret = Cmd.exec_cmd("echo " + self.attr_allow_any_host + " >" +
                            self.subsys_path + "/attr_allow_any_host")
         status = "Target Subsys " + self.subsys_path + " created successfully."
         if ret is False:
             status = self.err_str + "create " + self.subsys_path + " failed."
-        print(status)
+        self.logger.info(status)
 
         return ret
 
@@ -111,11 +117,12 @@ class NVMFTargetSubsystem(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Deleting namespace " + self.nqn + " : " + ns.ns_path + ".")
+        self.logger.info("Deleting namespace " + self.nqn + " : " +
+                         ns.ns_path + ".")
 
         ret = ns.delete()
         if ret is False:
-            print(self.err_str + "delete ns failed for " + ns.ns_path + ".")
+            self.logger.error("delete ns failed for " + ns.ns_path + ".")
 
         return ret
 
@@ -126,7 +133,7 @@ class NVMFTargetSubsystem(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Deleting subsystem " + self.nqn)
+        self.logger.info("Deleting subsystem " + self.nqn)
         ret = True
         for ns in self.ns_list:
             if self.delete_ns(ns) is False:

@@ -20,6 +20,7 @@
 """ Represents Ext4 File system.
 """
 import os
+import logging
 import subprocess
 
 from .filesystem import FileSystem
@@ -33,6 +34,12 @@ class Ext4FS(FileSystem):
     """
     def __init__(self, dev_path, mount_path=None):
         super(Ext4FS, self).__init__("ext4", dev_path, mount_path)
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
     def get_mount_path(self):
         """ Accessor for file system mountpath.
@@ -54,7 +61,7 @@ class Ext4FS(FileSystem):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception as err:
-            print(str(err) + ".")
+            self.logger.info(str(err) + ".")
             return False
 
         return True if proc.wait() == 0 else False
@@ -70,7 +77,7 @@ class Ext4FS(FileSystem):
             return False
 
         self.exec_cmd("mkfs.ext4 " + self.dev_path)
-        print("mkfs successful!!!")
+        self.logger.info("mkfs successful!!!")
         return True
 
     def mount(self):
@@ -108,7 +115,7 @@ class Ext4FS(FileSystem):
         try:
             os.rmdir(self.mount_path)
         except Exception as err:
-            print(str(err))
+            self.logger.info(str(err))
             ret = False
 
         return ret

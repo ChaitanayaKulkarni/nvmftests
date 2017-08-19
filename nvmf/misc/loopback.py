@@ -21,6 +21,7 @@
 """
 
 import os
+import logging
 
 from utils.shell import Cmd
 
@@ -42,7 +43,12 @@ class Loopback(object):
         self.block_size = block_size
         self.max_loop = max_loop
         self.dev_list = []
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
         Cmd.exec_cmd("losetup -D")
         Cmd.exec_cmd("modprobe -qr loop")
@@ -61,17 +67,17 @@ class Loopback(object):
             file_path = self.path + "/test" + str(i)
             cmd = "dd if=/dev/zero of=" + file_path + \
                 " count=" + str(count) + " bs=" + str(self.block_size)
-            print(cmd)
+            self.logger.info(cmd)
             ret = Cmd.exec_cmd(cmd)
             if ret is False:
-                print(self.err_str + " file creation " + self.dev_list[i])
+                self.logger.error(" file creation " + self.dev_list[i])
                 self.delete()
                 return False
             dev = "/dev/loop" + str(i)
             cmd = "losetup " + dev + " " + file_path
-            print(cmd)
+            self.logger.info(cmd)
             if Cmd.exec_cmd(cmd) is False:
-                print(self.err_str + cmd + " failed.")
+                self.logger.error(cmd + " failed.")
                 return False
 
             self.dev_list.append(dev)
@@ -88,10 +94,9 @@ class Loopback(object):
         loop_cnt = 0
         for i in self.dev_list:
             cmd = "losetup -d /dev/loop" + str(loop_cnt)
-            print(cmd)
+            self.logger.info(cmd)
             Cmd.exec_cmd(cmd)
             file_path = self.path + "/test" + str(loop_cnt)
-            print file_path
             os.remove(file_path)
             loop_cnt += 1
 

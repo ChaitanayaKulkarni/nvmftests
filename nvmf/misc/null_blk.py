@@ -20,6 +20,7 @@
 """ Represents null block device.
 """
 import sys
+import logging
 
 sys.path.append('../../')
 from utils.shell import Cmd
@@ -40,7 +41,12 @@ class NullBlk(object):
         self.block_size = str(block_size)
         self.nr_devices = str(nr_devices)
         self.dev_list = []
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
         cmd = "modprobe null_blk gb=" + self.dev_size
         cmd += " bs=" + self.block_size + " nr_devices=" + self.nr_devices
@@ -55,10 +61,10 @@ class NullBlk(object):
                   - True on success, False on failure.
         """
         for i in range(0, int(self.nr_devices)):
-            print("/dev/nullb" + str(i))
+            self.logger.info("/dev/nullb" + str(i))
             self.dev_list.append("/dev/nullb" + str(i))
 
-        print(self.dev_list)
+        self.logger.info(self.dev_list)
         return True
 
     def delete(self):

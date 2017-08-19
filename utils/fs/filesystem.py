@@ -21,6 +21,7 @@
 """
 import os
 import stat
+import logging
 import subprocess
 
 
@@ -40,6 +41,13 @@ class FileSystem(object):
         if self.mount_path is None:
             self.mount_path = "/mnt/" + self.dev_path.split('/')[-1]
 
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
+
     def exec_cmd(self, cmd):
         """ Wrapper for executing a shell command.
             - Args :
@@ -51,7 +59,7 @@ class FileSystem(object):
         try:
             proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         except Exception as err:
-            print(str(err) + ".")
+            self.logger.info(str(err) + ".")
             return False
 
         return True if proc.wait() == 0 else False
@@ -64,14 +72,15 @@ class FileSystem(object):
                   - True on success, False on failure.
         """
         if not os.path.exists(self.dev_path):
-            print("ERROR : device path %s is not present.", self.dev_path)
+            self.logger.info("ERROR : device path %s is not present.",
+                             self.dev_path)
             return False
 
         if not stat.S_ISBLK(os.stat(self.dev_path).st_mode):
-            print("ERRO : block device expected for mkfs.")
+            self.logger.info("ERRO : block device expected for mkfs.")
             return False
         if self.is_mounted() is True:
-            print("ERROR : device is already mounted.")
+            self.logger.info("ERROR : device is already mounted.")
             return False
 
         return True
@@ -87,7 +96,7 @@ class FileSystem(object):
             try:
                 os.makedirs(self.mount_path)
             except Exception as err:
-                print(str(err))
+                self.logger.info(str(err))
                 return False
 
         return True
@@ -109,7 +118,7 @@ class FileSystem(object):
                   - True on success, False on failure.
         """
         if not self.is_mounted():
-            print("ERROR : fs is not mounted")
+            self.logger.info("ERROR : fs is not mounted")
             return False
 
         return True

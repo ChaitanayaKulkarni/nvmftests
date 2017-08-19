@@ -22,6 +22,8 @@
 
 import json
 import random
+import logging
+
 
 from utils.shell import Cmd
 from nvmf.host.host_subsystem import NVMFHostController
@@ -47,8 +49,14 @@ class NVMFHost(object):
         self.target_type = target_type
         self.ctrl_list = []
         self.ctrl_list_index = 0
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
         self.load_modules()
+
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
     def __iter__(self):
         self.ctrl_list_index = 0
@@ -74,7 +82,7 @@ class NVMFHost(object):
         """
         ret = Cmd.exec_cmd("modprobe nvme-fabrics")
         if ret is False:
-            print(self.err_str + "unable to load nvme-fabrics.")
+            self.logger.error("unable to load nvme-fabrics.")
             return False
         return True
 
@@ -93,15 +101,15 @@ class NVMFHost(object):
             config = json.loads(config_file_handle.read())
             config_file_handle.close()
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return False
 
         for sscfg in config['subsystems']:
             ctrl = NVMFHostController(sscfg['nqn'], "loop")
             ret = ctrl.init_ctrl()
             if ret is False:
-                print(self.err_str + "failed init_ctrl() " +
-                      str(ctrl.ctrl_dev) + ".")
+                self.logger.error("failed init_ctrl() " +
+                                  str(ctrl.ctrl_dev) + ".")
                 return False
             self.ctrl_list.append(ctrl)
         return True
@@ -115,7 +123,7 @@ class NVMFHost(object):
                   - None.
         """
         ret = True
-        print("Starting traffic parallelly on all controllers ...")
+        self.logger.info("Starting traffic parallelly on all controllers ...")
         for ctrl in self.ctrl_list:
             if ctrl.run_io_all_ns(iocfg) is False:
                 ret = False
@@ -129,10 +137,10 @@ class NVMFHost(object):
                   - None.
         """
         ret = True
-        print("Waiting for all threads to finish the IOs ...")
+        self.logger.info("Waiting for all threads to finish the IOs ...")
         for ctrl in self.ctrl_list:
             if ctrl.wait_io_all_ns() is False:
-                print(self.err_str + "wait on " + ctrl.ctrl_dev + ".")
+                self.logger.error("wait on " + ctrl.ctrl_dev + ".")
                 ret = False
 
         return ret
@@ -175,7 +183,7 @@ class NVMFHost(object):
             - Returns :
                   - True on success, False on failure.
         """
-        print("Starting IOs seq ...")
+        self.logger.info("Starting IOs seq ...")
         ret = True
         for ctrl in iter(self):
             try:
@@ -325,11 +333,11 @@ class NVMFHost(object):
         """
         ret = False
         if self.target_type == "loop":
-            print("Configuring loop host")
+            self.logger.info("Configuring loop host")
             ret = self.config_loop(config_file)
-            print("Host configure successfully")
+            self.logger.info("Host configure successfully")
         else:
-            print(self.err_str + "only loop target type is supported.")
+            self.logger.error("only loop target type is supported.")
         return ret
 
     def delete(self):

@@ -22,6 +22,7 @@
 
 import sys
 import json
+import logging
 from nose.tools import assert_equal
 
 from utils.shell import Cmd
@@ -46,7 +47,12 @@ class NVMFTarget(object):
         self.port_list = []
         self.target_type = target_type
         self.cfgfs = "/sys/kernel/config/"
-        self.err_str = "ERROR : " + self.__class__.__name__ + " : "
+        self.logger = logging.getLogger(__name__)
+        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
+        self.log_format += '%(pathname)s'
+        self.formatter = logging.Formatter(self.log_format)
+        self.logger.setLevel(logging.WARNING)
 
         assert_equal(self.load_configfs(), True)
 
@@ -77,15 +83,15 @@ class NVMFTarget(object):
         if ret is False:
             ret = Cmd.exec_cmd("mount -t configfs none " + self.cfgfs)
             if ret is False:
-                print(self.err_str + "failed to mount configfs.")
+                self.logger.error("failed to mount configfs.")
                 sys.exit(ret)
             ret = Cmd.exec_cmd("mountpoint -q " + self.cfgfs)
             if ret is True:
-                print("Configfs mounted at " + self.cfgfs + ".")
+                self.logger.info("Configfs mounted at " + self.cfgfs + ".")
                 ret = True
             else:
-                print(self.err_str + "unable to mount configfs at " +
-                      self.cfgfs + ".")
+                self.logger.error("unable to mount configfs at " +
+                                  self.cfgfs + ".")
                 ret = False
         return ret
 
@@ -101,7 +107,7 @@ class NVMFTarget(object):
         """
         ret = Cmd.exec_cmd("modprobe nvme-loop")
         if ret is False:
-            print(self.err_str + "failed to load nvme-loop.")
+            self.logger.error("failed to load nvme-loop.")
             return False
 
         try:
@@ -109,7 +115,7 @@ class NVMFTarget(object):
             config = json.loads(config_file_handle.read())
             config_file_handle.close()
         except Exception, err:
-            print(self.err_str + str(err) + ".")
+            self.logger.error(str(err) + ".")
             return False
 
         # Subsystem
@@ -161,8 +167,8 @@ class NVMFTarget(object):
                 ret = port.add_subsys(subsys)
                 if ret is False:
                     # call unwind code here.
-                    print(self.err_str + "failed to add subsystem " +
-                          subsys + " to port " + port.port_id + ".")
+                    self.logger.error("failed to add subsystem " +
+                                      subsys + " to port " + port.port_id + ".")
                     return False
 
         return True
@@ -176,15 +182,15 @@ class NVMFTarget(object):
         """
         ret = Cmd.exec_cmd("modprobe nvmet")
         if ret is False:
-            print(self.err_str + "unable to load nvmet module.")
+            self.logger.error("unable to load nvmet module.")
             return False
 
         ret = False
         if self.target_type == "loop":
-            print("Configuring loop target ... ")
+            self.logger.info("Configuring loop target ... ")
             ret = self.config_loop_target(config_file)
         else:
-            print(self.err_str + "only loop target type is supported.")
+            self.logger.error("only loop target type is supported.")
 
         return ret
 
@@ -195,7 +201,7 @@ class NVMFTarget(object):
             -Returns :
                   - True on success, False on failure.
         """
-        print("Cleanup is in progress ...")
+        self.logger.info("Cleanup is in progress ...")
         ret = True
         for port in self.port_list:
             if port.delete() is False:
@@ -205,10 +211,10 @@ class NVMFTarget(object):
             if subsys.delete() is False:
                 ret = False
 
-        print("Removing Modules ...")
+        self.logger.info("Removing Modules ...")
         Cmd.exec_cmd("modprobe -r nvme_loop")
         Cmd.exec_cmd("modprobe -r nvmet")
         Cmd.exec_cmd("modprobe -r nvme_fabrics")
-        print("DONE.")
+        self.logger.info("DONE.")
 
         return ret
