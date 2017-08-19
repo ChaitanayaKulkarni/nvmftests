@@ -18,26 +18,29 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF Create/Delete Target :-
+NVMF sequntially select a controller and run IOs:-
 
     1. From the config file create Target.
-    2. Delete Target.
+    2. From the config file create host and connect to target.
+    3. Run IOs sequentially iterating over controller(s) ans its namespaces(s).
+    3. Delete Host.
+    4. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
-from nvmf.target import NVMFTarget
 
 
-class TestNVMFCreateTarget(NVMFTest):
+class TestNVMFIO(NVMFTest):
 
-    """ Represents Create Target testcase """
+    """ Represents Sequential Subsystem IO testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
-        self.target_subsys = None
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):
@@ -45,16 +48,17 @@ class TestNVMFCreateTarget(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        target_type = "loop"
-        self.target_subsys = NVMFTarget(target_type)
+        super(TestNVMFIO, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.target_subsys.delete()
+        super(TestNVMFIO, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_create_target(self):
+    def test_io(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.target_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : config target failed.")
+        ret = self.host_subsys.run_ios_seq(self.dd_read)
+        assert_equal(ret, True, "ERROR : running IOs failed.")
+        ret = self.host_subsys.run_ios_seq(self.dd_write)
+        assert_equal(ret, True, "ERROR : running IOs failed.")

@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF randomly select a controller and run IOs :-
+NVMF test id-ns on each namespace :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Randomly select the controller and run IOS on all namespaces(s).
+    3. Execute id-ns namespaces.
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFRandomFabric(NVMFTest):
+class TestNVMFIdentifyNamespace(NVMFTest):
 
-    """ Represents Random Susbsytem IO testcase """
+    """ Represents Identify Namespace Test testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -46,17 +48,15 @@ class TestNVMFRandomFabric(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFRandomFabric, self).common_setup()
+        super(TestNVMFIdentifyNamespace, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFRandomFabric, self).common_tear_down()
+        super(TestNVMFIdentifyNamespace, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_random_io(self):
+    def test_identify_namespace(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.run_ios_random(self.dd_read)
-        assert_equal(ret, True, "ERROR : running IOs failed.")
-        ret = self.host_subsys.run_ios_random(self.dd_write)
-        assert_equal(ret, True, "ERROR : running IOs failed.")
+        ret = self.host_subsys.id_ns()
+        assert_equal(ret, True, "ERROR : id ns failed.")

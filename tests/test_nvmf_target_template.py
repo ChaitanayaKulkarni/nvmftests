@@ -18,27 +18,29 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF test parallel IOs on all controllers :-
+NVMF target template :-
 
     1. From the config file create Target.
-    2. From the config file create host and connect to target.
-    3. Run parallel IOs on all available controller(s) and its nvmespace(s).
-    4. Delete Host.
-    5. Delete Target.
+    2. Write testcase code here.
+    3. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
+from nvmf.target import NVMFTarget
 
 
-class TestNVMFParallelFabric(NVMFTest):
+class TestNVMFTargetTemplate(NVMFTest):
 
-    """ Represents Parallel Subsystem IO testcase """
+    """ Represents target template testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
+        self.target_subsys = None
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):
@@ -46,15 +48,17 @@ class TestNVMFParallelFabric(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFParallelFabric, self).common_setup()
+        target_type = "loop"
+        self.target_subsys = NVMFTarget(target_type)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : target config failed")
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFParallelFabric, self).common_tear_down()
+        self.target_subsys.delete()
         self.null_blk.delete()
 
-    def test_parallel_io(self):
+    def test_target(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.run_perf_parallel(self.fio_read)
-        assert_equal(ret, True, "ERROR : running IOs failed.")
+        assert_equal(0, 0, "")

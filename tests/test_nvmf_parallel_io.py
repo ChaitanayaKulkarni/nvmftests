@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF host controller reset :-
+NVMF test parallel IOs on all controllers :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Call controller reset on each host controller.
+    3. Run parallel IOs on all available controller(s) and its nvmespace(s).
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFCtrlReset(NVMFTest):
+class TestNVMFParallelFabric(NVMFTest):
 
-    """ Represents host controller reset testcase """
+    """ Represents Parallel Subsystem IO testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -46,15 +48,17 @@ class TestNVMFCtrlReset(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFCtrlReset, self).common_setup()
+        super(TestNVMFParallelFabric, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFCtrlReset, self).common_tear_down()
+        super(TestNVMFParallelFabric, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_host(self):
+    def test_parallel_io(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.ctrl_reset()
-        assert_equal(ret, True, "ERROR : ctrl reset failed")
+        ret = self.host_subsys.run_ios_parallel(self.dd_read)
+        assert_equal(ret, True, "ERROR : running IOs failed.")
+        ret = self.host_subsys.run_ios_parallel(self.dd_write)
+        assert_equal(ret, True, "ERROR : running IOs failed.")

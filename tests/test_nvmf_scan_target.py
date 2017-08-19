@@ -18,27 +18,29 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF target template :-
+NVMF scan host :-
 
     1. From the config file create Target.
-    2. Write testcase code here.
-    3. Delete Target.
+    2. From the config file create host and connect to target.
+    3. Scan host subsystem.
+    4. Delete Host.
+    5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
-from nvmf.target import NVMFTarget
 
 
-class TestNVMFTargetTemplate(NVMFTest):
+class TestNVMFHostTemplate(NVMFTest):
 
-    """ Represents target template testcase """
+    """ Represents host controller scan testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
-        self.target_subsys = None
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):
@@ -46,17 +48,28 @@ class TestNVMFTargetTemplate(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        target_type = "loop"
-        self.target_subsys = NVMFTarget(target_type)
-        ret = self.target_subsys.config(self.target_config_file)
-        assert_equal(ret, True, "ERROR : target config failed")
+        super(TestNVMFHostTemplate, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        self.target_subsys.delete()
+        super(TestNVMFHostTemplate, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_target(self):
+    def test_scan_target(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        assert_equal(0, 0, "")
+        success = True
+        for target_subsys in iter(self.target_subsys):
+            try:
+                print("Target Controller " + target_subsys.nqn)
+                for target_ns in iter(target_subsys):
+                    try:
+                        print(" Target NS " + target_ns.ns_path)
+                    except StopIteration:
+                        success = False
+                        break
+            except StopIteration:
+                success = False
+                break
+
+        assert_equal(success, True, "ERROR : failed to scan host")

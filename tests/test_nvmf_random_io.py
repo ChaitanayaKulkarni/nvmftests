@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF scan host :-
+NVMF randomly select a controller and run IOs :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Scan host subsystem.
+    3. Randomly select the controller and run IOS on all namespaces(s).
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFHostTemplate(NVMFTest):
+class TestNVMFRandomFabric(NVMFTest):
 
-    """ Represents host controller scan testcase """
+    """ Represents Random Susbsytem IO testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -46,28 +48,17 @@ class TestNVMFHostTemplate(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFHostTemplate, self).common_setup()
+        super(TestNVMFRandomFabric, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFHostTemplate, self).common_tear_down()
+        super(TestNVMFRandomFabric, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_scan_target(self):
+    def test_random_io(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        success = True
-        for target_subsys in iter(self.target_subsys):
-            try:
-                print("Target Controller " + target_subsys.nqn)
-                for target_ns in iter(target_subsys):
-                    try:
-                        print(" Target NS " + target_ns.ns_path)
-                    except StopIteration:
-                        success = False
-                        break
-            except StopIteration:
-                success = False
-                break
-
-        assert_equal(success, True, "ERROR : failed to scan host")
+        ret = self.host_subsys.run_ios_random(self.dd_read)
+        assert_equal(ret, True, "ERROR : running IOs failed.")
+        ret = self.host_subsys.run_ios_random(self.dd_write)
+        assert_equal(ret, True, "ERROR : running IOs failed.")

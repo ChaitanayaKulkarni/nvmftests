@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF test smart log on all controllers :-
+NVMF test mkfs on each subsystem :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Execute smart-log on all controllers and its namespaces.
+    3. Execute mkfs on all host namespaces.
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
-from nvmf.misc.null_blk import NullBlk
+sys.path.append("../")
+from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 
-class TestNVMFSmartLog(NVMFTest):
+class TestNVMFMKFS(NVMFTest):
 
-    """ Represents Smart Log testcase """
+    """ Represents mkfs testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -43,18 +45,21 @@ class TestNVMFSmartLog(NVMFTest):
 
     def setUp(self):
         """ Pre section of testcase """
-        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
-        self.null_blk.init()
-        self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFSmartLog, self).common_setup()
+        self.loopdev = Loopback(self.mount_path, self.data_size,
+                                self.block_size, self.nr_dev)
+        self.loopdev.init()
+        self.build_target_config(self.loopdev.dev_list)
+        super(TestNVMFMKFS, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFSmartLog, self).common_tear_down()
-        self.null_blk.delete()
+        super(TestNVMFMKFS, self).common_tear_down()
+        self.loopdev.delete()
 
-    def test_smart_log(self):
+    def test_mkfs(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.smart_log()
-        assert_equal(ret, True, "ERROR : running smart log failed.")
+        ret = self.host_subsys.mkfs_seq("ext4")
+        assert_equal(ret, True, "ERROR : mkfs failed.")
+        ret = self.host_subsys.run_fs_ios(self.fio_fs_write)
+        assert_equal(ret, True, "ERROR : fio failed.")

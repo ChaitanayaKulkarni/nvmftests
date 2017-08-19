@@ -18,27 +18,32 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF host controller rescan :-
+NVMF Create/Delete Host :-
 
-    1. From config file create Target.
-    2. From config file create host and connect to target.
-    3. Call controller rescan on each host controller.
-    4. Delete Host.
-    5. Delete Target.
+    1. From the config file create Target.
+    2. From the config file create host and connect to target.
+    3. Delete Host.
+    4. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
+from nvmf.target import NVMFTarget
+from nvmf.host import NVMFHost
 
 
-class TestNVMFCtrlRescan(NVMFTest):
+class TestNVMFCreateHost(NVMFTest):
 
-    """ Represents host controller rescan testcase """
+    """ Represents Host Creation testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
+        self.host_subsys = None
+        self.target_subsys = None
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):
@@ -46,15 +51,20 @@ class TestNVMFCtrlRescan(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFCtrlRescan, self).common_setup()
+        target_type = "loop"
+        self.target_subsys = NVMFTarget(target_type)
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : target config failed")
+        self.host_subsys = NVMFHost(target_type)
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFCtrlRescan, self).common_tear_down()
+        self.host_subsys.delete()
+        self.target_subsys.delete()
         self.null_blk.delete()
 
-    def test_host(self):
+    def test_create_host(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.ctrl_rescan()
-        assert_equal(ret, True, "ERROR : ctrl rescan failed")
+        ret = self.host_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : host config failed")

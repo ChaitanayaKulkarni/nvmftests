@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF sequntially select a controller and run IOs:-
+NVMF scan host :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Run IOs sequentially iterating over controller(s) ans its namespaces(s).
-    3. Delete Host.
-    4. Delete Target.
+    3. Scan host subsystem.
+    4. Delete Host.
+    5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFIO(NVMFTest):
+class TestNVMFHostTemplate(NVMFTest):
 
-    """ Represents Sequential Subsystem IO testcase """
+    """ Represents host controller scan testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -46,17 +48,28 @@ class TestNVMFIO(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFIO, self).common_setup()
+        super(TestNVMFHostTemplate, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFIO, self).common_tear_down()
+        super(TestNVMFHostTemplate, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_io(self):
+    def test_scan_host(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.run_ios_seq(self.dd_read)
-        assert_equal(ret, True, "ERROR : running IOs failed.")
-        ret = self.host_subsys.run_ios_seq(self.dd_write)
-        assert_equal(ret, True, "ERROR : running IOs failed.")
+        success = True
+        for host_subsys in iter(self.host_subsys):
+            try:
+                print("Host Controller " + host_subsys.ctrl_dev)
+                for host_ns in iter(host_subsys):
+                    try:
+                        print(" Host NS " + host_ns.ns_dev)
+                    except StopIteration:
+                        success = False
+                        break
+            except StopIteration:
+                success = False
+                break
+
+        assert_equal(success, True, "ERROR : failed to scan host")

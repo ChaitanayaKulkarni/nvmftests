@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF host template :-
+NVMF test smart log on all controllers :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Write testcase code here.
+    3. Execute smart-log on all controllers and its namespaces.
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFHostTemplate(NVMFTest):
+class TestNVMFSmartLog(NVMFTest):
 
-    """ Represents host template testcase """
+    """ Represents Smart Log testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -46,14 +48,15 @@ class TestNVMFHostTemplate(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFHostTemplate, self).common_setup()
+        super(TestNVMFSmartLog, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFHostTemplate, self).common_tear_down()
+        super(TestNVMFSmartLog, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_host(self):
+    def test_smart_log(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        assert_equal(0, 0, "")
+        ret = self.host_subsys.smart_log()
+        assert_equal(ret, True, "ERROR : running smart log failed.")

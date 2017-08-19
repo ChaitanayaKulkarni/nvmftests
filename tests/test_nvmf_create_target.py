@@ -18,27 +18,28 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF test id-ctrl on each controller :-
+NVMF Create/Delete Target :-
 
     1. From the config file create Target.
-    2. From the config file create host and connect to target.
-    3. Execute id-ctrl on all controllers.
-    4. Delete Host.
-    5. Delete Target.
+    2. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
+from nvmf.target import NVMFTarget
 
 
-class TestNVMFIdentifyController(NVMFTest):
+class TestNVMFCreateTarget(NVMFTest):
 
-    """ Represents Identify Controller testcase """
+    """ Represents Create Target testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
+        self.target_subsys = None
         self.setup_log_dir(self.__class__.__name__)
 
     def setUp(self):
@@ -46,15 +47,16 @@ class TestNVMFIdentifyController(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFIdentifyController, self).common_setup()
+        target_type = "loop"
+        self.target_subsys = NVMFTarget(target_type)
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFIdentifyController, self).common_tear_down()
+        self.target_subsys.delete()
         self.null_blk.delete()
 
-    def test_identify_controller(self):
+    def test_create_target(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.id_ctrl()
-        assert_equal(ret, True, "ERROR : id controller failed.")
+        ret = self.target_subsys.config(self.target_config_file)
+        assert_equal(ret, True, "ERROR : config target failed.")

@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF test id-ns on each namespace :-
+NVMF host template :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Execute id-ns namespaces.
+    3. Write testcase code here.
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
+sys.path.append("../")
 from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFIdentifyNamespace(NVMFTest):
+class TestNVMFHostTemplate(NVMFTest):
 
-    """ Represents Identify Namespace Test testcase """
+    """ Represents host template testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -46,15 +48,14 @@ class TestNVMFIdentifyNamespace(NVMFTest):
         self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
         self.null_blk.init()
         self.build_target_config(self.null_blk.dev_list)
-        super(TestNVMFIdentifyNamespace, self).common_setup()
+        super(TestNVMFHostTemplate, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFIdentifyNamespace, self).common_tear_down()
+        super(TestNVMFHostTemplate, self).common_tear_down()
         self.null_blk.delete()
 
-    def test_identify_namespace(self):
+    def test_host(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.id_ns()
-        assert_equal(ret, True, "ERROR : id ns failed.")
+        assert_equal(0, 0, "")

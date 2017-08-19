@@ -18,24 +18,26 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF test mkfs on each subsystem :-
+NVMF test id-ctrl on each controller :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Execute mkfs on all host namespaces.
+    3. Execute id-ctrl on all controllers.
     4. Delete Host.
     5. Delete Target.
 """
 
 
+import sys
 from nose.tools import assert_equal
-from nvmf.misc.loopback import Loopback
+sys.path.append("../")
+from nvmf.misc.null_blk import NullBlk
 from nvmf_test import NVMFTest
 
 
-class TestNVMFMKFS(NVMFTest):
+class TestNVMFIdentifyController(NVMFTest):
 
-    """ Represents mkfs testcase """
+    """ Represents Identify Controller testcase """
 
     def __init__(self):
         NVMFTest.__init__(self)
@@ -43,21 +45,18 @@ class TestNVMFMKFS(NVMFTest):
 
     def setUp(self):
         """ Pre section of testcase """
-        self.loopdev = Loopback(self.mount_path, self.data_size,
-                                self.block_size, self.nr_dev)
-        self.loopdev.init()
-        self.build_target_config(self.loopdev.dev_list)
-        super(TestNVMFMKFS, self).common_setup()
+        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
+        self.null_blk.init()
+        self.build_target_config(self.null_blk.dev_list)
+        super(TestNVMFIdentifyController, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFMKFS, self).common_tear_down()
-        self.loopdev.delete()
+        super(TestNVMFIdentifyController, self).common_tear_down()
+        self.null_blk.delete()
 
-    def test_mkfs(self):
+    def test_identify_controller(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.mkfs_seq("ext4")
-        assert_equal(ret, True, "ERROR : mkfs failed.")
-        ret = self.host_subsys.run_fs_ios(self.fio_fs_write)
-        assert_equal(ret, True, "ERROR : fio failed.")
+        ret = self.host_subsys.id_ctrl()
+        assert_equal(ret, True, "ERROR : id controller failed.")
