@@ -55,5 +55,6 @@ class TestNVMFIdentifyNamespace(NVMFTest):
 
     def test_identify_namespace(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.id_ns()
         assert_equal(ret, True, "ERROR : id ns failed.")

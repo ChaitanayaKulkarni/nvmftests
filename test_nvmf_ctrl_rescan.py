@@ -55,5 +55,6 @@ class TestNVMFCtrlRescan(NVMFTest):
 
     def test_host(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.ctrl_rescan()
         assert_equal(ret, True, "ERROR : ctrl rescan failed")

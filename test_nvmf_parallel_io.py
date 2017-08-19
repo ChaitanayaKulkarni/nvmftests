@@ -55,6 +55,7 @@ class TestNVMFParallelFabric(NVMFTest):
 
     def test_parallel_io(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.run_ios_parallel(self.dd_read)
         assert_equal(ret, True, "ERROR : running IOs failed.")
         ret = self.host_subsys.run_ios_parallel(self.dd_write)

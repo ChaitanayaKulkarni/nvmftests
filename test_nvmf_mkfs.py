@@ -56,6 +56,7 @@ class TestNVMFMKFS(NVMFTest):
 
     def test_mkfs(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.mkfs_seq("ext4")
         assert_equal(ret, True, "ERROR : mkfs failed.")
         ret = self.host_subsys.run_fs_ios(self.fio_fs_write)

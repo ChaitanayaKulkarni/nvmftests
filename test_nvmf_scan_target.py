@@ -55,6 +55,7 @@ class TestNVMFHostTemplate(NVMFTest):
 
     def test_scan_target(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         success = True
         for target_subsys in iter(self.target_subsys):
             try:

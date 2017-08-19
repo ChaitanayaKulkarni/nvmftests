@@ -55,5 +55,6 @@ class TestNVMFIdentifyController(NVMFTest):
 
     def test_identify_controller(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.id_ctrl()
         assert_equal(ret, True, "ERROR : id controller failed.")

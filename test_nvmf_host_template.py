@@ -55,4 +55,5 @@ class TestNVMFHostTemplate(NVMFTest):
 
     def test_host(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         assert_equal(0, 0, "")

@@ -55,6 +55,7 @@ class TestNVMFRandomFabric(NVMFTest):
 
     def test_random_io(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.run_ios_random(self.dd_read)
         assert_equal(ret, True, "ERROR : running IOs failed.")
         ret = self.host_subsys.run_ios_random(self.dd_write)

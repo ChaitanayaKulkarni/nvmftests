@@ -55,5 +55,6 @@ class TestNVMFSmartLog(NVMFTest):
 
     def test_smart_log(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.smart_log()
         assert_equal(ret, True, "ERROR : running smart log failed.")

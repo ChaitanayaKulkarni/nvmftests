@@ -100,6 +100,7 @@ class TestNVMFHostTraffic(NVMFTest):
 
     def test_host_traffic(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         self.host_subsys.run_traffic_parallel(self.dd_read_traffic)
         time.sleep(5)
         ret = self.disable_target_ns()

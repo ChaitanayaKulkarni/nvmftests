@@ -65,6 +65,7 @@ class TestNVMFNSEnableDisable(NVMFTest):
 
     def test_ns_enable_disable(self):
         """ Testcase main """
+        print("Now Running " + self.__class__.__name__)
         for target_subsys in iter(self.target_subsys):
             try:
                 print("Target Subsystem NQN " + target_subsys.nqn)
