@@ -22,10 +22,10 @@
 
 import os
 import shutil
-import logging
 
 from utils.shell import Cmd
 from utils.const import Const
+from utils.log import Log
 
 
 class NVMFTargetPort(object):
@@ -49,12 +49,7 @@ class NVMFTargetPort(object):
         self.port_conf['addr_trsvcid'] = port_conf['addr_trsvcid']
         self.port_conf['referrals'] = Const.XXX
         self.port_conf['subsystems'] = port_conf['subsystems']
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'port')
 
     def init(self):
         """ Create and initialize port.
@@ -79,7 +74,7 @@ class NVMFTargetPort(object):
                            "\" > " + self.port_path + "/addr_trtype")
         status = "Port " + self.port_path + " initialized successfully."
         if ret is False:
-            status = self.err_str + "trtype " + self.port_path + " failed."
+            status = "trtype " + self.port_path + " failed."
 
         self.logger.info(status)
         return ret
