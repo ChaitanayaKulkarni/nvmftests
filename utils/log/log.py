@@ -26,7 +26,7 @@ import logging
 class Log(object):
 
     """
-    Represents a shell command execution.
+    Represents a consoler logger setup helper for a module.
         - Attributes :
     """
 
@@ -42,17 +42,17 @@ class Log(object):
         with open('config/nvmftests.json') as cfg_file:
             cfg = json.load(cfg_file)
             logger = logging.getLogger(name)
-            log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-            log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-            log_format += '%(pathname)s'
-            if cfg['log'][element] == "DEBUG":
+            if cfg['log'][element] == "NOTSET":
+                logger.setLevel(logging.DEBUG)
+            elif cfg['log'][element] == "DEBUG":
                 logger.setLevel(logging.DEBUG)
             elif cfg['log'][element] == "INFO":
                 logger.setLevel(logging.INFO)
             elif cfg['log'][element] == "WARNING":
                 logger.setLevel(logging.WARNING)
-            elif cfg['log'][element] == "CRITICAL":
-                logger.setLevel(logging.CRITICAL)
             elif cfg['log'][element] == "ERROR":
                 logger.setLevel(logging.ERROR)
+            elif cfg['log'][element] == "CRITICAL":
+                logger.setLevel(logging.CRITICAL)
+
         return logger
