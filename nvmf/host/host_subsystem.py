@@ -26,12 +26,12 @@ import stat
 import time
 import random
 import string
-import logging
 import subprocess
 from natsort import natsorted
 
 from utils.const import Const
 from utils.shell import Cmd
+from utils.log import Log
 from nvmf.host.host_ns import NVMFHostNamespace
 
 
@@ -55,12 +55,7 @@ class NVMFHostController(object):
         self.ns_dev_list = []
         self.transport = transport
         self.ns_list_index = 0
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'host_subsystem')
 
     def __iter__(self):
         self.ns_list_index = 0
