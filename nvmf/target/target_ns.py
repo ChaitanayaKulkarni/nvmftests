@@ -22,9 +22,9 @@
 
 import os
 import shutil
-import logging
 
 from utils.shell import Cmd
+from utils.log import Log
 
 
 class NVMFTargetNamespace(object):
@@ -49,12 +49,7 @@ class NVMFTargetNamespace(object):
         self.ns_attr['device_nguid'] = ns_attr['device_nguid']
         self.ns_attr['device_path'] = ns_attr['device_path']
         self.ns_attr['enable'] = ns_attr['enable']
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'target_ns')
 
     def init(self):
         """ Create and initialize namespace.
