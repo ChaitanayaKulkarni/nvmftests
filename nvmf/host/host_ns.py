@@ -23,11 +23,11 @@
 import Queue
 import time
 import copy
-import logging
 import threading
 import subprocess
 
 from utils.fs import Ext4FS
+from utils.log import Log
 
 
 class NVMFNSThread(threading.Thread):
@@ -88,12 +88,7 @@ class NVMFHostNamespace(object):
         self.q_cond_var = threading.Condition()
         self.fs_type = None
         self.fs = None
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'host_ns')
 
     def init(self):
         """ Create worker thread.
