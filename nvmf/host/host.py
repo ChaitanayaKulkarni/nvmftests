@@ -22,10 +22,10 @@
 
 import json
 import random
-import logging
 
 
 from utils.shell import Cmd
+from utils.log import Log
 from nvmf.host.host_subsystem import NVMFHostController
 
 
@@ -50,13 +50,7 @@ class NVMFHost(object):
         self.ctrl_list = []
         self.ctrl_list_index = 0
         self.load_modules()
-
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'host')
 
     def __iter__(self):
         self.ctrl_list_index = 0
