@@ -63,5 +63,14 @@
         "BS": "4K",
         "COUNT": "XXX",
         "RC": "0"
+	},
+	"log": {
+		"host" : "ERROR",
+		"host_subsystem" : "ERROR",
+		"host_ns" : "ERROR",
+		"target" : "DEBUG",
+		"target_subsystem" : "DEBUG",
+		"target_ns" : "DEBUG",
+		"port" : "DEBUG"
 	}
 }
