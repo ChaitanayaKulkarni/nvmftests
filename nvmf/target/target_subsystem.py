@@ -22,9 +22,9 @@
 
 import os
 import shutil
-import logging
 
 from utils.shell import Cmd
+from utils.log import Log
 from nvmf.target.target_ns import NVMFTargetNamespace
 
 
@@ -47,12 +47,7 @@ class NVMFTargetSubsystem(object):
         self.subsys_path = self.cfgfs + "/nvmet/subsystems/" + nqn + "/"
         self.allowed_hosts = allowed_hosts
         self.attr_allow_any_host = attr_allow_any_host
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'target_subsystem')
         self.ns_list_index = 0
 
     def __iter__(self):
@@ -90,7 +85,7 @@ class NVMFTargetSubsystem(object):
                            self.subsys_path + "/attr_allow_any_host")
         status = "Target Subsys " + self.subsys_path + " created successfully."
         if ret is False:
-            status = self.err_str + "create " + self.subsys_path + " failed."
+            status = "create " + self.subsys_path + " failed."
         self.logger.info(status)
 
         return ret
