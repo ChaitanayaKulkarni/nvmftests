@@ -62,7 +62,7 @@ nvmftests
     4.7. Update setUp() and tearDown() to add pre and post functionality.
     4.8. Once testcase is ready make sure :-
          4.8.1. Run pep8, flake8, pylint and fix errors/warnings.
-                -Example "$ make static_check" will run pep8, flake8, and 
+                -Example "$ make static_check" will run pep8, flake8, and
                 pylint on all the python files in current directory.
          4.8.2. Execute make doc to generate the documentation.
                 -Example "$ make doc" will create and update existing
