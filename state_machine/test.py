@@ -3,8 +3,11 @@ from transitions.extensions import MachineFactory
 
 class target(object):
     """ """
+    def __init__(self):
+        self.state_name = ""
+
     def show_graph(self, **kwargs):
-        self.get_graph(**kwargs).draw('state1.png', prog='dot')
+        self.get_graph(**kwargs).draw(self.state_name + ".png", prog='dot')
 
 
 GM = MachineFactory.get_predefined(graph=True, nested=True, locked=True)
@@ -25,15 +28,6 @@ target_subsys_cfg_states = {'name': 'cfg',
 states = ['start', 'init', target_subsys_cfg_states,
           'online', 'offline', 'dead']
 transitions = [
-    # ['nsstart', "cfg_subsys_cfg", "cfg_subsys_cfg_ns_start"],
-    # ['nsinit', 'cfg_subsys_cfg_ns_start', 'cfg_subsys_cfg_ns_init'],
-    # ['nscfg', 'cfg_subsys_cfg_ns_init', 'cfg_subsys_cfg_ns_cfg'],
-    # ['nsonline', 'cfg_subsys_cfg_ns_cfg', 'cfg_subsys_cfg_ns_online'],
-    # ['nsoffline', 'cfg_subsys_cfg_ns_online', 'cfg_subsys_cfg_ns_offline'],
-    # ['nsdead', 'cfg_subsys_cfg_ns_offline', 'cfg_subsys_cfg_ns_dead'],
-    # ['ns_init_success', 'cfg_subsys_cfg_ns_online', 'subsys_cfg'],
-    # ['ns_init_failure', 'cfg_subsys_cfg_ns_cfg', 'cfg_subsys_cfg_ns_dead'],
-    # ['ns_initfail_exit', 'cfg_subsys_cfg_ns_dead', 'cfg_subsys_cfg'],
     ['subsysinit', 'cfg_subsys_start', 'cfg_subsys_init'],
     ['subsyscfg', 'cfg_subsys_init', 'cfg_subsys_cfg'],
     ['subsysonline', 'cfg_subsys_cfg', 'cfg_subsys_online'],
@@ -60,17 +54,28 @@ machine = GM(model=model1,
              initial='start',
              title="Mood Matrix",
              show_conditions=True)
+
+model1.state_name = "start"
 model1.show_graph()
 
 model1.target_init()
 print model1.state
+model1.state_name = "target_init"
 model1.show_graph()
 print model1.state
 model1.target_cfg()
 print model1.state
+model1.state_name = "target_cfg"
+model1.show_graph()
 model1.target_init_success()
 print model1.state
+model1.state_name = "target_init_success"
+model1.show_graph()
 model1.target_offline()
 print model1.state
+model1.state_name = "target_offline"
+model1.show_graph()
 model1.target_shutdown()
 print model1.state
+model1.state_name = "target_dead"
+model1.show_graph()
