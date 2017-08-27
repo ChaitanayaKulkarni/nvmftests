@@ -17,24 +17,26 @@ nvmftests
         1. Classes and methods for each component in the NVMeOF subsystem.
         2. Ability to build NVMeOF subsystem based on the configuration file.
         3. Ability to issue sequential and parallel commands to the different
-           namespaces and controllers from the host side.
+           namespaces and controllers from the host and target side.
 
-    All the testcases are written in python nose2 format. This framework
-    follows a simple class hierarchy. Each test is a direct subclass or indirect
-    subclass of NVMeOFTest. To write a new testcase one can copy an existing
-    template test_nvmf_target_template.py or test_nvmf_host_template.py and
-    start adding new testcase specific functionality.
+    All the testcases are written in python3 nose2 format.
 
-3. Class hierarchy and Design Considerations
---------------------------------------------
+3. Class hierarchy, design Considerations and directory structure
+----------------------------------------------------------------
 
-    3.1. Core Classes :-
-       Target Classes :-
+    This framework follows a simple class hierarchy. Each test is a
+    direct subclass or indirect subclass of NVMeOFTest. To write a new testcase
+    one can copy an existing template test_nvmf_target_template.py or
+    test_nvmf_host_template.py and start adding new testcase specific
+    functionality.
+
+    3.1. Core Classes :- (path $NVMFTESTSHOME/nvmf/)
+       Target Classes :- (path $NVMFTESTSHOME/nvmf/target)
            NVMeOFTarget :- Represents Target.
            NVMeOFTargetSubsystem :- Represents a Target Subsystem.
            NVMeOFTargetNamespace :- Represents a Target Namespace.
            NVMeOFTargetPort :- Represents a Target Port.
-       Host Classes
+       Host Classes :- (path $NVMFTESTSHOME/nvmf/host)
            NVMeOFHost :- Represents Host.
            NVMeOFHostController :- Represents a Host Controller.
            NVMeOFHostNamespace :- Represents a Host Namespace.
@@ -45,17 +47,37 @@ nvmftests
        add any new functionality to the framework please modify core classes
        for each component and propagate new interfaces to the top
        level (in host.py/target.py). On the target side, we have subsystem(s),
-       namespace(s), and port(s) which is mainly configured using configfs.
-       For detailed class hierarchy please look into Documentation/index.html.
+       namespace(s), and port(s) which is configured using configfs.
+       For detailed class hierarchy please look into documentation.
     3.2. Testcase class:-
         NVMeOFTest :- Base class for each testcase, contains common functions.
+                      Each testcase is direct or indirect subclass of
+                      NVMeOFTest. Testcase class consumes the host and target
+                      classes mentioned in the 3.1 to build the
+                      NVMeOF subsystems.
+    3.3 Directory Structure
+        Following is the quick overview of the directory structure :-
+        .
+        |-- nvmf          :- NVMF core test framework files.
+        |   |-- host      :- NVMF host core files.
+        |   |-- misc      :- miscellaneous files.
+        |   |-- target    :- NVMF target core files.
+        |-- tests         :- test cases.
+        |   |-- config    :- contains configuration JSON files.
+        |-- utils         :- Utility classes.
+            |-- const     :- all constants definitions.
+            |-- diskio    :- diskio related wrappers.
+            |-- fs        :- fs related wrappers.
+            |-- shell     :- shell command related wrappers.
+            |-- log       :- module logger helpers.
+
 
 4. Adding new testcases
 -----------------------
 
     4.1. Please refer host or target template testcase.
     4.2. Copy the template file with your testcase name.
-    4.3. Update the class name with testcase name.
+    4.3. Update the class name with testcase name, this has to be unique.
     4.4. Update the test case function name.
     4.5. If necessary update the core files and add new functionality.
     4.6. Add testcase main function to determine success or failure.
@@ -64,6 +86,7 @@ nvmftests
          4.8.1. Run pep8, flake8, pylint and fix errors/warnings.
                 -Example "$ make static_check" will run pep8, flake8, and
                 pylint on all the python files in current directory.
+                Please make sure your code had pylint rating >= 7.5.
          4.8.2. Execute make doc to generate the documentation.
                 -Example "$ make doc" will create and update existing
                  documentation.
@@ -80,20 +103,24 @@ nvmftests
         5.2. Running all the testcases :-
             from $NVMFTESTSHOME/tests
             # nose2 --verbose
+        5.3 Running all the testcases from makefile :-
+            from #NVMFTESTSHOME
+            # make run
 
     Some notes on execution:-
-        In the current implementation, it uses file backed loop device on the
-        target side. For some testcase execution, a new file is created and
-        linked with loop device. It expects that "/mnt/" has enough space
-        available to store backend files which are used for target namespaces.
-        Please edit the target subsystems and namespace configuration in
-        nvmftests.json and size of the loop device on the target side in the
-        nvmf_test.py according to your need.
+        In the current implementation, it uses file backed loop device or
+        null_blk on the target side. For some testcase execution, a new file
+        is created and linked with loop device. It expects that "mount_path"
+        in the nvmftests.json has enough space available to store backend files
+        which are used for target namespaces. Please edit the target subsystems
+        and namespace configuration, size of the loop device backed file on
+        the target side in the $NVMFTESTSHOME/tests/config/nvmftests.json
+        according to your need.
 
         For host and target setup, you may have to configure timeout (sleep())
         values in the code to make sure previous steps are completed
         successfully and resources are online before executing next the steps.
-        We are planning to make these sleeps configurable in future releases.
+        We are planning to make these sleeps configurable in future release.
 
 6. Logging
 ----------
@@ -102,16 +129,17 @@ nvmftests
     name under logs/. This directory will be used for temporary files and
     storing execution logs of each testcase. Current implementation stores
     stdout and stderr for each testcase under log directory, e.g.:-
-        logs/
-        |-- TestNVMeOFParallelFabric
-        |       |-- stderr.log
-        |       |-- stdout.log
-        |-- TestNVMeOFRandomFabric
-        |       |-- stderr.log
-        |       |-- stdout.log
-        |--- TestNVMeOFSeqFabric
-                |-- stderr.log
-                |-- stdout.log
+		logs/
+		|-- TestNVMFCreateHost
+		|   |-- TestNVMFCreateHost
+		|       |-- stderr.log
+		|       |-- stdout.log
+		|-- TestNVMFCreateTarget
+		|   |── TestNVMFCreateTarget
+		|       |-- stderr.log
+		|       |-- stdout.log
+		|-- TestNVMFCtrlRescan
+		|   |-- TestNVMFCtrlRescan
                 .
                 .
                 .
@@ -119,35 +147,17 @@ nvmftests
 7. Test configuration
 ---------------------
 
-    There are two types of the config files used by the framework :-
+    There are two types of config files used by the framework :-
     1. nvmftests.json :- ($NVMFTESTSHOME/tests/config/nvmftests.json) file
        contains the information about various testcase parameters.
     2. loop.json :- This file is auto-generated by the test framework
        for the target configuration based on the parameters set in the
-       nvmetests.json.
-
-8. Directory Structure
-----------------------
-
-    Following is the quick overview of the directory structure :-
-    .
-    |-- nvmf          :- NVMF core test framework files.
-    |   |-- host      :- NVMF host core files.
-    |   |-- misc      :- miscellaneous files.
-    |   |-- target    :- NVMF target core files.
-    |-- tests         :- test cases.
-    |   |-- config    :- contains configuration JSON files.
-    |-- utils         :- Utility classes.
-        |-- const     :- all constants definitions.
-        |-- diskio    :- diskio related wrappers.
-        |-- fs        :- fs related wrappers.
-        |-- shell     :- shell command related wrappers.
-        |-- log       :- module logger helpers.
+       nvmftests.json.
 
 9. Dependencies
 ----------------
 
-    6.1. Python(>= 2.7.5 or >= 3.3)
+    6.1. Python( >= 3.0)
     6.2. nose(http://nose.readthedocs.io/en/latest/)
     6.3. nose2(Installation guide http://nose2.readthedocs.io/)
     6.4. pep8(https://pypi.python.org/pypi/setuptools-pep8)
