@@ -22,6 +22,7 @@
 import os
 import re
 import sys
+import time
 import logging
 from natsort import natsorted
 
@@ -50,6 +51,8 @@ class NVMePCIeBlk(object):
 
         Cmd.exec_cmd("modprobe -r nvme")
         Cmd.exec_cmd("modprobe nvme")
+        # allow devices to appear in /dev
+        time.sleep(1)
 
     def init(self):
         """ Create and initialize Loopback.
@@ -86,8 +89,7 @@ class NVMePCIeBlk(object):
                 self.dev_list.append("/dev/" + line)
 
         self.logger.info(self.ctrl_list)
-        print(self.ctrl_list)
-        print(self.dev_list)
+        self.logger.info(self.dev_list)
         return True
 
     def delete(self):
@@ -99,8 +101,3 @@ class NVMePCIeBlk(object):
         """
         Cmd.exec_cmd("modprobe -qr nvme")
         return True
-
-
-obj = NVMePCIeBlk()
-obj.init()
-obj.delete()
