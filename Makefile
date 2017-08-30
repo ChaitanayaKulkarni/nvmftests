@@ -37,7 +37,7 @@ static_check:
 	done
 
 cleanall: clean
-	@rm -fr tests/logs/* tests/*fio.log
+	@rm -fr tests/logs/* tests/*fio.log loop.json
 	@find . -name \*_fio.log | xargs rm -fr
 	@make -C doc/ clean
  
