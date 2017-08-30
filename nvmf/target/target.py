@@ -163,7 +163,8 @@ class NVMFTarget(object):
                 if ret is False:
                     # call unwind code here.
                     self.logger.error("failed to add subsystem " +
-                                      subsys + " to port " + port.port_id + ".")
+                                      subsys + " to port " +
+                                      port.port_id + ".")
                     return False
 
         return True

@@ -443,7 +443,7 @@ class NVMFHostController(object):
         for host_ns in self.ns_list:
             if host_ns.id_ns() is False:
                 return False
-            self.logger.info("------------------------------------------------")
+            self.logger.info("-----------------------------------------------")
         return True
 
     def generate_next_ns_id(self):

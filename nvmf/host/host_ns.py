@@ -208,7 +208,7 @@ class NVMFHostNamespace(object):
         if self.worker_thread.is_alive():
             self.logger.info("Waiting for thread " + self.ns_dev + ".")
             while not self.workq.empty() and \
-                               self.worker_thread.is_alive() is True:
+                    self.worker_thread.is_alive() is True:
                 # Wait till waorker thread is alive.
                 time.sleep(1)
         else:
@@ -243,7 +243,7 @@ class NVMFHostNamespace(object):
                 self.q_cond_var.notifyAll()
 
             while not self.workq.empty() and \
-                  self.worker_thread.is_alive() is True:
+                    self.worker_thread.is_alive() is True:
                 time.sleep(1)
 
         self.unmount_cleanup()
