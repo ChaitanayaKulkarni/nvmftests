@@ -54,6 +54,17 @@ class NVMePCIeBlk(object):
         # allow devices to appear in /dev
         time.sleep(1)
 
+    def is_pci_ctrl(self, ctrl):
+        """ Validate underlaying device belogs to pci subsystem.
+            - Args:
+                - None
+            - Returns:
+                - None
+        """
+        cmd = "find /sys/devices -name " + ctrl + " | grep -i pci"
+        print cmd
+        return Cmd.exec_cmd(cmd)
+
     def init(self):
         """ Create and initialize Loopback.
             - Args :
@@ -73,7 +84,11 @@ class NVMePCIeBlk(object):
             line = line.strip('\n')
             if pat.match(line):
                 ctrl = line
-                self.ctrl_list.append("/dev/" + ctrl)
+                ctrl_dev = "/dev/" + ctrl
+                if self.is_pci_ctrl(ctrl) is True:
+                    self.ctrl_list.append(ctrl_dev)
+                else:
+                    self.logger.info(ctrl_dev + " is not pci ctrl.")
 
         # find namespace(s) associated with ctrl
         try:
