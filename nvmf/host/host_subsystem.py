@@ -377,6 +377,15 @@ class NVMFHostController(object):
         self.logger.info("Host sysfs entries are validated " + str(ret) + ".")
         return ret
 
+    def validate_fabric_ctrl(self):
+        if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
+            self.logger.error("failed to find char device for host ctrl.")
+
+        cmd = "find /sys/devices -name " + self.ctrl_dev.split("/")[-2] \
+              + " | grep nvme-fabric"
+        print cmd
+        return Cmd.exec_cmd(cmd)
+
     def init_ctrl(self):
         """ Initialize controller and build controller attributes.
             - Args :
@@ -393,8 +402,7 @@ class NVMFHostController(object):
             return False
         self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
 
-        if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
-            self.logger.error("failed to find char device for host ctrl.")
+        if self.validate_fabric_ctrl() is False:
             return False
 
         ret = self.id_ctrl()
