@@ -28,6 +28,7 @@ from natsort import natsorted
 
 sys.path.append('../../')
 from utils.shell import Cmd
+from utils.log import Log
 
 
 class NVMePCIeBlk(object):
@@ -42,12 +43,7 @@ class NVMePCIeBlk(object):
         self.nr_devices = None
         self.ctrl_list = []
         self.dev_list = []
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'nvme_pci')
 
         Cmd.exec_cmd("modprobe -r nvme")
         Cmd.exec_cmd("modprobe nvme")
@@ -86,6 +82,7 @@ class NVMePCIeBlk(object):
                 ctrl = line
                 ctrl_dev = "/dev/" + ctrl
                 if self.is_pci_ctrl(ctrl) is True:
+                    self.logger.info("found NVMe PCIe Controller " + ctrl_dev)
                     self.ctrl_list.append(ctrl_dev)
                 else:
                     self.logger.info(ctrl_dev + " is not pci ctrl.")
