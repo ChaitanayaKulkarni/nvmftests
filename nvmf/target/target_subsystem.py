@@ -130,7 +130,7 @@ class NVMFTargetSubsystem(object):
         """
         self.logger.info("Deleting subsystem " + self.nqn)
         ret = True
-        for ns in self.ns_list:
+        for ns in iter(self):
             if self.delete_ns(ns) is False:
                 ret = False
 

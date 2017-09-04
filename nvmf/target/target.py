@@ -203,7 +203,7 @@ class NVMFTarget(object):
             if port.delete() is False:
                 ret = False
 
-        for subsys in self.subsys_list:
+        for subsys in iter(self):
             if subsys.delete() is False:
                 ret = False
 
