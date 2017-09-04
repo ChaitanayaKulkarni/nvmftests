@@ -448,7 +448,7 @@ class NVMFHostController(object):
             - Returns :
                   - True on success, False on failure.
         """
-        for host_ns in self.ns_list:
+        for host_ns in iter(self):
             if host_ns.id_ns() is False:
                 return False
             self.logger.info("-----------------------------------------------")

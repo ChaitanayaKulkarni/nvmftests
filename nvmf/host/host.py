@@ -118,7 +118,7 @@ class NVMFHost(object):
         """
         ret = True
         self.logger.info("Starting traffic parallelly on all controllers ...")
-        for ctrl in iter(self):   #self.ctrl_list:
+        for ctrl in iter(self):
             if ctrl.run_io_all_ns(iocfg) is False:
                 ret = False
         return ret
@@ -132,7 +132,7 @@ class NVMFHost(object):
         """
         ret = True
         self.logger.info("Waiting for all threads to finish the IOs ...")
-        for ctrl in iter(self):   #self.ctrl_list:
+        for ctrl in iter(self):
             if ctrl.wait_io_all_ns() is False:
                 self.logger.error("wait on " + ctrl.ctrl_dev + ".")
                 ret = False
@@ -250,7 +250,7 @@ class NVMFHost(object):
                   - True on success, False on failure.
         """
         ret = True
-        for ctrl in iter(self):   #self.ctrl_list:
+        for ctrl in iter(self):
             if ctrl.smart_log() is False:
                 ret = False
                 break
@@ -264,7 +264,7 @@ class NVMFHost(object):
                   - True on success, False on failure.
         """
         ret = True
-        for ctrl in iter(self):   #self.ctrl_list:
+        for ctrl in iter(self):
             if ctrl.id_ctrl() is False:
                 ret = False
                 break
@@ -278,7 +278,7 @@ class NVMFHost(object):
                   - True on success, False on failure.
         """
         ret = True
-        for ctrl in iter(self):   #self.ctrl_list:
+        for ctrl in iter(self):
             if ctrl.id_ns() is False:
                 ret = False
                 break
@@ -342,7 +342,7 @@ class NVMFHost(object):
                   - True on success, False on failure.
         """
         ret = True
-        for subsys in iter(self):   #self.ctrl_list:
+        for subsys in iter(self):
             if subsys.delete() is False:
                 ret = False
         return ret
