@@ -93,8 +93,7 @@ class NVMFTargetPort(object):
         dest = self.port_path + "/subsystems/"
         cmd = "ln -s " + src + " " + dest
         self.logger.info(cmd)
-        ret = Cmd.exec_cmd("ln -s " + src + " " + dest)
-        return ret
+        return Cmd.exec_cmd(cmd)
 
     def delete(self):
         """ Delete this port.
@@ -117,6 +116,5 @@ class NVMFTargetPort(object):
         except Exception, err:
             self.logger.error(str(err) + ".")
             return False
-
         self.logger.info("Removed port " + self.port_path + " successfully.")
         return True

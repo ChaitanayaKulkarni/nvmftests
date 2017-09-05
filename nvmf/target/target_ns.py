@@ -67,14 +67,13 @@ class NVMFTargetNamespace(object):
 
         cmd = "echo -n " + self.ns_attr['device_path'] + " > " + \
               self.ns_path + "/device_path"
-        ret = Cmd.exec_cmd(cmd)
-        if ret is False:
+
+        if Cmd.exec_cmd(cmd) is False:
             self.logger.error("failed to configure device path.")
             return False
 
         if self.ns_attr['enable'] == '1':
-            ret = self.enable()
-            if ret is False:
+            if self.enable() is False:
                 self.logger.error("enable ns " + self.ns_path + " failed.")
                 return False
 

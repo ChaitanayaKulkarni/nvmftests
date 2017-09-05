@@ -123,7 +123,6 @@ class NVMFTarget(object):
                                          sscfg['attr']['allow_any_host'])
             ret = subsys.init()
             if ret is False:
-                # call unwind code here.
                 return False
 
             self.subsys_list.append(subsys)
@@ -136,7 +135,6 @@ class NVMFTarget(object):
                 ns_attr['nsid'] = str(nscfg['nsid'])
                 ret = subsys.create_ns(**ns_attr)
                 if ret is False:
-                    # call unwind code here.
                     return False
 
         # Port
@@ -153,7 +151,6 @@ class NVMFTarget(object):
             port = NVMFTargetPort(self.cfgfs, port_cfg['portid'], **port_cfg)
             ret = port.init()
             if ret is False:
-                # call unwind code here.
                 return False
 
             self.port_list.append(port)
@@ -161,7 +158,6 @@ class NVMFTarget(object):
             for subsys in port_cfg['subsystems']:
                 ret = port.add_subsys(subsys)
                 if ret is False:
-                    # call unwind code here.
                     self.logger.error("failed to add subsystem " +
                                       subsys + " to port " +
                                       port.port_id + ".")
@@ -212,5 +208,4 @@ class NVMFTarget(object):
         Cmd.exec_cmd("modprobe -r nvmet")
         Cmd.exec_cmd("modprobe -r nvme_fabrics")
         self.logger.info("DONE.")
-
         return ret

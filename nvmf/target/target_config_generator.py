@@ -209,6 +209,7 @@ class TargetConfig:
             ss_list.append(subsys.build_subsys())
             nqn_list.append(nqn)
 
+        # TODO : improve support for multiple ports
         p = Port(1)
         port_list.append(p.build_port(nqn_list))
 

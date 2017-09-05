@@ -114,7 +114,6 @@ class NVMFTargetSubsystem(object):
         """
         self.logger.info("Deleting namespace " + self.nqn + " : " +
                          ns.ns_path + ".")
-
         ret = ns.delete()
         if ret is False:
             self.logger.error("delete ns failed for " + ns.ns_path + ".")
@@ -132,6 +131,7 @@ class NVMFTargetSubsystem(object):
         ret = True
         for ns in iter(self):
             if self.delete_ns(ns) is False:
+                # try and continue deleting namespaces
                 ret = False
 
         if os.path.exists(self.subsys_path):
