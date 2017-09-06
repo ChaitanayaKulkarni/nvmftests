@@ -5,9 +5,11 @@ class target(object):
     """ """
     def __init__(self):
         self.state_name = ""
+        self.name = ""
 
     def show_graph(self, **kwargs):
-        self.get_graph(**kwargs).draw(self.state_name + ".png", prog='dot')
+        print "state namne " + self.state_name + " name " + self.name
+        self.get_graph(**kwargs).draw(self.name + ".png", prog='dot')
 
 
 GM = MachineFactory.get_predefined(graph=True, nested=True, locked=True)
@@ -21,7 +23,7 @@ target_ns_cfg_states = {'name': 'subsys_cfg',
 target_subsys_cfg_states = {'name': 'cfg',
                             'children': ['subsys_start',
                                          'subsys_init',
-                                         "subsys_cfg",
+                                         target_ns_cfg_states,
                                          'subsys_online',
                                          'subsys_offline',
                                          'subsys_dead']}
@@ -29,15 +31,19 @@ target_subsys_cfg_states = {'name': 'cfg',
 states = ['start', 'init', target_subsys_cfg_states,
           'online', 'offline', 'dead']
 transitions = [
-    ['target_init', 'start', 'init'],
-    ['target_cfg', 'init', 'cfg'],
+    # target_ns
+    ['target_cfg_subsys_ns_start', 'cfg_subsys_init',
+        'cfg_subsys_cfg_ns_start'],
 
+    # target_subsystem
     ['target_cfg_subsys', 'cfg', 'cfg_subsys_start'],
     ['target_cfg_init', 'cfg_subsys_start', 'cfg_subsys_init'],
     ['target_cfg_cfg', 'cfg_subsys_init', 'cfg_subsys_cfg'],
     ['target_cfg_online', 'cfg_subsys_cfg', 'cfg_subsys_online'],
     ['target_cfg_online_success', 'cfg_subsys_online', 'cfg'],
-
+    # target
+    ['target_init', 'start', 'init'],
+    ['target_cfg', 'init', 'cfg'],
     ['target_init_success', 'cfg', 'online'],
     ['target_exec_command', 'online', 'online'],
     ['target_init_failure', 'cfg', 'dead'],
@@ -54,52 +60,63 @@ machine = GM(model=model1,
              title="Mood Matrix",
              show_conditions=True)
 
-model1.state_name = "target1"
+i = 0
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_init()
 print model1.state
 
-model1.state_name = "target2"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_cfg()
 print model1.state
 
-model1.state_name = "target3"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_cfg_subsys()
 print model1.state
 
-model1.state_name = "target4"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_cfg_init()
 print model1.state
 
-model1.state_name = "target5"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
-model1.target_cfg_cfg()
+model1.target_cfg_subsys_ns_start()
 print model1.state
 
-model1.state_name = "target6"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_cfg_online()
 print model1.state
 
-model1.state_name = "target7"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_cfg_online_success()
 print model1.state
 
-model1.state_name = "target8"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_init_success()
 print model1.state
 
-model1.state_name = "target9"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_offline()
 print model1.state
 
-model1.state_name = "target10"
+i += 1
+model1.name = "target" + str(i)
 model1.show_graph()
 model1.target_shutdown()
 print model1.state
