@@ -24,6 +24,7 @@ import os
 import shutil
 
 from utils.shell import Cmd
+from utils.const import Const
 from utils.log import Log
 from nvmf.target.target_ns import NVMFTargetNamespace
 
@@ -44,7 +45,7 @@ class NVMFTargetSubsystem(object):
         self.ns_list = []
         self.cfgfs = cfgfs
         self.nqn = nqn
-        self.subsys_path = self.cfgfs + "/nvmet/subsystems/" + nqn + "/"
+        self.subsys_path = self.cfgfs + Const.SYSFS_NVMET_SUBSYS + nqn + "/"
         self.allowed_hosts = allowed_hosts
         self.attr_allow_any_host = attr_allow_any_host
         self.logger = Log.get_logger(__name__, 'target_subsystem')
@@ -66,7 +67,7 @@ class NVMFTargetSubsystem(object):
         return self.__next__()
 
     def init(self):
-        """ create and initialize subsystem.
+        """ Create and initialize subsystem.
             - Args :
                   - None.
             - Returns :
@@ -131,7 +132,7 @@ class NVMFTargetSubsystem(object):
         ret = True
         for ns in iter(self):
             if self.delete_ns(ns) is False:
-                # try and continue deleting namespaces
+                # try and continue deleting namespaces for cleanup after error
                 ret = False
 
         if os.path.exists(self.subsys_path):

@@ -46,8 +46,9 @@ class NVMFTarget(object):
         self.subsys_list = []
         self.port_list = []
         self.target_type = target_type
-        self.cfgfs = "/sys/kernel/config/"
+        self.cfgfs = Const.SYSFS_DEFAULT_MOUNT_PATH
         self.logger = Log.get_logger(__name__, 'target')
+        self.subsys_list_index = 0
 
         assert_equal(self.load_configfs(), True)
 
@@ -58,7 +59,7 @@ class NVMFTarget(object):
     def __next__(self):
         index = self.subsys_list_index
         self.subsys_list_index += 1
-        if (len(self.subsys_list) > index):
+        if len(self.subsys_list) > index:
             return self.subsys_list[index]
         raise StopIteration
 
@@ -121,8 +122,7 @@ class NVMFTarget(object):
                                          sscfg['allowed_hosts']
                                          [Const.ALLOW_HOST_VALUE],
                                          sscfg['attr']['allow_any_host'])
-            ret = subsys.init()
-            if ret is False:
+            if subsys.init() is False:
                 return False
 
             self.subsys_list.append(subsys)
@@ -133,8 +133,7 @@ class NVMFTarget(object):
                 ns_attr['device_path'] = str(nscfg['device']['path'])
                 ns_attr['enable'] = str(nscfg['enable'])
                 ns_attr['nsid'] = str(nscfg['nsid'])
-                ret = subsys.create_ns(**ns_attr)
-                if ret is False:
+                if subsys.create_ns(**ns_attr) is False:
                     return False
 
         # Port
@@ -149,8 +148,7 @@ class NVMFTarget(object):
             port_cfg['subsystems'] = pcfg['subsystems']
 
             port = NVMFTargetPort(self.cfgfs, port_cfg['portid'], **port_cfg)
-            ret = port.init()
-            if ret is False:
+            if port.init() is False:
                 return False
 
             self.port_list.append(port)
@@ -172,8 +170,7 @@ class NVMFTarget(object):
             -Returns :
                   - None.
         """
-        ret = Cmd.exec_cmd("modprobe nvmet")
-        if ret is False:
+        if Cmd.exec_cmd("modprobe nvmet") is False:
             self.logger.error("unable to load nvmet module.")
             return False
 

@@ -24,6 +24,7 @@ import os
 import shutil
 
 from utils.shell import Cmd
+from utils.const import Const
 from utils.log import Log
 
 
@@ -44,8 +45,8 @@ class NVMFTargetNamespace(object):
         self.cfgfs = cfgfs
         self.nqn = nqn
         self.ns_id = ns_id
-        self.ns_path = (self.cfgfs + "/nvmet/subsystems/" +
-                        nqn + "/namespaces/" + str(ns_id) + "/")
+        self.ns_path = (self.cfgfs + Const.SYSFS_NVMET_SUBSYS +
+                        nqn + Const.SYSFS_NVMET_SUBSYS_NS + str(ns_id) + "/")
         self.ns_attr['device_nguid'] = ns_attr['device_nguid']
         self.ns_attr['device_path'] = ns_attr['device_path']
         self.ns_attr['enable'] = ns_attr['enable']
