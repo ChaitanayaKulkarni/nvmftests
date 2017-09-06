@@ -43,3 +43,8 @@ class Const:
     CTRL_BLK_FILE_NAME = 2
     SMART_LOG_VALUE = 1
     ALLOW_HOST_VALUE = 0
+
+    SYSFS_DEFAULT_MOUNT_PATH = "/sys/kernel/config"
+    SYSFS_NVMET = "/nvmet/"
+    SYSFS_NVMET_SUBSYS = SYSFS_NVMET + "/subsystems/"
+    SYSFS_NVMET_SUBSYS_NS = "/namespaces/"
