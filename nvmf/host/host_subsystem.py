@@ -437,7 +437,6 @@ class NVMFHostController(object):
             self.ctrl_dict[key.strip()] = val.strip()
 
         self.logger.info(self.ctrl_dict)
-        self.logger.info("-----------------------------------------------")
         return True
 
     def id_ns(self):
@@ -451,7 +450,19 @@ class NVMFHostController(object):
         for host_ns in iter(self):
             if host_ns.id_ns() is False:
                 return False
-            self.logger.info("-----------------------------------------------")
+        return True
+
+    def ns_descs(self):
+        """ Wrapper for executing ns_descs command on all namespaces of this
+            controller.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        for host_ns in iter(self):
+            if host_ns.ns_descs() is False:
+                return False
         return True
 
     def generate_next_ns_id(self):

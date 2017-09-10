@@ -24,10 +24,10 @@ import Queue
 import time
 import copy
 import threading
-import subprocess
 
 from utils.fs import Ext4FS
 from utils.log import Log
+from utils.shell import Cmd
 
 
 class NVMFNSThread(threading.Thread):
@@ -113,16 +113,18 @@ class NVMFHostNamespace(object):
             - Returns :
                   - True on success, False on failure.
         """
-        id_ctrl_cmd = "nvme id-ns " + self.ns_dev
-        proc = subprocess.Popen(id_ctrl_cmd,
-                                shell=True,
-                                stdout=subprocess.PIPE)
-        ret = proc.wait()
-        if ret != 0:
-            self.logger.error("nvme id-ctrl failed")
-            return False
+        id_ns_cmd = "nvme id-ns " + self.ns_dev
+        return Cmd.exec_cmd(id_ns_cmd)
 
-        return True
+    def ns_descs(self):
+        """ Wrapper for ns-descs command.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        ns_descs_cmd = "nvme ns-descs " + self.ns_dev
+        return Cmd.exec_cmd(ns_descs_cmd)
 
     def mkfs(self, fs_type):
         """ Format namespace with file system and mount on the unique
