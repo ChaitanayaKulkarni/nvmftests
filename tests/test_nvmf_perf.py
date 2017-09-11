@@ -31,7 +31,7 @@ NVMF test parallel IOs on all controllers :-
 import sys
 from nose.tools import assert_equal
 sys.path.append("../")
-from nvmf.misc.null_blk import NullBlk
+from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 
@@ -45,15 +45,17 @@ class TestNVMFParallelFabric(NVMFTest):
 
     def setUp(self):
         """ Pre section of testcase """
-        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
-        self.null_blk.init()
-        self.build_target_config(self.null_blk.dev_list)
+        self.loopdev = Loopback(self.mount_path, self.data_size,
+                                self.block_size, self.nr_dev)
+        self.loopdev.init()
+        print self.loopdev.dev_list
+        self.build_target_config(self.loopdev.dev_list)
         super(TestNVMFParallelFabric, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
         super(TestNVMFParallelFabric, self).common_tear_down()
-        self.null_blk.delete()
+        self.loopdev.delete()
 
     def test_parallel_io(self):
         """ Testcase main """

@@ -29,7 +29,7 @@ NVMF target template :-
 import sys
 from nose.tools import assert_equal
 sys.path.append("../")
-from nvmf.misc.null_blk import NullBlk
+from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 from nvmf.target import NVMFTarget
 
@@ -45,9 +45,11 @@ class TestNVMFTargetTemplate(NVMFTest):
 
     def setUp(self):
         """ Pre section of testcase """
-        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
-        self.null_blk.init()
-        self.build_target_config(self.null_blk.dev_list)
+        self.loopdev = Loopback(self.mount_path, self.data_size,
+                                self.block_size, self.nr_dev)
+        self.loopdev.init()
+        print self.loopdev.dev_list
+        self.build_target_config(self.loopdev.dev_list)
         target_type = "loop"
         self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
@@ -56,7 +58,7 @@ class TestNVMFTargetTemplate(NVMFTest):
     def tearDown(self):
         """ Post section of testcase """
         self.target_subsys.delete()
-        self.null_blk.delete()
+        self.loopdev.delete()
 
     def test_target(self):
         """ Testcase main """
