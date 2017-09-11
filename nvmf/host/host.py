@@ -298,6 +298,20 @@ class NVMFHost(object):
                 break
         return ret
 
+    def get_ns_id(self):
+        """ Execute get-ns-id on all namespace(s).
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        ret = True
+        for ctrl in iter(self):
+            if ctrl.get_ns_id() is False:
+                ret = False
+                break
+        return ret
+
     def mkfs_seq(self, fs_type):
         """ Run mkfs, mount fs, run IOs.
             - Args :

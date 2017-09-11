@@ -465,6 +465,19 @@ class NVMFHostController(object):
                 return False
         return True
 
+    def get_ns_id(self):
+        """ Wrapper for executing get-ns-id command on all namespaces of this
+            controller.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        for host_ns in iter(self):
+            if host_ns.get_ns_id() is False:
+                return False
+        return True
+
     def generate_next_ns_id(self):
         """ Return next namespace id.
             - Args :

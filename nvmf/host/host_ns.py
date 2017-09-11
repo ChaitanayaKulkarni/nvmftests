@@ -126,6 +126,16 @@ class NVMFHostNamespace(object):
         ns_descs_cmd = "nvme ns-descs " + self.ns_dev
         return Cmd.exec_cmd(ns_descs_cmd)
 
+    def get_ns_id(self):
+        """ Wrapper for get-ns-id command.
+            - Args :
+                  - None.
+            - Returns :
+                  - True on success, False on failure.
+        """
+        get_ns_id_cmd = "nvme get_ns_id " + self.ns_dev
+        return Cmd.exec_cmd(get_ns_id_cmd)
+
     def mkfs(self, fs_type):
         """ Format namespace with file system and mount on the unique
             namespace directory.
