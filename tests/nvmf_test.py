@@ -78,6 +78,7 @@ class NVMFTest(object):
         self.fio_fs_write = {}
         self.dd_read = {}
         self.dd_write = {}
+        self.blk_dev_pool = []
 
         self.load_config()
 
@@ -136,6 +137,10 @@ class NVMFTest(object):
             self.dd_write['OF'] = None
             self.dd_write['COUNT'] = str(self.data_size / self.block_size)
             self.dd_write['RC'] = 0
+            # block_dev_pool
+            self.blk_dev_pool = cfg['block_dev_pool']
+            print self.blk_dev_pool
+            print len(self.blk_dev_pool)
             return True
         return False
 

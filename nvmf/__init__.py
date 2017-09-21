@@ -10,3 +10,4 @@ from .target import TargetConfig
 
 from .misc import NullBlk
 from .misc import Loopback
+from .misc import GenBlk
