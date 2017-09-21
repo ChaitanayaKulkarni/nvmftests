@@ -54,7 +54,7 @@ class NullBlk(object):
         Cmd.exec_cmd(cmd)
 
     def init(self):
-        """ Create and initialize Loopback.
+        """ Create and initialize null blk.
             - Args :
                   - None.
             - Returns :
@@ -68,7 +68,7 @@ class NullBlk(object):
         return True
 
     def delete(self):
-        """ Delete this Loopback.
+        """ Delete this null blk.
             - Args :
                   - None.
             -Returns :
