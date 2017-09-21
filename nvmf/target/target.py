@@ -170,6 +170,10 @@ class NVMFTarget(object):
             -Returns :
                   - None.
         """
+        if Cmd.exec_cmd("modprobe nvme") is False:
+            self.logger.error("failed to load nvme.")
+            return False
+
         if Cmd.exec_cmd("modprobe nvmet") is False:
             self.logger.error("unable to load nvmet module.")
             return False
