@@ -64,4 +64,3 @@ class TestNVMFParallelFabric(NVMFTest):
         assert_equal(ret, True, "ERROR : running IOs failed.")
         ret = self.host_subsys.run_ios_parallel(self.dd_write)
         assert_equal(ret, True, "ERROR : running IOs failed.")
-        raw_input("...")
