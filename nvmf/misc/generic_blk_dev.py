@@ -29,7 +29,7 @@ class GenBlk(object):
     """
     Represents Generic BLK block devices.
 
-        - Attributes :
+        - Attributes:
             - nr_devices : max block devices.
             - dev_list : list of block devices.
     """
@@ -48,7 +48,7 @@ class GenBlk(object):
             - Args :
                 - dev_list : list of block devices.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         for i in range(0, int(self.nr_devices)):
             self.logger.info(dev_list[i])
