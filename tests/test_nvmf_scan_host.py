@@ -35,7 +35,7 @@ from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 
-class TestNVMFHostTemplate(NVMFTest):
+class TestNVMFScanHost(NVMFTest):
 
     """ Represents host controller scan testcase """
 
@@ -50,11 +50,11 @@ class TestNVMFHostTemplate(NVMFTest):
         self.loopdev.init()
         print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
-        super(TestNVMFHostTemplate, self).common_setup()
+        super(TestNVMFScanHost, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFHostTemplate, self).common_tear_down()
+        super(TestNVMFScanHost, self).common_tear_down()
         self.loopdev.delete()
 
     def test_scan_host(self):

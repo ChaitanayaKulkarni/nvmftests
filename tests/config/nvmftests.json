@@ -6,6 +6,7 @@
 	"nr_target_subsys" : "1",
 	"nr_ns_per_subsys" : "1",
 	"target_config_file" : "loop.json",
+	"target_type" : "loop",
 	"fio_read": {
 		"IO_TYPE": "fio",
 		"group_reporting": "1",

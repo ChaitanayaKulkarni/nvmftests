@@ -37,9 +37,9 @@ from nvmf_test_logger import NVMFLogger
 def __dd_worker__(iocfg):
     """ dd worker thread function.
         - Args :
-              - iocfg : io configuration.
+            - iocfg : io configuration.
         - Returns :
-              - Return value of dd command.
+            - Return value of dd command.
     """
     return DD.run_io(iocfg)
 
@@ -47,9 +47,9 @@ def __dd_worker__(iocfg):
 def __fio_worker__(iocfg):
     """ fio worker thread function.
         - Args :
-              - iocfg : io configuration.
+            - iocfg : io configuration.
         - Returns :
-              - Return value of fio command.
+            - Return value of fio command.
     """
     return FIO.run_io(iocfg)
 
@@ -69,6 +69,7 @@ class NVMFTest(object):
         self.nr_target_subsys = 0
         self.nr_ns_per_subsys = 0
         self.target_config_file = Const.XXX
+        self.target_type = Const.XXX
         self.loopdev = None
         self.host_subsys = None
         self.target_subsys = None
@@ -85,9 +86,9 @@ class NVMFTest(object):
     def build_target_config(self, dev_list):
         """ Generates target config file in JSON format from test config file.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - None.
+                - None.
         """
         with open(self.config_file) as cfg_file:
             cfg = json.load(cfg_file)
@@ -103,11 +104,11 @@ class NVMFTest(object):
             target_cfg.build_target_subsys()
 
     def load_config(self):
-        """ Load Basic test configuration.
+        """ Load basic test configuration.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         with open(self.config_file) as nvmftest_config:
             cfg = json.load(nvmftest_config)
@@ -137,6 +138,8 @@ class NVMFTest(object):
             self.dd_write['OF'] = None
             self.dd_write['COUNT'] = str(self.data_size / self.block_size)
             self.dd_write['RC'] = 0
+
+            self.target_type = cfg['target_type']
             # block_dev_pool
             self.blk_dev_pool = cfg['block_dev_pool']
             print self.blk_dev_pool
@@ -145,11 +148,11 @@ class NVMFTest(object):
         return False
 
     def human_to_bytes(self, num_str):
-        """ Converts num_str from human redable format to bytes.
+        """ Converts human redable format to bytes.
             Args :
-                - num_str : human redable string.
+              - num_str : human redable string.
             Returns :
-                - On success decimal equivalant of num_str, 0 on failure.
+              - On success decimal equivalant of num_str, 0 on failure.
         """
         decimal_bytes = 0
         num_suffix = str(num_str[-2:]).upper()
@@ -167,9 +170,9 @@ class NVMFTest(object):
     def setup_log_dir(self, test_name):
         """ Set up the log directory for a testcase.
             Args :
-                - test_name : name of the testcase.
+              - test_name : name of the testcase.
             Returns :
-                - None.
+              - None.
         """
         self.test_log_dir = self.log_dir + "/" + test_name
         if not os.path.exists(self.test_log_dir):
@@ -180,24 +183,23 @@ class NVMFTest(object):
     def common_setup(self):
         """ Common test case setup function.
             Args :
-                - test_name : name of the testcase.
+              - test_name : name of the testcase.
             Returns :
-                - None.
+              - None.
         """
-        target_type = 'loop'
-        self.target_subsys = NVMFTarget(target_type)
+        self.target_subsys = NVMFTarget(self.target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMFHost(target_type)
+        self.host_subsys = NVMFHost(self.target_type)
         ret = self.host_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : host config failed")
 
     def common_tear_down(self):
         """ Common test case tear down function.
             Args :
-                - test_name : name of the testcase.
+              - test_name : name of the testcase.
             Returns :
-                - None.
+              - None.
         """
         self.host_subsys.delete()
         self.target_subsys.delete()

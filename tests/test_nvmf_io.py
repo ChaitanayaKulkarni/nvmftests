@@ -22,7 +22,7 @@ NVMF sequntially select a controller and run IOs:-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Run IOs sequentially iterating over controller(s) ans its namespaces(s).
+    3. Run IOs sequentially iterating over controller(s) and its namespaces(s).
     3. Delete Host.
     4. Delete Target.
 """

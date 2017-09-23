@@ -22,7 +22,7 @@ NVMF test parallel IOs on all controllers :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Run parallel IOs on all available controller(s) and its nvmespace(s).
+    3. Run parallel IOs on all available controller(s) and its namespace(s).
     4. Delete Host.
     5. Delete Target.
 """

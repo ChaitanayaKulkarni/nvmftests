@@ -50,8 +50,7 @@ class TestNVMFTargetTemplate(NVMFTest):
         self.loopdev.init()
         print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
-        target_type = "loop"
-        self.target_subsys = NVMFTarget(target_type)
+        self.target_subsys = NVMFTarget(self.target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
 

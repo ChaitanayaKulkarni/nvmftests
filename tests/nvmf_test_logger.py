@@ -27,7 +27,7 @@ class NVMFLogger(object):
     def __init__(self, log_file_path):
         """ Logger setup.
             - Args :
-                  - log_file_path : path to store the log.
+                - log_file_path : path to store the log.
         """
         self.terminal = sys.stdout
         self.log = open(log_file_path, "w")
@@ -35,9 +35,9 @@ class NVMFLogger(object):
     def write(self, log_message):
         """ Logger write.
             - Args :
-                  - log_message: string to write in the log file.
+                - log_message : string to write in the log file.
             - Returns:
-                  - None.
+                - None.
         """
         self.terminal.write(log_message)
         self.log.write(log_message)

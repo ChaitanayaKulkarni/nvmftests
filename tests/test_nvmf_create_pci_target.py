@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF Create/Delete Host :-
+NVMF Create/Delete Host with PCIe device on target namespace :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -51,11 +51,10 @@ class TestNVMFCreatePCIeTarget(NVMFTest):
         self.nvme_pci = NVMePCIeBlk()
         self.nvme_pci.init()
         self.build_target_config(self.nvme_pci.dev_list)
-        target_type = "loop"
-        self.target_subsys = NVMFTarget(target_type)
+        self.target_subsys = NVMFTarget(self.target_type)
         ret = self.target_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : target config failed")
-        self.host_subsys = NVMFHost(target_type)
+        self.host_subsys = NVMFHost(self.target_type)
 
     def tearDown(self):
         """ Post section of testcase """
