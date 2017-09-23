@@ -17,7 +17,7 @@
 #
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@hgst.com>
 #
-""" Represents Shell Command execution.
+""" Represents Testcaes Logging setup.
 """
 import json
 import logging
@@ -34,7 +34,7 @@ class Log(object):
     def get_logger(name, element):
         """ Returns the log level from config file.
             - Args :
-                - element : NVMe Over Fabric subsystem element.
+                - element : NVMe Over Fabrics subsystem element.
             - Returns :
                 - Valid Log level on success, None otherwise.
         """

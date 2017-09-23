@@ -26,7 +26,7 @@ class Const:
     """
     Represents a host.
         - Attributes :
-            All constants for testcases
+            General constants for testcases.
     """
 
     XXX = "XXX"

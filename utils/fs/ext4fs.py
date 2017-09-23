@@ -21,9 +21,9 @@
 """
 import os
 import logging
-import subprocess
 
 from .filesystem import FileSystem
+from utils.shell import Cmd
 
 
 class Ext4FS(FileSystem):
@@ -50,68 +50,55 @@ class Ext4FS(FileSystem):
         """
         return super(Ext4FS, self).get_mount_path()
 
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - Value of the command.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception as err:
-            self.logger.info(str(err) + ".")
-            return False
-
-        return True if proc.wait() == 0 else False
-
     def mkfs(self):
         """ Execute mkfs on target deivce.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         if super(Ext4FS, self).mkfs() is False:
             return False
 
-        self.exec_cmd("mkfs.ext4 " + self.dev_path)
+        if Cmd.exec_cmd("mkfs.ext4 " + self.dev_path) is False:
+            self.logger.error("mkfs failed")
+            return False
+
         self.logger.info("mkfs successful!!!")
         return True
 
     def mount(self):
         """ Mount Target device on the mount path.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         if super(Ext4FS, self).mount() is False:
             return False
-        return self.exec_cmd("mount " + self.dev_path + " " + self.mount_path)
+        return Cmd.exec_cmd("mount " + self.dev_path + " " + self.mount_path)
 
     def is_mounted(self):
-        """ Check if namespace is mounted.
+        """ Check if mount_path is mounted.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
-        return self.exec_cmd("mountpoint -q " + self.mount_path)
+        return Cmd.exec_cmd("mountpoint -q " + self.mount_path)
 
     def umount(self):
         """ Unmount target device from mount path.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         if super(Ext4FS, self).umount() is False:
             return False
 
         ret = True
-        self.exec_cmd("umount " + self.mount_path)
+        Cmd.exec_cmd("umount " + self.mount_path)
         try:
             os.rmdir(self.mount_path)
         except Exception as err:

@@ -22,7 +22,9 @@
 import os
 import stat
 import logging
-import subprocess
+
+
+from utils.shell import Cmd
 
 
 class FileSystem(object):
@@ -48,28 +50,13 @@ class FileSystem(object):
         self.formatter = logging.Formatter(self.log_format)
         self.logger.setLevel(logging.WARNING)
 
-    def exec_cmd(self, cmd):
-        """ Wrapper for executing a shell command.
-            - Args :
-                - cmd : command to execute.
-            - Returns :
-                - Value of the command.
-        """
-        proc = None
-        try:
-            proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        except Exception as err:
-            self.logger.info(str(err) + ".")
-            return False
-
-        return True if proc.wait() == 0 else False
-
     def mkfs(self):
-        """ Check preconditions for the mkfs operation.
+        """ Check preconditions for the mkfs operation, subclass should
+            implement actual mkfs.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         if not os.path.exists(self.dev_path):
             self.logger.info("ERROR : device path %s is not present.",
@@ -88,9 +75,9 @@ class FileSystem(object):
     def mount(self):
         """ Check preconditions for the mount operation.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         if not os.path.exists(self.mount_path):
             try:
@@ -104,30 +91,30 @@ class FileSystem(object):
     def get_mount_path(self):
         """ Accessor for file system mountpath.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - File system mountpath.
+                - File system mountpath.
         """
         return self.mount_path
 
     def umount(self):
         """ Check preconditions for the umount operation.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         if not self.is_mounted():
-            self.logger.info("ERROR : fs is not mounted")
+            self.logger.info("fs is not mounted")
             return False
 
         return True
 
     def is_mounted(self):
-        """ Check if namespace is mounted.
+        """ Check if mount_path is mounted.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
-        return self.exec_cmd("mountpoint -q " + self.mount_path)
+        return Cmd.exec_cmd("mountpoint -q " + self.mount_path)
