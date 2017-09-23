@@ -23,7 +23,6 @@ import os
 import re
 import sys
 import time
-import logging
 from natsort import natsorted
 
 sys.path.append('../../')
@@ -53,9 +52,9 @@ class NVMePCIeBlk(object):
 
     def is_pci_ctrl(self, ctrl):
         """ Validate underlaying device belogs to pci subsystem.
-            - Args:
+            - Args :
                 - None.
-            - Returns:
+            - Returns :
                 - True if device is belongs to PCIe subsystem, False otherwise.
         """
         cmd = "find /sys/devices -name " + ctrl + " | grep -i pci"
