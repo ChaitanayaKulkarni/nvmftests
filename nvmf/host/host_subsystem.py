@@ -40,7 +40,7 @@ class NVMFHostController(object):
     Represents a host controller.
 
         - Attributes :
-            - nqn : ctrltem nqn.
+            - nqn : ctrl nqn.
             - ctrl_dev : controller device.
             - ctrl_dict : controller attributes.
             - ns_list : list of namespaces.
@@ -75,9 +75,9 @@ class NVMFHostController(object):
     def run_io_all_ns(self, iocfg):
         """ Start IOs on all the namespaces of this controller parallelly.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ns in iter(self):
@@ -95,9 +95,9 @@ class NVMFHostController(object):
     def wait_io_all_ns(self):
         """ Wait until workqueue is empty.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True if namespace wait IO is successful, False otherwise.
+                - True if namespace wait IO is successful, False otherwise.
         """
         for ns in iter(self):
             try:
@@ -109,11 +109,11 @@ class NVMFHostController(object):
         return True
 
     def run_io_seq(self, iocfg):
-        """ Exercie IOs on each namespace.
+        """ Exercise IOs on each namespace.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ns in iter(self):
@@ -130,9 +130,9 @@ class NVMFHostController(object):
     def run_mkfs_seq(self, fs_type):
         """ Run mkfs, mount fs.
             - Args :
-                  - fs_type : file system type.
+                - fs_type : file system type.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ns in iter(self):
@@ -147,9 +147,9 @@ class NVMFHostController(object):
     def run_fs_ios(self, iocfg):
         """ Run IOs on mounted file system.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ns in iter(self):
@@ -165,9 +165,9 @@ class NVMFHostController(object):
         """ Select the namespce randomely and wait for the IOs completion,
             repeat this for all the namespaces.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         num_list = range(0, len(self.ns_list))
 
@@ -185,9 +185,9 @@ class NVMFHostController(object):
     def __ctrl_set_attr__(self, attr):
         """ Set host controller attribute.
             - Args :
-                  - attr : sysfs attribute to set.
+                - attr : sysfs attribute to set.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         sysfs_path = "/sys/class/nvme-fabrics/ctl/"
         cmd = "echo 1 >" + sysfs_path + self.ctrl_dev.split('/')[-1] \
@@ -197,27 +197,27 @@ class NVMFHostController(object):
     def ctrl_rescan(self):
         """ Issue controller rescan.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         return self.__ctrl_set_attr__("rescan_controller")
 
     def ctrl_reset(self):
         """ Issue controller reset.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         return self.__ctrl_set_attr__("reset_controller")
 
     def run_smart_log(self, nsid="0xFFFFFFFF"):
         """ Wrapper for nvme smart-log command.
             - Args :
-                  - None.
+                - None.
             - Returns:
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         smart_log_cmd = "nvme smart-log " + self.ctrl_dev + " -n " + str(nsid)
         self.logger.info(smart_log_cmd)
@@ -252,9 +252,9 @@ class NVMFHostController(object):
     def smart_log(self):
         """ Execute smart-log command.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.run_smart_log()
         i = 1
@@ -270,9 +270,9 @@ class NVMFHostController(object):
     def validate_sysfs_ns(self):
         """ Validate sysfs entries for the host controller and namespace(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ctrl_bdev = self.ctrl_dev.split("/")[Const.CTRL_BLK_FILE_NAME]
         # Validate ctrl in the sysfs
@@ -305,9 +305,9 @@ class NVMFHostController(object):
         """ Generate next available controller and namespace id on the fly.
             Build the ns list for this controller.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - ctrl and ns list on success, None on failure.
+                - ctrl and ns list on success, None on failure.
         """
         ctrl = Const.XXX
         ns_list = []
@@ -353,9 +353,9 @@ class NVMFHostController(object):
     def init_ns(self):
         """ Initialize and build namespace list and validate sysfs entries.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Expecting following namespaces " +
                          str(self.ns_dev_list) + ".")
@@ -378,6 +378,13 @@ class NVMFHostController(object):
         return ret
 
     def validate_fabric_ctrl(self):
+        """ Validate this is a fabric controller.
+            - Args :
+                - None.
+            - Returns :
+                - True on success, False on failure.
+        """
+
         if not stat.S_ISCHR(os.stat(self.ctrl_dev).st_mode):
             self.logger.error("failed to find char device for host ctrl.")
 
@@ -389,9 +396,9 @@ class NVMFHostController(object):
     def init_ctrl(self):
         """ Initialize controller and build controller attributes.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         # initialize nqn and transport
         cmd = "echo  \"transport=" + self.transport + ",nqn=" + \
@@ -414,9 +421,9 @@ class NVMFHostController(object):
     def id_ctrl(self):
         """ Wrapper for executing id-ctrl command.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         id_ctrl_cmd = "nvme id-ctrl " + self.ctrl_dev
         proc = subprocess.Popen(id_ctrl_cmd,
@@ -443,9 +450,9 @@ class NVMFHostController(object):
         """ Wrapper for executing id-ns command on all namespaces of this
             controller.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         for host_ns in iter(self):
             if host_ns.id_ns() is False:
@@ -456,9 +463,9 @@ class NVMFHostController(object):
         """ Wrapper for executing ns_descs command on all namespaces of this
             controller.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         for host_ns in iter(self):
             if host_ns.ns_descs() is False:
@@ -469,9 +476,9 @@ class NVMFHostController(object):
         """ Wrapper for executing get-ns-id command on all namespaces of this
             controller.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         for host_ns in iter(self):
             if host_ns.get_ns_id() is False:
@@ -481,18 +488,18 @@ class NVMFHostController(object):
     def generate_next_ns_id(self):
         """ Return next namespace id.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - next namespace id.
+                - next namespace id.
         """
         return len(self.ns_list) + 1
 
     def delete(self):
         """ Delete subsystem and associated namespace(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                 - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Deleting subsystem " + self.nqn + ".")
         for host_ns in self.ns_list:

@@ -39,18 +39,11 @@ class NVMFHost(object):
               - ctrl_list : list of the host controllers.
     """
     def __init__(self, target_type):
-        """ Constructor for NVMFHost.
-            - Args :
-                  - target_type : represents target transport type.
-                  - ctrl_list : list of host controllers.
-            - Returns :
-                  - None.
-        """
         self.target_type = target_type
         self.ctrl_list = []
         self.ctrl_list_index = 0
-        self.load_modules()
         self.logger = Log.get_logger(__name__, 'host')
+        self.load_modules()
 
     def __iter__(self):
         self.ctrl_list_index = 0
@@ -70,12 +63,11 @@ class NVMFHost(object):
     def load_modules(self):
         """ Wrapper for Loading NVMF Host modules.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
-        ret = Cmd.exec_cmd("modprobe nvme-fabrics")
-        if ret is False:
+        if Cmd.exec_cmd("modprobe nvme-fabrics") is False:
             self.logger.error("unable to load nvme-fabrics.")
             return False
         return True
@@ -86,9 +78,9 @@ class NVMFHost(object):
             2. Load config from json file.
             3. Create Controller list.
             - Args :
-                  - None.
+                - config_file : json config file.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         try:
             config_file_handle = open(config_file, "r")
@@ -112,9 +104,9 @@ class NVMFHost(object):
         """ Run parallel IO traffic on all host controller(s) and
             wait for completion.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - None.
+                - None.
         """
         ret = True
         self.logger.info("Starting traffic parallelly on all controllers ...")
@@ -126,9 +118,9 @@ class NVMFHost(object):
     def wait_traffic_parallel(self):
         """ Wait for IOs completion on all controllers.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - None.
+                - None.
         """
         ret = True
         self.logger.info("Waiting for all threads to finish the IOs ...")
@@ -143,9 +135,9 @@ class NVMFHost(object):
         """ Run parallel IOs on all host controller(s) and
             wait for completion.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - None.
+                - None.
         """
         if self.run_traffic_parallel(iocfg) is False:
             return False
@@ -159,9 +151,9 @@ class NVMFHost(object):
         """ Run parallel IO traffic on all host controller(s) and
             wait for completion.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - None.
+                - None.
         """
         if self.run_ios_parallel(iocfg) is False:
             return False
@@ -171,11 +163,11 @@ class NVMFHost(object):
         return True
 
     def run_ios_seq(self, iocfg):
-        """ Run IOs on all host controllers one by one.
+        """ Run IOs on all host controllers sequentially.
             - Args :
-                  - None.
+                - iocfg : io configuration.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Starting IOs seq ...")
         ret = True
@@ -192,9 +184,9 @@ class NVMFHost(object):
         """ Select a controller from the list of controllers
             randomly and run IOs. Exhaust entire list.
             - Args :
-                  - None.
+                - iocfg : io configuration.
             - Returns :
-                  - None.
+                - None.
         """
         ctrl_list = range(0, len(self.ctrl_list))
 
@@ -209,11 +201,11 @@ class NVMFHost(object):
         return ret
 
     def ctrl_rescan(self):
-        """ Run controller_rescan on all host controllers one by one.
+        """ Run controller_rescan on all host controllers sequentially.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -226,11 +218,11 @@ class NVMFHost(object):
         return ret
 
     def ctrl_reset(self):
-        """ Run controller_reset on all host controllers one by one.
+        """ Run controller_reset on all host controllers sequentially.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -245,9 +237,9 @@ class NVMFHost(object):
     def smart_log(self):
         """ Execute smart log.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -259,9 +251,9 @@ class NVMFHost(object):
     def id_ctrl(self):
         """ Execute id-ctrl on all the controllers(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -271,11 +263,11 @@ class NVMFHost(object):
         return ret
 
     def id_ns(self):
-        """ Execute id-ns on controllers(s) and all its namespace(s).
+        """ Execute id-ns on controller(s) and all its namespace(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -287,9 +279,9 @@ class NVMFHost(object):
     def ns_descs(self):
         """ Execute ns-descs on all namespace(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -301,9 +293,9 @@ class NVMFHost(object):
     def get_ns_id(self):
         """ Execute get-ns-id on all namespace(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -313,11 +305,11 @@ class NVMFHost(object):
         return ret
 
     def mkfs_seq(self, fs_type):
-        """ Run mkfs, mount fs, run IOs.
+        """ Run mkfs, mount fs, and run IOs.
             - Args :
-                  - fs_type : file system type.
+                - fs_type : file system type.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -332,9 +324,9 @@ class NVMFHost(object):
     def run_fs_ios(self, iocfg):
         """ Run IOs on mounted file system.
             - Args :
-                  - iocfg : io configuration.
+                - iocfg : io configuration.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for ctrl in iter(self):
@@ -349,9 +341,9 @@ class NVMFHost(object):
     def config(self, config_file="config/loop.json"):
         """ Configure Host based on the target transport.
             - Args :
-                  - None.
+                - config_file : JSON config.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = False
         if self.target_type == "loop":
@@ -365,9 +357,9 @@ class NVMFHost(object):
     def delete(self):
         """ Delete all the Host Controllers.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         for subsys in iter(self):
