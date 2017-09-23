@@ -54,11 +54,6 @@ class TestNVMFCreateHost(NVMFTest):
         self.loopdev.init()
         print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
-        """
-        self.null_blk = NullBlk(self.data_size, self.block_size, self.nr_dev)
-        self.null_blk.init()
-        self.build_target_config(self.null_blk.dev_list)
-        """
         target_type = "loop"
         self.target_subsys = NVMFTarget(target_type)
         ret = self.target_subsys.config(self.target_config_file)
