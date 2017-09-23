@@ -56,9 +56,9 @@ class NullBlk(object):
     def init(self):
         """ Create and initialize null blk.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         for i in range(0, int(self.nr_devices)):
             self.logger.info("/dev/nullb" + str(i))
@@ -70,9 +70,9 @@ class NullBlk(object):
     def delete(self):
         """ Delete this null blk.
             - Args :
-                  - None.
+                - None.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         Cmd.exec_cmd("modprobe -qr null_blk")
         return True

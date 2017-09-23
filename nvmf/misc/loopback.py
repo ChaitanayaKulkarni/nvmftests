@@ -30,7 +30,7 @@ class Loopback(object):
     """
     Represents Loopback driver block devices.
 
-        - Attributes :
+        - Attributes:
             - path : path to create backend files.
             - dev_size : device file size.
             - block size : block size to create file.
@@ -57,9 +57,9 @@ class Loopback(object):
     def init(self):
         """ Create and initialize Loopback.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         count = self.dev_size / self.block_size
 
@@ -86,9 +86,9 @@ class Loopback(object):
     def delete(self):
         """ Delete this Loopback.
             - Args :
-                  - None.
+                - None.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = True
         loop_cnt = 0

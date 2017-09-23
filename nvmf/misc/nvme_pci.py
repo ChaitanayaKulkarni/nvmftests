@@ -36,8 +36,9 @@ class NVMePCIeBlk(object):
     Represents NVMe PCIe block devices.
 
         - Attributes :
-            - nr_devices : max null block devices.
-            - dev_list : list of null devices.
+            - nr_devices : number of block devices.
+            - dev_list : list of devices.
+            - ctrl_list : NVMe PCIe controller list.
     """
     def __init__(self):
         self.nr_devices = None
@@ -47,15 +48,15 @@ class NVMePCIeBlk(object):
 
         Cmd.exec_cmd("modprobe -r nvme")
         Cmd.exec_cmd("modprobe nvme")
-        # allow devices to appear in /dev
+        # allow devices to appear in /dev/
         time.sleep(1)
 
     def is_pci_ctrl(self, ctrl):
         """ Validate underlaying device belogs to pci subsystem.
             - Args:
-                - None
+                - None.
             - Returns:
-                - None
+                - True if device is belongs to PCIe subsystem, False otherwise.
         """
         cmd = "find /sys/devices -name " + ctrl + " | grep -i pci"
         print cmd
@@ -64,16 +65,16 @@ class NVMePCIeBlk(object):
     def init(self):
         """ Create and initialize Loopback.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ctrl = "XXX "
         try:
             dev_list = os.listdir("/dev/")
         except Exception, err:
             self.logger.error(str(err) + ".")
-            return None, None
+            return False
         dev_list = natsorted(dev_list, key=lambda y: y.lower())
         pat = re.compile("^nvme[0-9]+$")
         for line in dev_list:
@@ -92,7 +93,7 @@ class NVMePCIeBlk(object):
             dir_list = os.listdir("/dev/")
         except Exception, err:
             self.logger.error(str(err))
-            return None, None
+            return False
         pat = re.compile("^" + ctrl + "+n[0-9]+$")
         for line in dir_list:
             line = line.strip('\n')
@@ -107,9 +108,9 @@ class NVMePCIeBlk(object):
     def delete(self):
         """ Delete this Loopback.
             - Args :
-                  - None.
+                - None.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         Cmd.exec_cmd("modprobe -qr nvme")
         return True
