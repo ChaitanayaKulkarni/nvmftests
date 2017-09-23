@@ -58,18 +58,22 @@ nvmftests
     3.3 Directory Structure
         Following is the quick overview of the directory structure :-
         .
-        |-- nvmf          :- NVMF core test framework files.
-        |   |-- host      :- NVMF host core files.
-        |   |-- misc      :- miscellaneous files.
-        |   |-- target    :- NVMF target core files.
-        |-- tests         :- test cases.
-        |   |-- config    :- contains configuration JSON files.
-        |-- utils         :- Utility classes.
-            |-- const     :- all constants definitions.
-            |-- diskio    :- diskio related wrappers.
-            |-- fs        :- fs related wrappers.
-            |-- shell     :- shell command related wrappers.
-            |-- log       :- module logger helpers.
+        |-- doc                 :- documentation.
+        |   |-- Documentation   :- class documentation.
+        |   |-- sequence-diag   :- sequence diagram.
+        |-- nvmf                :- NVMF core test framework files.
+        |   |-- host            :- NVMF host core files.
+        |   |-- misc            :- miscellaneous files.
+        |   |-- target          :- NVMF target core files.
+        |-- state_machine       :- experimental folder for framework state machine, work in progress.
+        |-- tests               :- test cases.
+        |   |-- config          :- contains configuration JSON files.
+        |-- utils               :- utility classes.
+            |-- const           :- all constants definitions.
+            |-- diskio          :- diskio related wrappers.
+            |-- fs              :- fs related wrappers.
+            |-- log             :- shell command related wrappers.
+            |-- shell           :- module logger helpers.
 
 
 4. Adding new testcases
@@ -129,17 +133,17 @@ nvmftests
     name under logs/. This directory will be used for temporary files and
     storing execution logs of each testcase. Current implementation stores
     stdout and stderr for each testcase under log directory, e.g.:-
-		logs/
-		|-- TestNVMFCreateHost
-		|   |-- TestNVMFCreateHost
-		|       |-- stderr.log
-		|       |-- stdout.log
-		|-- TestNVMFCreateTarget
-		|   |── TestNVMFCreateTarget
-		|       |-- stderr.log
-		|       |-- stdout.log
-		|-- TestNVMFCtrlRescan
-		|   |-- TestNVMFCtrlRescan
+        logs/
+        |-- TestNVMFCreateHost
+        |   |-- TestNVMFCreateHost
+        |       |-- stderr.log
+        |       |-- stdout.log
+        |-- TestNVMFCreateTarget
+        |   |── TestNVMFCreateTarget
+        |       |-- stderr.log
+        |       |-- stdout.log
+        |-- TestNVMFCtrlRescan
+        |   |-- TestNVMFCtrlRescan
                 .
                 .
                 .
