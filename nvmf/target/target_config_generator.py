@@ -28,8 +28,7 @@ class Port:
     Represents target port config generator.
 
         - Attributes:
-            - port_id: unique port identification number.
-            - port : list of the ports.
+            - port_id : unique port identification number.
             - port_dict : dictionary to hold port attributes.
             - referrals : list of target port referals.
             - subsystems : list of the subsystems associated with this port.
@@ -44,9 +43,9 @@ class Port:
     def build_addr(self):
         """ Initialize address attributes for this port.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - None.
+                - None.
         """
         self.addr['adrfam'] = ""
         self.addr['traddr'] = ""
@@ -58,9 +57,9 @@ class Port:
     def build_subsystems(self, subsys_list):
         """ Initialize subsystem list associated with this port.
             - Args :
-                  - None.
+                - None.
             -Returns :
-                  - Port attributes dictionary.
+                - Port attributes dictionary.
         """
         self.subsystem = subsys_list
         self.port_dict['subsystems'] = self.subsystem
@@ -68,9 +67,9 @@ class Port:
     def build_port(self, nqn_list):
         """ Builds port addr, subsystems, id, and referrals.
             - Args :
-                  - List of the subsystem nqn associated with this port.
+                - List of the subsystem nqn associated with this port.
             - Returns :
-                  - Port dictionary with valid values.
+                - Port dictionary with valid values.
         """
         self.build_addr()
         self.build_subsystems(nqn_list)
@@ -107,9 +106,9 @@ class Subsystem:
     def add_ns(self, ns_cfg):
         """ Updates subsystem namespace list with new namespace.
             - Args :
-                  - ns_cfg : namespace configuration.
+                - ns_cfg : namespace configuration.
             - Returns :
-                  - None.
+                - None.
         """
         self.allowd_hosts = []
         self.attr = {}
@@ -123,15 +122,15 @@ class Subsystem:
         self.namespace['device'] = self.device
         self.namespace['enable'] = ns_cfg['enable']
         self.namespace['nsid'] = ns_cfg['nsid']
-        n = self.namespace
-        self.ns_list.append(n)
+        ns = self.namespace
+        self.ns_list.append(ns)
 
     def build_ns(self):
-        """ Build namespace configuration using available loop devices.
+        """ Build namespace configuration using available devices.
             - Args :
-                  - ns_cfg : namespace configuration.
+                - ns_cfg : namespace configuration.
             - Returns :
-                  - None.
+                - None.
         """
         for i in range(0, self.nr_ns):
             ns_cfg = {}
@@ -145,19 +144,19 @@ class Subsystem:
     def build_subsys(self):
         """ Initialize subsystem entry.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - subsystem entry dictionary.
+                - subsystem entry dictionary.
         """
         self.build_ns()
-        ss_entry = {}
-        ss_entry['allowed_hosts'] = self.allowd_hosts
-        ss_entry['attr'] = self.attr
-        ss_entry['namespaces'] = self.ns_list
-        ss_entry['nqn'] = self.nqn
-        ss = []
-        ss.append(ss_entry)
-        return ss_entry
+        subsys_entry = {}
+        subsys_entry['allowed_hosts'] = self.allowd_hosts
+        subsys_entry['attr'] = self.attr
+        subsys_entry['namespaces'] = self.ns_list
+        subsys_entry['nqn'] = self.nqn
+        subsys = []
+        subsys.append(subsys_entry)
+        return subsys_entry
 
 
 class TargetConfig:
@@ -165,48 +164,48 @@ class TargetConfig:
     Represents target config generator.
 
         - Attributes:
-            - ss_list : list of subsystems associsted with this target.
+            - subsys_list : list of subsystems associsted with this target.
             - port_list : list of the ports associated with this target.
-            - config_file_path : path name for generated config file.
+            - config_file_path : path name to test config file.
             - nr_subsys : number of subsystems present in this target.
             - dev_list : list of devices to be used for namespaces.
     """
     def __init__(self, config_file_path, nr_subsys, nr_ns, dev_list):
-        self.ss_list = []
+        self.subsys_list = []
         self.port_list = []
         self.config_file_path = config_file_path
         self.nr_subsys = nr_subsys
         self.nr_ns = nr_ns
         self.dev_list = dev_list
 
-    def pp_json(self, json_thing, sort=True, indents=4):
+    def pp_json(self, json_string, sort=True, indents=4):
         """ Prints formatted JSON output.
             - Args :
-                  - json_thing : JSON string.
-                  - sort : flag to sort JSON values before formatting.
-                  - idents : identation width.
+                - json_string : JSON string.
+                - sort : flag to sort JSON values before formatting.
+                - idents : identation width.
             -Returns :
-                  - formatted JSON string.
+                - formatted JSON string.
         """
-        if type(json_thing) is str:
-            return json.dumps(json.loads(json_thing),
+        if type(json_string) is str:
+            return json.dumps(json.loads(json_string),
                               sort_keys=sort, indent=indents)
-        return json.dumps(json_thing, sort_keys=sort, indent=indents)
+        return json.dumps(json_string, sort_keys=sort, indent=indents)
 
     def build_target_subsys(self):
         """ Builds the Target config and dumps in JSON format.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - None.
+                - None.
         """
         nqn_list = []
-        ss_list = []
+        subsys_list = []
         port_list = []
         for i in range(0, self.nr_subsys):
             nqn = "testnqn" + str(i + 1)
             subsys = Subsystem(self.nr_ns, nqn, self.dev_list)
-            ss_list.append(subsys.build_subsys())
+            subsys_list.append(subsys.build_subsys())
             nqn_list.append(nqn)
 
         # TODO : improve support for multiple ports
@@ -215,7 +214,7 @@ class TargetConfig:
 
         target_config_str = {}
         target_config_str['ports'] = port_list
-        target_config_str['subsystems'] = ss_list
+        target_config_str['subsystems'] = subsys_list
         data = self.pp_json(target_config_str)
         with open(self.config_file_path, "w+") as config_file:
             config_file.write(data)

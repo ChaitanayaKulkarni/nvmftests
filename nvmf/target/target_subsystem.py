@@ -31,7 +31,7 @@ from nvmf.target.target_ns import NVMFTargetNamespace
 
 class NVMFTargetSubsystem(object):
     """
-    Represents a target controller.
+    Represents a target subsystem.
 
         - Attributes :
             - ns_list : list of namespaces.
@@ -67,11 +67,11 @@ class NVMFTargetSubsystem(object):
         return self.__next__()
 
     def init(self):
-        """ Create and initialize subsystem.
+        """ Create and initialize target subsystem.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         # create subsystem dir
         self.logger.info("Creating subsys path " + self.subsys_path + ".")
@@ -94,9 +94,9 @@ class NVMFTargetSubsystem(object):
     def create_ns(self, **ns_attr):
         """ Create, initialize and store namespace in subsystem's list.
             - Args :
-                  - ns_attr : namespace attributes.
+                - ns_attr : namespace attributes.
             - Returns :
-                  - namespace handle on success, None on error.
+                - namespace handle on success, None on error.
         """
         ns_id = len(self.ns_list) + 1
 
@@ -109,9 +109,9 @@ class NVMFTargetSubsystem(object):
     def delete_ns(self, ns):
         """ Delete single namespace.
             - Args :
-                  - ns : target namespace object to be deleted.
+                - ns : target namespace object to be deleted.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Deleting namespace " + self.nqn + " : " +
                          ns.ns_path + ".")
@@ -124,9 +124,9 @@ class NVMFTargetSubsystem(object):
     def delete(self):
         """ Delete subsystem and associated namespace(s).
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Deleting subsystem " + self.nqn)
         ret = True

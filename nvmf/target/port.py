@@ -82,9 +82,9 @@ class NVMFTargetPort(object):
     def add_subsys(self, subsys_name):
         """ Link Subsystem to this port.
             - Args :
-                  - subsys_name : subsystem nqn to be linked.
+                - subsys_name : subsystem nqn to be linked.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         src = self.cfgfs + "/nvmet/subsystems/" + subsys_name
         if not os.path.exists(src):
@@ -98,9 +98,9 @@ class NVMFTargetPort(object):
     def delete(self):
         """ Delete this port.
             - Args :
-                  - None.
+                - None.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Deleting port " + self.port_id + ".")
         subsys_symlink = self.port_path + "/subsystem/"

@@ -70,9 +70,9 @@ class NVMFTarget(object):
     def load_configfs(self):
         """ Load configfs.
             - Args :
-                  - None
+                - None.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         Cmd.exec_cmd("modprobe configfs")
         ret = Cmd.exec_cmd("mountpoint -q " + self.cfgfs)
@@ -97,9 +97,9 @@ class NVMFTarget(object):
             2. Create port(s) and linked them to respective subsystem(s).
             3. Create in memory configuration from JSON config file.
             - Args :
-                  - None.
+                - config_file : json config file path.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         ret = Cmd.exec_cmd("modprobe nvme-loop")
         if ret is False:
@@ -166,9 +166,9 @@ class NVMFTarget(object):
     def config(self, config_file="config/loop.json"):
         """ Wrapper for creating target configuration.
             - Args :
-                  - None.
+                - config_file : json config_file.
             -Returns :
-                  - None.
+                - True on success, False on failure.
         """
         if Cmd.exec_cmd("modprobe nvme") is False:
             self.logger.error("failed to load nvme.")
@@ -190,9 +190,9 @@ class NVMFTarget(object):
     def delete(self):
         """ Target Cleanup.
             - Args :
-                  - None.
+                - None.
             -Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Cleanup is in progress ...")
         ret = True

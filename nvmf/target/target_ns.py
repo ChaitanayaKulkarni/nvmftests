@@ -34,10 +34,10 @@ class NVMFTargetNamespace(object):
 
         - Attributes :
             - ns_attr : namespace attributes.
-            - cfgfs : configfs path
-            - nqn : subsystem nqn
+            - cfgfs : configfs path.
+            - nqn : subsystem nqn.
             - ns_id : namespace identifier.
-            - ns_path : namespace path in configfs path.
+            - ns_path : namespace path in configfs tree.
             - ns_attr : namespace attributes.
     """
     def __init__(self, cfgfs, nqn, ns_id, **ns_attr):
@@ -55,9 +55,9 @@ class NVMFTargetNamespace(object):
     def init(self):
         """ Create and initialize namespace.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.logger.info("Creating ns " + self.ns_path + " ...")
         try:
@@ -84,9 +84,9 @@ class NVMFTargetNamespace(object):
     def disable(self):
         """ Disable Namespace.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.ns_attr['enable'] = '0'
         return Cmd.exec_cmd("echo 0 > " + self.ns_path + "/enable")
@@ -94,9 +94,9 @@ class NVMFTargetNamespace(object):
     def enable(self):
         """ Enable Namespace.
             - Args :
-                  - None.
+                - None.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         self.ns_attr['enable'] = '1'
         return Cmd.exec_cmd("echo 1 > " + self.ns_path + "/enable")
@@ -104,9 +104,9 @@ class NVMFTargetNamespace(object):
     def delete(self):
         """ Delete namespace.
             - Args :
-                  - None.
+                 - None.
             - Returns :
-                  - True on success, False on failure.
+                 - True on success, False on failure.
         """
         self.logger.info("Removing NS " + self.ns_path + ".")
         ret = os.path.exists(self.ns_path)
