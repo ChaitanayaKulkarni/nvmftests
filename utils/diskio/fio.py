@@ -33,9 +33,9 @@ class FIO(object):
     def run_io(iocfg):
         """ Executes fio command based on the config argument.
             - Args :
-                  - IO Configuration for fio command.
+                - IO Configuration for fio command.
             - Returns :
-                  - True on success, False on failure.
+                - True on success, False on failure.
         """
         cmd = "fio "
         cmd += " --group_reporting=" + iocfg['group_reporting']
@@ -64,6 +64,11 @@ class FIO(object):
         ret = True
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         rc = proc.wait()
+        """
+            some testcases expect fio to fail which is success for the
+            testcase so we test against RC value before deciding success and
+            failure of fio execution
+        """
         if rc != iocfg['RC']:
             ret = False
         return ret
