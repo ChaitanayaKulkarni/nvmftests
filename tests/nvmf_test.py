@@ -59,6 +59,7 @@ class NVMFTest(object):
     """ Common attributes for all testcases """
 
     def __init__(self):
+        # TODO : make this dictionary
         self.config_file = 'config/nvmftests.json'
         self.data_size = 0
         self.block_size = 0
