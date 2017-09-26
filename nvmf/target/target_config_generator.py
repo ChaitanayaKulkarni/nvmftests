@@ -30,6 +30,7 @@ class Port:
         - Attributes:
             - port_id : unique port identification number.
             - port_dict : dictionary to hold port attributes.
+            - addr : to hold address attributes.
             - referrals : list of target port referals.
             - subsystems : list of the subsystems associated with this port.
     """
@@ -84,7 +85,7 @@ class Subsystem:
 
         - Attributes:
             - nr_ns : number of namespaces per subsystem.
-            - nr_dev: number of loop devices to be used.
+            - dev_list : list of block devices.
             - nqn : subsystem nqn.
             - ns_list : namespace list for this subsystem.
             - allowd_hosts : allowd hosts.
@@ -168,6 +169,7 @@ class TargetConfig:
             - port_list : list of the ports associated with this target.
             - config_file_path : path name to test config file.
             - nr_subsys : number of subsystems present in this target.
+            - nr_ns : number of namespaces per subsystem.
             - dev_list : list of devices to be used for namespaces.
     """
     def __init__(self, config_file_path, nr_subsys, nr_ns, dev_list):

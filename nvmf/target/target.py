@@ -84,11 +84,9 @@ class NVMFTarget(object):
             ret = Cmd.exec_cmd("mountpoint -q " + self.cfgfs)
             if ret is True:
                 self.logger.info("Configfs mounted at " + self.cfgfs + ".")
-                ret = True
             else:
                 self.logger.error("unable to mount configfs at " +
                                   self.cfgfs + ".")
-                ret = False
         return ret
 
     def config_loop_target(self, config_file):

@@ -84,11 +84,10 @@ class NVMFTargetSubsystem(object):
         self.logger.info("Configuring allowed hosts ...")
         ret = Cmd.exec_cmd("echo " + self.attr_allow_any_host + " >" +
                            self.subsys_path + "/attr_allow_any_host")
-        status = "Target Subsys " + self.subsys_path + " created successfully."
         if ret is False:
-            status = "create " + self.subsys_path + " failed."
-        self.logger.info(status)
-
+            self.logger.error(self.subsys_path + " creation failed.")
+        else:
+            self.logger.info(self.subsys_path + " created successfully.")
         return ret
 
     def create_ns(self, **ns_attr):

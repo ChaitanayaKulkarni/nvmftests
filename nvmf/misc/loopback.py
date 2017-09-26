@@ -48,7 +48,7 @@ class Loopback(object):
         self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
         self.log_format += '%(pathname)s'
         self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger.setLevel(logging.DEBUG)
 
         Cmd.exec_cmd("losetup -D")
         Cmd.exec_cmd("modprobe -qr loop")
@@ -61,6 +61,10 @@ class Loopback(object):
             - Returns :
                 - True on success, False on failure.
         """
+		if self.dev_size == 0 or self.block_size == 0:
+			self.logger.err("invalid device size or block size")
+			return False
+
         count = self.dev_size / self.block_size
 
         for i in range(0, self.max_loop):
@@ -70,7 +74,7 @@ class Loopback(object):
             self.logger.info(cmd)
             ret = Cmd.exec_cmd(cmd)
             if ret is False:
-                self.logger.error(" file creation " + self.dev_list[i])
+                self.logger.error("lookback file creation " + self.dev_list[i])
                 self.delete()
                 return False
             dev = "/dev/loop" + str(i)

@@ -143,8 +143,6 @@ class NVMFTest(object):
             self.target_type = cfg['target_type']
             # block_dev_pool
             self.blk_dev_pool = cfg['block_dev_pool']
-            print self.blk_dev_pool
-            print len(self.blk_dev_pool)
             return True
         return False
 

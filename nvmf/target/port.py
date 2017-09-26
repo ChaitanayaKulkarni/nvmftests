@@ -35,13 +35,14 @@ class NVMFTargetPort(object):
         - Attributes :
             - cfgfs : configfs mountpoint.
             - port_id : port identification number.
+            - port_path : port path in configfs.
             - port_conf : dictionary to hold the port attributes.
     """
     def __init__(self, cfgfs, port_id, **port_conf):
         self.cfgfs = cfgfs
         self.port_id = port_id
-        self.port_conf = {}
         self.port_path = self.cfgfs + "/nvmet/ports/" + port_id + "/"
+        self.port_conf = {}
         self.port_conf['addr_treq'] = port_conf['addr_treq']
         self.port_conf['addr_traddr'] = port_conf['addr_traddr']
         self.port_conf['addr_trtype'] = port_conf['addr_trtype']
@@ -72,11 +73,12 @@ class NVMFTargetPort(object):
 
         ret = Cmd.exec_cmd("echo -n \"" + self.port_conf['addr_trtype'] +
                            "\" > " + self.port_path + "/addr_trtype")
-        status = "Port " + self.port_path + " initialized successfully."
         if ret is False:
             status = "trtype " + self.port_path + " failed."
-
-        self.logger.info(status)
+            self.logger.error(status)
+        else:
+            status = "Port " + self.port_path + " initialized successfully."
+            self.logger.info(status)
         return ret
 
     def add_subsys(self, subsys_name):
