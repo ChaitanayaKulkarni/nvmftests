@@ -22,7 +22,7 @@
 
 import json
 import random
-
+from nose.tools import assert_equal
 
 from utils.shell import Cmd
 from utils.log import Log
@@ -43,7 +43,7 @@ class NVMFHost(object):
         self.ctrl_list = []
         self.ctrl_list_index = 0
         self.logger = Log.get_logger(__name__, 'host')
-        self.load_modules()
+        assert_equal(self.load_modules(), True)
 
     def __iter__(self):
         self.ctrl_list_index = 0
@@ -74,9 +74,8 @@ class NVMFHost(object):
 
     def config_loop(self, config_file):
         """ Configure host for loop target :-
-            1. Load Loop module(s).
-            2. Load config from json file.
-            3. Create Controller list.
+            1. Load config from json file.
+            2. Create Controller list.
             - Args :
                 - config_file : json config file.
             -Returns :
@@ -92,10 +91,8 @@ class NVMFHost(object):
 
         for sscfg in config['subsystems']:
             ctrl = NVMFHostController(sscfg['nqn'], "loop")
-            ret = ctrl.init_ctrl()
-            if ret is False:
-                self.logger.error("failed init_ctrl() " +
-                                  str(ctrl.ctrl_dev) + ".")
+            if ctrl.init_ctrl()is False:
+                self.logger.error("ctrl init " + str(ctrl.ctrl_dev) + ".")
                 return False
             self.ctrl_list.append(ctrl)
         return True

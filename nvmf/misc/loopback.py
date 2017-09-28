@@ -61,9 +61,9 @@ class Loopback(object):
             - Returns :
                 - True on success, False on failure.
         """
-		if self.dev_size == 0 or self.block_size == 0:
-			self.logger.err("invalid device size or block size")
-			return False
+        if self.dev_size == 0 or self.block_size == 0:
+            self.logger.err("invalid device size or block size")
+            return False
 
         count = self.dev_size / self.block_size
 

@@ -370,12 +370,11 @@ class NVMFHostController(object):
             self.ns_list.append(host_ns)
         # allow sysfs entries to populate
         time.sleep(1)
-        ret = self.validate_sysfs_ns()
-        if ret is False:
+        if self.validate_sysfs_ns() is False:
             self.logger.error("unable to verify sysfs entries.")
             return False
-        self.logger.info("Host sysfs entries are validated " + str(ret) + ".")
-        return ret
+        self.logger.info("Host sysfs entries are validated.")
+        return True
 
     def validate_fabric_ctrl(self):
         """ Validate this is a fabric controller.
@@ -390,7 +389,7 @@ class NVMFHostController(object):
 
         cmd = "find /sys/devices -name " + self.ctrl_dev.split("/")[-2] \
               + " | grep nvme-fabric"
-        print cmd
+        self.logger.info(cmd)
         return Cmd.exec_cmd(cmd)
 
     def init_ctrl(self):
@@ -409,11 +408,7 @@ class NVMFHostController(object):
             return False
         self.ctrl_dev, self.ns_dev_list = self.build_ns_list()
 
-        if self.validate_fabric_ctrl() is False:
-            return False
-
-        ret = self.id_ctrl()
-        if ret is False:
+        if self.validate_fabric_ctrl() is False or self.id_ctrl() is False:
             return False
 
         return self.init_ns()
