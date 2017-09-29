@@ -302,7 +302,7 @@ class NVMFHost(object):
         return ret
 
     def mkfs_seq(self, fs_type):
-        """ Run mkfs, mount fs, and run IOs.
+        """ Run mkfs, mount fs and run IOs.
             - Args :
                 - fs_type : file system type.
             - Returns :

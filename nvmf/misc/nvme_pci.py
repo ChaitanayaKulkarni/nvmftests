@@ -36,8 +36,8 @@ class NVMePCIeBlk(object):
 
         - Attributes :
             - nr_devices : number of block devices.
-            - dev_list : list of devices.
             - ctrl_list : NVMe PCIe controller list.
+            - dev_list : list of devices.
     """
     def __init__(self):
         self.nr_devices = None
@@ -51,18 +51,17 @@ class NVMePCIeBlk(object):
         time.sleep(1)
 
     def is_pci_ctrl(self, ctrl):
-        """ Validate underlaying device belogs to pci subsystem.
+        """ Validate underlaying device belongs to pci subsystem.
             - Args :
                 - None.
             - Returns :
                 - True if device is belongs to PCIe subsystem, False otherwise.
         """
         cmd = "find /sys/devices -name " + ctrl + " | grep -i pci"
-        print cmd
         return Cmd.exec_cmd(cmd)
 
     def init(self):
-        """ Create and initialize Loopback.
+        """ Build the list of NVMe PCIe controllers.
             - Args :
                 - None.
             - Returns :
@@ -105,11 +104,10 @@ class NVMePCIeBlk(object):
         return True
 
     def delete(self):
-        """ Delete this Loopback.
+        """ Remove the nvme module.
             - Args :
                 - None.
             -Returns :
                 - True on success, False on failure.
         """
-        Cmd.exec_cmd("modprobe -qr nvme")
-        return True
+        return Cmd.exec_cmd("modprobe -qr nvme")

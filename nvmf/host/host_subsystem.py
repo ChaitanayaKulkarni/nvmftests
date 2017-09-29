@@ -128,7 +128,7 @@ class NVMFHostController(object):
         return ret
 
     def run_mkfs_seq(self, fs_type):
-        """ Run mkfs, mount fs.
+        """ Run mkfs.
             - Args :
                 - fs_type : file system type.
             - Returns :
@@ -215,7 +215,7 @@ class NVMFHostController(object):
     def run_smart_log(self, nsid="0xFFFFFFFF"):
         """ Wrapper for nvme smart-log command.
             - Args :
-                - None.
+                - nsid : namespace id for smart log, defaults to ctrl.
             - Returns:
                 - True on success, False on failure.
         """
@@ -256,6 +256,7 @@ class NVMFHostController(object):
             - Returns :
                 - True on success, False on failure.
         """
+        # Run smart log on controller
         self.run_smart_log()
         i = 1
         for ns in iter(self):
@@ -438,6 +439,7 @@ class NVMFHostController(object):
             key, val = line.split(':')
             self.ctrl_dict[key.strip()] = val.strip()
 
+        self.logger.info("ID controller :- ")
         self.logger.info(self.ctrl_dict)
         return True
 

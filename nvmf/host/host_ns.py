@@ -135,7 +135,7 @@ class NVMFHostNamespace(object):
             - Returns :
                 - True on success, False on failure.
         """
-        get_ns_id_cmd = "nvme get_ns_id " + self.ns_dev
+        get_ns_id_cmd = "nvme get-ns-id " + self.ns_dev
         return Cmd.exec_cmd(get_ns_id_cmd)
 
     def mkfs(self, fs_type):

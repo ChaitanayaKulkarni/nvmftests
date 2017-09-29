@@ -28,7 +28,7 @@ from utils.shell import Cmd
 
 class Ext4FS(FileSystem):
     """
-    Represents Ext4FS File System management interface.
+    Represents Ext4 File System management interface.
 
         - Attributes :
     """

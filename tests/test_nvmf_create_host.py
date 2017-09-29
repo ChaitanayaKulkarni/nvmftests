@@ -52,7 +52,6 @@ class TestNVMFCreateHost(NVMFTest):
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
-        print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
         self.target_subsys = NVMFTarget(self.target_type)
         ret = self.target_subsys.config(self.target_config_file)
