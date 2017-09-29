@@ -29,7 +29,7 @@ from utils.shell import Cmd
 
 class FileSystem(object):
     """
-    Represents Ext4FS file system management interface.
+    Represents file system management interface.
 
         - Attributes :
             - fs_name : file system name.
@@ -66,6 +66,7 @@ class FileSystem(object):
         if not stat.S_ISBLK(os.stat(self.dev_path).st_mode):
             self.logger.info("ERRO : block device expected for mkfs.")
             return False
+
         if self.is_mounted() is True:
             self.logger.info("ERROR : device is already mounted.")
             return False
@@ -95,6 +96,7 @@ class FileSystem(object):
             - Returns :
                 - File system mountpath.
         """
+        # TODO : add mount check here
         return self.mount_path
 
     def umount(self):

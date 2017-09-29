@@ -22,7 +22,7 @@ NVMF host template :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Write testcase code here.
+    3. Write testcase code in the testcase function.
     4. Delete Host.
     5. Delete Target.
 """
@@ -48,7 +48,6 @@ class TestNVMFHostTemplate(NVMFTest):
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
-        print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
         super(TestNVMFHostTemplate, self).common_setup()
 

@@ -22,7 +22,7 @@ NVMF test ns-descs on each controller :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Execute ns-descs on all controllers.
+    3. Execute ns-descs.
     4. Delete Host.
     5. Delete Target.
 """
@@ -48,7 +48,6 @@ class TestNVMFNsDescs(NVMFTest):
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
-        print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
         super(TestNVMFNsDescs, self).common_setup()
 

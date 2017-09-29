@@ -48,7 +48,6 @@ class TestNVMFNSEnableDisable(NVMFTest):
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
-        print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
         super(TestNVMFNSEnableDisable, self).common_setup()
 
@@ -60,9 +59,11 @@ class TestNVMFNSEnableDisable(NVMFTest):
     def target_ns_enable_disable(self, target_ns):
         target_ns_path_str = " Target NS Path " + target_ns.ns_path
         print(" Target NS ID " + str(target_ns.ns_id))
+
         ret = target_ns.disable()
         assert_equal(ret, True, "ERROR : target ns enable failed ...")
         print(target_ns_path_str + " disabled successfully")
+
         ret = target_ns.enable()
         assert_equal(ret, True, "ERROR : target ns disable failed ...")
         print(target_ns_path_str + " enabled successfully")

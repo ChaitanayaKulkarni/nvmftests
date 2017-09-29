@@ -2,7 +2,7 @@
 	"mount_path" : "/mnt/",
 	"data_size"  : "128MB",
 	"block_size" : "4KB",
-	"nr_dev" : "10",
+	"nr_dev" : "5",
 	"nr_target_subsys" : "1",
 	"nr_ns_per_subsys" : "1",
 	"target_config_file" : "loop.json",

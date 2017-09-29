@@ -48,7 +48,6 @@ class TestNVMFGetNsId(NVMFTest):
         self.loopdev = Loopback(self.mount_path, self.data_size,
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
-        print self.loopdev.dev_list
         self.build_target_config(self.loopdev.dev_list)
         super(TestNVMFGetNsId, self).common_setup()
 
@@ -60,5 +59,5 @@ class TestNVMFGetNsId(NVMFTest):
     def test_identify_controller(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
-        ret = self.host_subsys.ns_descs()
+        ret = self.host_subsys.get_ns_id()
         assert_equal(ret, True, "ERROR : id controller failed.")
