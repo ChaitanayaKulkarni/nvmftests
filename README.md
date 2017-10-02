@@ -107,6 +107,7 @@ nvmftests
         5.2. Running all the testcases :-
             from $NVMFTESTSHOME/tests
             # nose2 --verbose
+
         5.3 Running all the testcases from makefile :-
             from #NVMFTESTSHOME
             # make run

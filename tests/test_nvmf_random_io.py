@@ -22,7 +22,7 @@ NVMF randomly select a controller and run IOs :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
-    3. Randomly select the controller and run IOS on all namespaces(s).
+    3. Randomly select the controller and run IOs on all namespaces(s).
     4. Delete Host.
     5. Delete Target.
 """
@@ -35,7 +35,7 @@ from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 
-class TestNVMFRandomFabric(NVMFTest):
+class TestNVMFRandomIO(NVMFTest):
 
     """ Represents Random Susbsytem IO testcase """
 
@@ -49,11 +49,11 @@ class TestNVMFRandomFabric(NVMFTest):
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
         self.build_target_config(self.loopdev.dev_list)
-        super(TestNVMFRandomFabric, self).common_setup()
+        super(TestNVMFRandomIO, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFRandomFabric, self).common_tear_down()
+        super(TestNVMFRandomIO, self).common_tear_down()
         self.loopdev.delete()
 
     def test_random_io(self):

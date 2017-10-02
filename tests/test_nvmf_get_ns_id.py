@@ -56,7 +56,7 @@ class TestNVMFGetNsId(NVMFTest):
         super(TestNVMFGetNsId, self).common_tear_down()
         self.loopdev.delete()
 
-    def test_identify_controller(self):
+    def test_get_nsid(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.get_ns_id()

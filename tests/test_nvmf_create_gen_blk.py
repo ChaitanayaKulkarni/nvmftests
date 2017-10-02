@@ -18,7 +18,7 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 """
-NVMF Create/Delete Host using geenric block device :-
+NVMF Create/Delete Host using generic block device :-
 
     1. From the config file create Target.
     2. From the config file create host and connect to target.
@@ -36,7 +36,7 @@ from nvmf.target import NVMFTarget
 from nvmf.host import NVMFHost
 
 
-class TestNVMFCreateHost(NVMFTest):
+class TestNVMFCreateGenBlk(NVMFTest):
 
     """ Represents Host Creation testcase """
 
@@ -64,9 +64,8 @@ class TestNVMFCreateHost(NVMFTest):
         self.host_subsys.delete()
         self.target_subsys.delete()
 
-    def test_create_host(self):
+    def test_create_gen_blk(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : host config failed")
-        raw_input("Press enter to continue ...")

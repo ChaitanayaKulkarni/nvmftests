@@ -56,7 +56,7 @@ class TestNVMFCtrlRescan(NVMFTest):
         super(TestNVMFCtrlRescan, self).common_tear_down()
         self.loopdev.delete()
 
-    def test_host(self):
+    def test_ctrl_rescan(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.ctrl_rescan()

@@ -67,4 +67,3 @@ class TestNVMFCreatePCIeTarget(NVMFTest):
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.config(self.target_config_file)
         assert_equal(ret, True, "ERROR : host config failed")
-        raw_input("Press enter to continue ...")

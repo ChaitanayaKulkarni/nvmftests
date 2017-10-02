@@ -26,7 +26,7 @@ import logging
 class Log(object):
 
     """
-    Represents a consoler logger setup helper for a module.
+    Represents a console logger setup helper for a module.
         - Attributes :
     """
 

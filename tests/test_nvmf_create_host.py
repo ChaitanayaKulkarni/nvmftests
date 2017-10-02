@@ -30,7 +30,6 @@ NVMF Create/Delete Host :-
 import sys
 from nose.tools import assert_equal
 sys.path.append("../")
-# from nvmf.misc.null_blk import NullBlk
 from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 from nvmf.target import NVMFTarget

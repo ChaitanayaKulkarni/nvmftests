@@ -56,7 +56,7 @@ class TestNVMFCtrlReset(NVMFTest):
         super(TestNVMFCtrlReset, self).common_tear_down()
         self.loopdev.delete()
 
-    def test_host(self):
+    def test_ctrl_reset(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.ctrl_reset()

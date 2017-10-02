@@ -35,7 +35,7 @@ from nvmf.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 
 
-class TestNVMFParallelFabric(NVMFTest):
+class TestNVMFParallelPerf(NVMFTest):
 
     """ Represents Parallel Subsystem IO testcase """
 
@@ -49,14 +49,14 @@ class TestNVMFParallelFabric(NVMFTest):
                                 self.block_size, self.nr_dev)
         self.loopdev.init()
         self.build_target_config(self.loopdev.dev_list)
-        super(TestNVMFParallelFabric, self).common_setup()
+        super(TestNVMFParallelPerf, self).common_setup()
 
     def tearDown(self):
         """ Post section of testcase """
-        super(TestNVMFParallelFabric, self).common_tear_down()
+        super(TestNVMFParallelPerf, self).common_tear_down()
         self.loopdev.delete()
 
-    def test_parallel_io(self):
+    def test_parallel_perf(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.run_perf_parallel(self.fio_read)

@@ -56,7 +56,7 @@ class TestNVMFNsDescs(NVMFTest):
         super(TestNVMFNsDescs, self).common_tear_down()
         self.loopdev.delete()
 
-    def test_identify_controller(self):
+    def test_ns_descs(self):
         """ Testcase main """
         print("Now Running " + self.__class__.__name__)
         ret = self.host_subsys.ns_descs()

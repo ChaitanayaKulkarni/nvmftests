@@ -47,6 +47,7 @@ def __run_traffic__(iocfg):
     print("Run traffic :- ")
     while True:
         ret = DD.run_io(iocfg)
+        # For this testcase we need dd to fail after disabling the ns
         if ret is False:
             return True
 
