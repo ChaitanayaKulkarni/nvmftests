@@ -182,7 +182,7 @@ class NVMFTest(object):
     def common_setup(self):
         """ Common test case setup function.
             Args :
-              - test_name : name of the testcase.
+              - None.
             Returns :
               - None.
         """
@@ -196,7 +196,7 @@ class NVMFTest(object):
     def common_tear_down(self):
         """ Common test case tear down function.
             Args :
-              - test_name : name of the testcase.
+              - None.
             Returns :
               - None.
         """
