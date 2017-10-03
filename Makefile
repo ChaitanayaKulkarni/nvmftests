@@ -24,16 +24,16 @@ run:
 	@rm -fr config
 
 static_check:
-	@for i in `find . -name \*.py  | grep -v __init__`
-	do \
-		echo "Pylint :- " ; \
-		printf "%10s    " $${i}; \
-		pylint $${i} 2>&1  | grep "^Your code" |  awk '{print $$7}';\
-		echo "--------------------------------------------";\
-		pep8 $${i}; \
-		echo "pep8 :- "; \
-		echo "flake8 :- "; \
-		flake8 $${i}; \
+	for i in `find . -name \*.py  | grep -v __init__ | grep -v state_machine`;\
+	do\
+			echo "Pylint :- " ;\
+			printf "%10s    " $${i};\
+			pylint $${i} 2>&1  | grep "^Your code" |  awk '{print $$7}';\
+			echo "--------------------------------------------";\
+			pep8 $${i};\
+			echo "pep8 :- ";\
+			echo "flake8 :- ";\
+			flake8 $${i};\
 	done
 
 cleanall: clean
