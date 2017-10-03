@@ -19,7 +19,16 @@
 #
 from .fs import FileSystem
 from .fs import Ext4FS
+
 from .shell import cmd
+
 from .diskio import dd
 from .diskio import fio
+
+
+from .misc import NullBlk
+from .misc import Loopback
+from .misc import GenBlk
+from .misc import NVMePCIeBlk
+
 from .log import Log

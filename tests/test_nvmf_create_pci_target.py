@@ -30,7 +30,7 @@ NVMF Create/Delete Host with PCIe device on target namespace :-
 import sys
 from nose.tools import assert_equal
 sys.path.append("../")
-from nvmf.misc.nvme_pci import NVMePCIeBlk
+from utils.misc.nvme_pci import NVMePCIeBlk
 from nvmf_test import NVMFTest
 from nvmf.target import NVMFTarget
 from nvmf.host import NVMFHost

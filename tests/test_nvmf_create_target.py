@@ -28,7 +28,7 @@ NVMF Create/Delete Target :-
 import sys
 from nose.tools import assert_equal
 sys.path.append("../")
-from nvmf.misc.loopback import Loopback
+from utils.misc.loopback import Loopback
 from nvmf_test import NVMFTest
 from nvmf.target import NVMFTarget
 

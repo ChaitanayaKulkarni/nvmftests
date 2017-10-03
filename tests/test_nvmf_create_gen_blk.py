@@ -30,7 +30,7 @@ NVMF Create/Delete Host using generic block device :-
 import sys
 from nose.tools import assert_equal
 sys.path.append("../")
-from nvmf.misc.generic_blk_dev import GenBlk
+from utils.misc.generic_blk_dev import GenBlk
 from nvmf_test import NVMFTest
 from nvmf.target import NVMFTarget
 from nvmf.host import NVMFHost
