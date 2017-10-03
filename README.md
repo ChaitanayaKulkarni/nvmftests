@@ -65,7 +65,7 @@ nvmftests
         |   |-- host            :- NVMF host core files.
         |   |-- misc            :- miscellaneous files.
         |   |-- target          :- NVMF target core files.
-        |-- state_machine       :- experimental folder for framework state machine, work in progress.
+        |-- state_machine       :- framework state machine, work in progress.
         |-- tests               :- test cases.
         |   |-- config          :- contains configuration JSON files.
         |-- utils               :- utility classes.
@@ -113,14 +113,14 @@ nvmftests
             # make run
 
     Some notes on execution:-
-        In the current implementation, it uses file backed loop device or
-        null_blk on the target side. For some testcase execution, a new file
-        is created and linked with loop device. It expects that "mount_path"
-        in the nvmftests.json has enough space available to store backend files
-        which are used for target namespaces. Please edit the target subsystems
-        and namespace configuration, size of the loop device backed file on
-        the target side in the $NVMFTESTSHOME/tests/config/nvmftests.json
-        according to your need.
+        In the current implementation, it uses file backed loop or nvme-pci
+        block device or null_blk on target side. For some testcase execution,
+        a new file is created and linked with loop device. It expects that
+        mount_path" in the nvmftests.json has enough space available to store
+        backend files which are used for target namespaces. Please edit the
+        target subsystems and namespace configuration, size of the loop device
+        backed file on the target side in the
+        $NVMFTESTSHOME/tests/config/nvmftests.json according to your need.
 
         For host and target setup, you may have to configure timeout (sleep())
         values in the code to make sure previous steps are completed
