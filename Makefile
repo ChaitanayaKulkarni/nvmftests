@@ -30,8 +30,8 @@ static_check:
 			printf "%10s    " $${i};\
 			pylint $${i} 2>&1  | grep "^Your code" |  awk '{print $$7}';\
 			echo "--------------------------------------------";\
-			pep8 $${i};\
 			echo "pep8 :- ";\
+			pep8 $${i};\
 			echo "flake8 :- ";\
 			flake8 $${i};\
 	done
