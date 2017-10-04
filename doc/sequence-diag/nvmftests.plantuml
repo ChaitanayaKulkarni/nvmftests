@@ -59,7 +59,7 @@ h->hs : read config file and create host subsystem config_loop()
 hs->hs : initialize the host subsystem, connect to target init_ctrl()
 
 activate hs
-hs->hns : create and initialize namespace init_ctrl_ns() 
+hs->hns : create and initialize namespace init_ctrl_ns()
 hns->hns : validate sysfs entries
 
 activate hns
@@ -96,4 +96,3 @@ t->tc
 deactivate tc
 
 @enduml
-

@@ -4,4 +4,4 @@ doc:
 
 clean:
 	@make -C sequence-diag/ clean
-	@rm -fr Documentation 
+	@rm -fr Documentation
