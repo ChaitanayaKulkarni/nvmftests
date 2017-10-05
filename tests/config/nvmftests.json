@@ -76,6 +76,8 @@
 		"target_subsystem" : "DEBUG",
 		"target_ns" : "DEBUG",
 		"port" : "DEBUG",
-		"nvme_pci": "DEBUG"
+		"nvme_pci": "DEBUG",
+		"loopback": "DEBUG",
+		"gen_blk": "DEBUG"
 	}
 }
