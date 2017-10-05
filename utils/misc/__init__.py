@@ -18,7 +18,6 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 
-from .null_blk import NullBlk
 from .loopback import Loopback
 from .generic_blk_dev import GenBlk
 from .nvme_pci import NVMePCIeBlk

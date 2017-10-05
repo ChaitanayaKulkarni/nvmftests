@@ -24,6 +24,7 @@ import os
 import stat
 import logging
 
+from utils.log import Log
 
 class GenBlk(object):
     """
@@ -36,12 +37,8 @@ class GenBlk(object):
     def __init__(self, nr_devices):
         self.nr_devices = str(nr_devices)
         self.dev_list = []
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
-        self.logger.setLevel(logging.WARNING)
+        self.logger = Log.get_logger(__name__, 'gen_blk')
+        self.logger.setLevel(logging.DEBUG)
 
     def init(self, dev_list):
         """ Create and initialize Generic Block Device.

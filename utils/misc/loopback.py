@@ -24,6 +24,7 @@ import os
 import logging
 
 from utils.shell import Cmd
+from utils.log import Log
 
 
 class Loopback(object):
@@ -43,11 +44,7 @@ class Loopback(object):
         self.block_size = block_size
         self.max_loop = max_loop
         self.dev_list = []
-        self.logger = logging.getLogger(__name__)
-        self.log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        self.log_format += '%(filename)20s %(funcName)20s %(lineno)4d'
-        self.log_format += '%(pathname)s'
-        self.formatter = logging.Formatter(self.log_format)
+        self.logger = Log.get_logger(__name__, 'loopback')
         self.logger.setLevel(logging.DEBUG)
 
         Cmd.exec_cmd("losetup -D")
@@ -94,7 +91,6 @@ class Loopback(object):
             -Returns :
                 - True on success, False on failure.
         """
-        ret = True
         loop_cnt = 0
         for i in self.dev_list:
             cmd = "losetup -d /dev/loop" + str(loop_cnt)
@@ -104,5 +100,4 @@ class Loopback(object):
             os.remove(file_path)
             loop_cnt += 1
 
-        Cmd.exec_cmd("modprobe -qr loop")
-        return ret
+        return Cmd.exec_cmd("modprobe -qr loop")
