@@ -105,7 +105,6 @@ class NVMFHostNamespace(object):
         self.worker_thread = NVMFNSThread(args=[self.workq, self.q_cond_var])
         self.worker_thread.setDaemon(True)
         self.worker_thread.start()
-        # TODO : check for successfull thread start
         return True
 
     def id_ns(self):

@@ -111,7 +111,6 @@ class NVMFTargetNamespace(object):
         self.logger.info("Removing NS " + self.ns_path + ".")
         ret = os.path.exists(self.ns_path)
         if ret is True:
-            # TODO : improve cleanup funcitonality.
             shutil.rmtree(self.ns_path, ignore_errors=True)
         else:
             self.logger.error("path " + self.ns_path + " doesn't exists.")
