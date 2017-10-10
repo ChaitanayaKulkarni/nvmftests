@@ -7,7 +7,7 @@ nvmftests
 
     This contains NVMe Over Fabrics unit test framework. The purpose of this
     framework is to provide a platform to create different scenarios and test
-    specific functionality for NVMe Over Fabrics Subsystem.
+    specific functionality for NVMe Over Fabrics Subsystem (NVMeOF).
 
 2. Overview
 -----------
@@ -19,10 +19,10 @@ nvmftests
         3. Ability to issue sequential and parallel commands to the different
            namespaces and controllers from the host and target side.
 
-    All the testcases are written in python3 nose2 format.
+    All the testcases are written in python3 and nose2 format.
 
 3. Class hierarchy, design Considerations and directory structure
-----------------------------------------------------------------
+-----------------------------------------------------------------
 
     This framework follows a simple class hierarchy. Each test is a
     direct subclass or indirect subclass of NVMeOFTest. To write a new testcase
@@ -47,7 +47,7 @@ nvmftests
        add any new functionality to the framework please modify core classes
        for each component and propagate new interfaces to the top
        level (in host.py/target.py). On the target side, we have subsystem(s),
-       namespace(s), and port(s) which is configured using configfs.
+       namespace(s), and port(s) which are configured using configfs.
        For detailed class hierarchy please look into documentation.
     3.2. Testcase class:-
         NVMeOFTest :- Base class for each testcase, contains common functions.
@@ -59,27 +59,26 @@ nvmftests
         Following is the quick overview of the directory structure :-
         .
         |-- doc                 :- documentation.
-        |   |-- Documentation   :- class documentation.
-        |   |-- sequence-diag   :- sequence diagram.
+        |   |-- Documentation   :- class documentation.
+        |   |-- sequence-diag   :- sequence diagram.
         |-- nvmf                :- NVMF core test framework files.
-        |   |-- host            :- NVMF host core files.
-        |   |-- misc            :- miscellaneous files.
-        |   |-- target          :- NVMF target core files.
-        |-- state_machine       :- framework state machine, work in progress.
+        |   |-- host            :- NVMF host core files.
+        |   |-- target          :- NVMF target core files.
         |-- tests               :- test cases.
-        |   |-- config          :- contains configuration JSON files.
+        |   |-- config          :- test configuration JSON files.
         |-- utils               :- utility classes.
-            |-- const           :- all constants definitions.
+            |-- const           :- constant(s) definitions.
             |-- diskio          :- diskio related wrappers.
             |-- fs              :- fs related wrappers.
-            |-- log             :- shell command related wrappers.
-            |-- shell           :- module logger helpers.
+            |-- misc            :- miscellaneous files.
+            |-- shell           :- shell command related wrappers.
+            |-- log             :- module logger helpers.
 
 
 4. Adding new testcases
 -----------------------
 
-    4.1. Please refer host or target template testcase.
+    4.1. Please refer to host or target template testcase.
     4.2. Copy the template file with your testcase name.
     4.3. Update the class name with testcase name, this has to be unique.
     4.4. Update the test case function name.
@@ -90,7 +89,6 @@ nvmftests
          4.8.1. Run pep8, flake8, pylint and fix errors/warnings.
                 -Example "$ make static_check" will run pep8, flake8, and
                 pylint on all the python files in current directory.
-                Please make sure your code had pylint rating >= 7.5.
          4.8.2. Execute make doc to generate the documentation.
                 -Example "$ make doc" will create and update existing
                  documentation.
@@ -114,9 +112,9 @@ nvmftests
 
     Some notes on execution:-
         In the current implementation, it uses file backed loop or nvme-pci
-        block device or null_blk on target side. For some testcase execution,
+        block device on the target side. For some testcase execution,
         a new file is created and linked with loop device. It expects that
-        mount_path" in the nvmftests.json has enough space available to store
+        "mount_path" in the nvmftests.json has enough space available to store
         backend files which are used for target namespaces. Please edit the
         target subsystems and namespace configuration, size of the loop device
         backed file on the target side in the
@@ -125,7 +123,8 @@ nvmftests
         For host and target setup, you may have to configure timeout (sleep())
         values in the code to make sure previous steps are completed
         successfully and resources are online before executing next the steps.
-        We are planning to make these sleeps configurable in future release.
+        We are planning to make these sleep() calls configurable in the future
+        release.
 
 6. Logging
 ----------
@@ -136,15 +135,15 @@ nvmftests
     stdout and stderr for each testcase under log directory, e.g.:-
         logs/
         |-- TestNVMFCreateHost
-        |   |-- TestNVMFCreateHost
-        |       |-- stderr.log
-        |       |-- stdout.log
+        |   |-- TestNVMFCreateHost
+        |       |-- stderr.log
+        |       |-- stdout.log
         |-- TestNVMFCreateTarget
-        |   |── TestNVMFCreateTarget
-        |       |-- stderr.log
-        |       |-- stdout.log
+        |   |── TestNVMFCreateTarget
+        |       |-- stderr.log
+        |       |-- stdout.log
         |-- TestNVMFCtrlRescan
-        |   |-- TestNVMFCtrlRescan
+        |   |-- TestNVMFCtrlRescan
                 .
                 .
                 .
@@ -160,16 +159,16 @@ nvmftests
        nvmftests.json.
 
 9. Dependencies
-----------------
+---------------
 
-    6.1. Python( >= 3.0)
-    6.2. nose(http://nose.readthedocs.io/en/latest/)
-    6.3. nose2(Installation guide http://nose2.readthedocs.io/)
-    6.4. pep8(https://pypi.python.org/pypi/setuptools-pep8)
-    6.5. flake8(https://pypi.python.org/pypi/flake8)
-    6.6. pylint(https://www.pylint.org/)
-    6.7. Epydoc(http://epydoc.sourceforge.net/)
-    6.8. nvme-cli(https://github.com/linux-nvme/nvme-cli.git)
+    9.1. Python( >= 3.0)
+    9.2. nose(http://nose.readthedocs.io
+    9.3. nose2(Installation guide http://nose2.readthedocs.io/)
+    9.4. pep8(https://pypi.python.org/pypi/setuptools-pep8)
+    9.5. flake8(https://pypi.python.org/pypi/flake8)
+    9.6. pylint(https://www.pylint.org/)
+    9.7. Epydoc(http://epydoc.sourceforge.net/)
+    9.8. nvme-cli(https://github.com/linux-nvme/nvme-cli.git)
 
     Python package management system pip can be used to install most of the
     listed packages(https://pip.pypa.io/en/stable/installing/) :-
