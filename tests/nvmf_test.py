@@ -147,9 +147,9 @@ class NVMFTest(object):
         return False
 
     def human_to_bytes(self, num_str):
-        """ Converts human redable format to bytes.
+        """ Converts human readble format to bytes.
             Args :
-              - num_str : human redable string.
+              - num_str : human readble string.
             Returns :
               - On success decimal equivalant of num_str, 0 on failure.
         """
