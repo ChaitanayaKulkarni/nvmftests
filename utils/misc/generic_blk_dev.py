@@ -26,6 +26,7 @@ import logging
 
 from utils.log import Log
 
+
 class GenBlk(object):
     """
     Represents Generic BLK block devices.

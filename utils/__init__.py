@@ -25,7 +25,6 @@ from .shell import cmd
 from .diskio import dd
 from .diskio import fio
 
-
 from .misc import Loopback
 from .misc import GenBlk
 from .misc import NVMePCIeBlk

@@ -67,6 +67,7 @@ class NVMePCIeBlk(object):
             - Returns :
                 - True on success, False on failure.
         """
+        time.sleep(1)
         ctrl = "XXX "
         try:
             dev_list = os.listdir("/dev/")
