@@ -18,6 +18,8 @@
 #   Author: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 #
 
+PREFIX?=/opt
+
 help: all
 
 all:
@@ -27,6 +29,7 @@ all:
 	@echo "  make doc         - Generate Documentation."
 	@echo "  make cleanall    - removes *pyc, documentation."
 	@echo "  make static_check- runs pep8, flake8, and pylint on code."
+	@echo "  make install     - copy test suite to ${PREFIX}/nvmftests
 
 doc:
 	@make -C doc/
@@ -59,5 +62,9 @@ clean:
 	@find . -name \*pyc | xargs rm -fr
 	@find . -name __pycache__ | xargs rm -fr
 	@find . -name \*ropeproject | xargs rm -fr
+
+install:
+	@mkdir -p ${PREFIX}/nvmftest
+	@cp -r * ${PREFIX}/nvmftest
 
 .PHONY: doc clean cleanall
